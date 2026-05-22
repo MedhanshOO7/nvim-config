@@ -2,7 +2,7 @@
 
 Built to understand the editor, not just use it.
 
-![Neovim](https://img.shields.io/badge/Neovim-0.10+-blue.svg?style=flat-square&logo=neovim) ![Lua](https://img.shields.io/badge/Written_in-Lua-blue.svg?style=flat-square&logo=lua) ![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)
+![Neovim](https://img.shields.io/badge/Neovim-0.10+-blue.svg?style=flat-square&logo=neovim) ![Lua](https://img.shields.io/badge/Written_in-Lua-blue.svg?style=flat-square&logo=lua)
 
 ## Who built this
 
@@ -461,5 +461,3 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 * [NvChad](https://github.com/NvChad/NvChad) - For endless inspiration on UI aesthetics and dynamic themes.
 
 Contributions, tweaks, and suggestions are welcome via pull requests.
-
-Released under the MIT License.
