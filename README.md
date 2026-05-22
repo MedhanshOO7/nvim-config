@@ -37,7 +37,7 @@ If you just want something that works out of the box, there are better options â
 
 ## Requirements
 
-This configuration is built for performance and features. To ensure everything (including image rendering, Jupyter notebooks, and system integration) works correctly, you must install the following dependencies.
+This configuration is built for performance and deep tool integration. To ensure everything (including image rendering, Jupyter notebooks, formatting, and linting) works correctly, you must install the following dependencies.
 
 ### Minimum version
 *   **Neovim v0.10.0** or newer is strictly required.
@@ -49,7 +49,7 @@ This configuration is built for performance and features. To ensure everything (
 ```bash
 sudo pacman -S --needed neovim git curl ripgrep fd tree-sitter-cli nodejs npm \
   base-devel unzip python python-pip xdg-utils wl-clipboard man-db lazygit \
-  imagemagick kitty
+  imagemagick kitty make shfmt
 ```
 For the custom dashboard (AUR):
 ```bash
@@ -61,7 +61,7 @@ yay -S pokemon-colorscripts-git
 sudo apt update
 sudo apt install -y neovim git curl ripgrep fd-find tree-sitter-cli nodejs npm \
   build-essential unzip python3 python3-venv python3-pip xdg-utils wl-clipboard \
-  man-db lazygit imagemagick kitty
+  man-db lazygit imagemagick kitty make shfmt
 ```
 *Note: Symlink `fdfind` to `fd` for Telescope compatibility:*
 ```bash
@@ -69,19 +69,35 @@ mkdir -p ~/.local/bin
 ln -sf "$(command -v fdfind)" ~/.local/bin/fd
 ```
 
+#### Fedora
+```bash
+sudo dnf install neovim git curl ripgrep fd-find tree-sitter-cli nodejs npm \
+  development-tools unzip python3 python3-pip xdg-utils wl-clipboard \
+  man-db lazygit imagemagick kitty make shfmt
+```
+
 #### macOS (Homebrew)
 ```bash
-brew install neovim git ripgrep fd tree-sitter-cli node python lazygit imagemagick
+brew install neovim git ripgrep fd tree-sitter-cli node python lazygit \
+  imagemagick make shfmt stylua
 ```
 
 ### Mandatory Python environment
 The configuration uses a dedicated virtual environment for the Python provider and Jupyter (Molten) support. This prevents system-wide dependency conflicts.
 
 ```bash
+# Create the venv
 python -m venv ~/.venvs/neovim
+
+# Install core dependencies
 ~/.venvs/neovim/bin/pip install --upgrade pip
 ~/.venvs/neovim/bin/pip install pynvim jupytext jupyter_client ipykernel nbformat
 ```
+
+### Dashboard ASCII art
+This config uses `pokemon-colorscripts` for the startup screen.
+*   **Arch**: Install `pokemon-colorscripts-git` from AUR.
+*   **Others**: Follow the installation guide at [phakt/pokemon-colorscripts](https://gitlab.com/phakt/pokemon-colorscripts).
 
 ### Recommended terminal
 **Kitty** is highly recommended as it provides the most robust support for `image.nvim` and `molten-nvim` image rendering.
