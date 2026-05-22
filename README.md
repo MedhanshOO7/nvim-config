@@ -37,28 +37,56 @@ If you just want something that works out of the box, there are better options â
 
 ## Requirements
 
-Before cloning this repository, ensure your system has the required dependencies. You will need Git, a C compiler, Node.js (for some language servers), Python (for Molten/Jupyter support), and basic search utilities. Neovim **v0.10.0** or newer is strictly required.
+This configuration is built for performance and features. To ensure everything (including image rendering, Jupyter notebooks, and system integration) works correctly, you must install the following dependencies.
 
+### Minimum version
+*   **Neovim v0.10.0** or newer is strictly required.
+*   **Python 3.11+** is recommended for full Molten and plugin support.
+
+### System packages
+
+#### Arch Linux
 ```bash
-# macOS (Homebrew)
-brew install neovim git ripgrep fd node python gcc
+sudo pacman -S --needed neovim git curl ripgrep fd tree-sitter-cli nodejs npm \
+  base-devel unzip python python-pip xdg-utils wl-clipboard man-db lazygit \
+  imagemagick kitty
+```
+For the custom dashboard (AUR):
+```bash
+yay -S pokemon-colorscripts-git
 ```
 
+#### Debian / Ubuntu
 ```bash
-# Linux/Ubuntu (APT)
 sudo apt update
-sudo apt install neovim git ripgrep fd-find nodejs python3 python3-pip build-essential
+sudo apt install -y neovim git curl ripgrep fd-find tree-sitter-cli nodejs npm \
+  build-essential unzip python3 python3-venv python3-pip xdg-utils wl-clipboard \
+  man-db lazygit imagemagick kitty
 ```
+*Note: Symlink `fdfind` to `fd` for Telescope compatibility:*
+```bash
+mkdir -p ~/.local/bin
+ln -sf "$(command -v fdfind)" ~/.local/bin/fd
+```
+
+#### macOS (Homebrew)
+```bash
+brew install neovim git ripgrep fd tree-sitter-cli node python lazygit imagemagick
+```
+
+### Mandatory Python environment
+The configuration uses a dedicated virtual environment for the Python provider and Jupyter (Molten) support. This prevents system-wide dependency conflicts.
 
 ```bash
-# Arch Linux (Pacman)
-sudo pacman -S neovim git ripgrep fd nodejs python python-pip base-devel
+python -m venv ~/.venvs/neovim
+~/.venvs/neovim/bin/pip install --upgrade pip
+~/.venvs/neovim/bin/pip install pynvim jupytext jupyter_client ipykernel nbformat
 ```
 
-```powershell
-# Windows (Winget)
-winget install Neovim.Neovim Git.Git BurntSushi.ripgrep.MSVC sharkdp.fd OpenJS.NodeJS Python.Python.3.11
-```
+### Recommended terminal
+**Kitty** is highly recommended as it provides the most robust support for `image.nvim` and `molten-nvim` image rendering.
+
+![screenshot](./assets/screenshot.png)
 
 ## Installation
 
@@ -81,7 +109,7 @@ On the first boot, `lazy.nvim` will automatically bootstrap itself, clone all co
 ## Aesthetics
 
 *   **Colorscheme**: Dynamically managed via a custom utility. Defaults to [TokyoNight](https://github.com/folke/tokyonight.nvim), but seamlessly supports Catppuccin, Rose Pine, Kanagawa, and Nightfox.
-*   **Font**: [JetBrains Mono Nerd Font](https://www.nerdfonts.com/font-downloads), size 13 (configured via your terminal emulator).
+*   **Font**: [JetBrains Mono Nerd Font](https://www.nerdfonts.com/font-downloads), size 16 (configured via your terminal emulator).
 *   **Transparency**: Editor chrome and floating windows are dynamically blended. You can toggle global background transparency on the fly using `<leader>uy`.
 *   **Statusline**: Powered by `lualine.nvim` with a minimal, uncluttered design that integrates cleanly with the active colorscheme.
 
