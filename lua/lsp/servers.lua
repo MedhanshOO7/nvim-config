@@ -18,9 +18,11 @@ return {
             "--function-arg-placeholders=0",
             "--header-insertion=iwyu",
             "--fallback-style={BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Never}",
+            "--log=error",
+            "--query-driver=/usr/bin/arm-none-eabi-*",
         },
         init_options = {
-            clangdFileStatus = true,
+            clangdFileStatus = false,
             completeUnimported = true,
             usePlaceholders = true,
         },
@@ -110,7 +112,8 @@ return {
             },
         },
     },
-    ts_ls = {
+    qmlls = {},
+    vtsls = {
         settings = {
             typescript = {
                 suggest = {

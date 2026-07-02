@@ -54,7 +54,7 @@ opt.updatetime     = 250                       -- snappier diagnostics and git u
 opt.timeoutlen     = 300                       -- faster which-key popup and mappings
 opt.splitkeep      = "screen"                  -- avoid layout jumps when opening or closing splits
 opt.inccommand     = "split"                   -- preview substitutions live
-opt.smoothscroll   = true                      -- smoother large jumps and search motion
+opt.smoothscroll   = false                     -- disabled in favor of neoscroll.nvim
 opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- ── Clipboard ───────────────────────────────────────────────
@@ -64,6 +64,7 @@ opt.spell          = false -- disable spellcheck by default
 
 -- ── Folding (Treesitter-ready) ───────────────────────────────
 opt.foldmethod     = "expr"
+opt.foldexpr       = "v:lua.vim.treesitter.foldexpr()"
 opt.foldenable     = true
 opt.foldlevel      = 99 -- keep folds open by default
 opt.foldlevelstart = 99
@@ -85,7 +86,8 @@ opt.listchars      = {    -- … configured as:
     trail = "·",
     nbsp  = "␣",
 }
-opt.formatoptions:remove("cro") -- stop auto-inserting comment leaders
+-- formatoptions:remove at init-time is overridden by ftplugins;
+-- use a FileType autocmd instead (see language_defaults group below).
 opt.iskeyword:append("-")       -- treat hyphenated-words as one word
 opt.path:append("**")           -- let gf find project files in nested folders
 opt.jumpoptions:append("view")  -- restore the previous viewport on jumplist travel
@@ -123,11 +125,9 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd("FileType", {
     group = language_group,
-    pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact", "html", "css", "scss", "less", "json", "jsonc", "markdown", "yaml", "c", "cpp", "lua", "python", "sh", "bash", "zsh" },
+    pattern = "*",
     callback = function()
-        vim.opt_local.shiftwidth = 4
-        vim.opt_local.tabstop = 4
-        vim.opt_local.softtabstop = 4
+        vim.opt_local.formatoptions:remove("cro")
     end,
 })
 
