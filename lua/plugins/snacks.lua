@@ -83,10 +83,10 @@ return {
             formats = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff", "svg", "avif" },
             doc = {
                 enabled = true,
-                inline = true,
+                inline = false,
                 float = true,
-                max_width = 80,
-                max_height = 40,
+                max_width = 60,
+                max_height = 20,
             },
             convert = {
                 notify = false,
@@ -186,6 +186,7 @@ return {
             end,
             desc = "Browse Images (Floating Preview)",
         },
+        { "<leader>ih", function() Snacks.image.hover() end, desc = "Hover Image Preview" },
         { "<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit (VS Code-style panel)" },
         { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
         { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Open Git Permalink in Browser" },
