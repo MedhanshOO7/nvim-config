@@ -66,9 +66,6 @@ return {
             end
 
             vim.api.nvim_create_user_command("CopilotToggle", toggle_copilot, { desc = "Toggle Copilot Engine (Kill Switch)" })
-
-            -- Kill Switch: Disable Copilot by default for now
-            vim.cmd("Copilot disable")
         end,
     },
     {
