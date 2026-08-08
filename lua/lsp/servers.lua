@@ -87,6 +87,18 @@ return {
             },
         },
     },
+    basedpyright = {
+        settings = {
+            basedpyright = {
+                analysis = {
+                    autoSearchPaths = true,
+                    useLibraryCodeForTypes = true,
+                    diagnosticMode = "openFilesOnly",
+                    typeCheckingMode = "standard",
+                },
+            },
+        },
+    },
     marksman = {},
     pylsp = {
         settings = {
