@@ -79,10 +79,11 @@ return {
         gitbrowse = { enabled = true },
         image = {
             enabled = true,
+            force = true,
             formats = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff", "svg", "avif" },
             doc = {
                 enabled = true,
-                inline = false,
+                inline = true,
                 float = true,
                 max_width = 80,
                 max_height = 40,
