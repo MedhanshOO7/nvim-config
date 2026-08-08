@@ -3,7 +3,7 @@ return {
     -- Renders images directly in Neovim buffers using the Kitty protocol.
     {
         "3rd/image.nvim",
-        enabled = false,
+        enabled = true,
         event = "VeryLazy",
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -11,6 +11,7 @@ return {
         },
         opts = {
             backend = "kitty",
+            processor = "magick_cli",
             integrations = {
                 markdown = {
                     enabled = true,
@@ -20,16 +21,18 @@ return {
                     filetypes = { "markdown", "vimwiki", "quarto" },
                 },
                 neorg = { enabled = true },
+                html = { enabled = true },
+                css = { enabled = true },
             },
             max_width = nil,
             max_height = nil,
             max_width_window_percentage = nil,
             max_height_window_percentage = 50,
-            window_overlap_clear_enabled = false,
+            window_overlap_clear_enabled = true,
             window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
             editor_only_render_when_focused = false,
             tmux_show_only_in_active_window = false,
-            hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp" },
+            hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
         },
     },
 
