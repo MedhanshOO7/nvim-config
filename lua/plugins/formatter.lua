@@ -51,6 +51,10 @@ return {
                     return nil
                 end
 
+                if not vim.api.nvim_buf_is_valid(bufnr) or not vim.bo[bufnr].modifiable then
+                    return nil
+                end
+
                 return {
                     timeout_ms = 500,
                     lsp_format = "fallback",

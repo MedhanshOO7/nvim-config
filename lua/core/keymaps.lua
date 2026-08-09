@@ -155,7 +155,11 @@ map("n", "<leader>e", toggle_explorer, { desc = "Open or close the file sidebar"
 map("n", "<leader>fe", cmd("Explore"), { desc = "Open the classic netrw file list" })
 map("n", "<leader>fs", cmd("write"), { desc = "Save the current file" })
 map("n", "<leader>cf", function()
-    require("conform").format({ lsp_format = "fallback" })
+    if not vim.bo.modifiable then
+        vim.notify("Buffer is read-only (not modifiable)", vim.log.levels.WARN, { title = "Formatter" })
+        return
+    end
+    require("conform").format({ lsp_format = "fallback", async = true })
 end, { desc = "Format the current file" })
 map("n", "<leader>uf", cmd("FormatToggle"), { desc = "Toggle auto-format on save" })
 map("n", "<leader>q", cmd("quit"), { desc = "Quit the current window" })
