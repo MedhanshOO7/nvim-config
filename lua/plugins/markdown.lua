@@ -212,7 +212,9 @@ return {
             quote = { raw = "[!QUOTE]", rendered = "󱆧 Quote", highlight = "RenderMarkdownQuote" },
         },
         pipe_table = {
-            enabled = false,
+            enabled = true,
+            preset = "round",
+            style = "full",
         },
         latex = {
             enabled = true,
@@ -251,10 +253,10 @@ return {
         opts = {
             preview_mode = "inline",
             inline_mode = "replace",
-            auto_preview = true,
-            render_all = false, -- Only render tables in view/cursor!
-            inline_viewport_scrolling = true, -- Only tables in current viewport!
-            inline_wrap_scope = "cursor", -- Scope to active view/cursor!
+            auto_preview = false, -- Manual toggle only (<leader>mi, <leader>mt)!
+            render_all = false,
+            inline_viewport_scrolling = true,
+            inline_wrap_scope = "cursor",
             auto_preview_in_insert = false,
             clear_on_insert = true,
             highlight_preset = "render_markdown",
@@ -262,7 +264,7 @@ return {
             use_unicode_border = true,
             extra_filetypes = { "sql" },
             reader = {
-                auto_open = false, -- Keeps buffer in editable Inline mode (no E21 errors!)
+                auto_open = false,
             },
         },
     },
