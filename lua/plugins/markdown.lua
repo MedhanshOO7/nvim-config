@@ -251,8 +251,8 @@ return {
         opts = {
             auto_preview = true,
             render_all = true,
-            auto_preview_in_insert = true,
-            clear_on_insert = false,
+            auto_preview_in_insert = false,
+            clear_on_insert = true,
             highlight_preset = "render_markdown",
             table_border = "rounded",
             use_unicode_border = true,
