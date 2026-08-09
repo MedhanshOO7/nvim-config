@@ -39,6 +39,20 @@ return {
             less = { validate = true },
         },
     },
+    emmet_language_server = {
+        filetypes = {
+            "css",
+            "eruby",
+            "html",
+            "javascript",
+            "javascriptreact",
+            "less",
+            "pug",
+            "sass",
+            "scss",
+            "typescriptreact",
+        },
+    },
     html = {
         filetypes = { "html", "templ" },
     },
@@ -125,6 +139,9 @@ return {
         },
     },
     qmlls = {},
+    sqls = {
+        filetypes = { "sql", "mysql" },
+    },
     vtsls = {
         settings = {
             typescript = {

@@ -26,6 +26,7 @@ return {
                 sh = { "shfmt" },
                 bash = { "shfmt" },
                 zsh = { "shfmt" },
+                sql = { "sql_formatter" },
                 yaml = { "prettierd", "prettier" },
             },
             formatters = {
