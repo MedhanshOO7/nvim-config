@@ -168,6 +168,7 @@ return {
             min_width = 30,
             left_pad = 1,
             right_pad = 1,
+            highlight_mode = "combine",
         },
         bullet = {
             enabled = true,
