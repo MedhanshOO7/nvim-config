@@ -6,7 +6,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "nvim-tree/nvim-web-devicons",
     },
-    ft = { "markdown", "markdown.mdx", "quarto", "rmd" },
+    ft = { "markdown", "markdown.mdx", "quarto", "rmd", "sql" },
     init = function()
         local function resolve_group(groups)
             for _, group in ipairs(groups) do
@@ -242,7 +242,7 @@ return {
     },
     {
         "ice345/markdown-table-wrap.nvim",
-        ft = { "markdown", "markdown.mdx", "quarto", "rmd" },
+        ft = { "markdown", "markdown.mdx", "quarto", "rmd", "sql" },
         keys = {
             { "<leader>mi", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Inline View" },
             { "<leader>mr", "<cmd>MarkdownTableToggleReader<cr>", desc = "Toggle Markdown Table Reader" },
@@ -256,6 +256,7 @@ return {
             highlight_preset = "render_markdown",
             table_border = "rounded",
             use_unicode_border = true,
+            extra_filetypes = { "sql" },
             reader = {
                 auto_open = false, -- Keeps buffer in editable Inline mode (no E21 errors!)
             },
