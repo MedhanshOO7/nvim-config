@@ -243,9 +243,15 @@ return {
             { "<leader>mt", "<cmd>MarkdownTableTogglePreview<cr>", desc = "Toggle Markdown Table Preview" },
         },
         opts = {
-            auto_preview = false,
+            auto_preview = true,
+            render_all = true,
+            auto_preview_in_insert = true,
+            clear_on_insert = false,
+            highlight_preset = "render_markdown",
+            table_border = "rounded",
+            use_unicode_border = true,
             reader = {
-                auto_open = false,
+                auto_open = false, -- Keeps buffer in editable Inline mode (no E21 errors!)
             },
         },
     },
