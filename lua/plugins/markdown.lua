@@ -207,6 +207,10 @@ return {
         pipe_table = {
             enabled = true,
             preset = "round",
+            style = "full",
+            cell = "padded",
+            padding = 1,
+            min_width = 12,
             alignment_indicator = "━",
         },
         latex = {
