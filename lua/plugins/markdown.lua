@@ -249,6 +249,8 @@ return {
             { "<leader>mt", "<cmd>MarkdownTableTogglePreview<cr>", desc = "Toggle Markdown Table Preview" },
         },
         opts = {
+            preview_mode = "inline",
+            inline_mode = "replace",
             auto_preview = true,
             render_all = false, -- Only render tables in view/cursor!
             inline_viewport_scrolling = true, -- Only tables in current viewport!
