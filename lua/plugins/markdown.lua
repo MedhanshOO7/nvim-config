@@ -250,7 +250,9 @@ return {
         },
         opts = {
             auto_preview = true,
-            render_all = true,
+            render_all = false, -- Only render tables in view/cursor!
+            inline_viewport_scrolling = true, -- Only tables in current viewport!
+            inline_wrap_scope = "cursor", -- Scope to active view/cursor!
             auto_preview_in_insert = false,
             clear_on_insert = true,
             highlight_preset = "render_markdown",
