@@ -206,13 +206,7 @@ return {
             quote = { raw = "[!QUOTE]", rendered = "󱆧 Quote", highlight = "RenderMarkdownQuote" },
         },
         pipe_table = {
-            enabled = true,
-            preset = "round",
-            style = "full",
-            cell = "padded",
-            padding = 1,
-            min_width = 12,
-            alignment_indicator = "━",
+            enabled = false,
         },
         latex = {
             enabled = true,
@@ -243,10 +237,16 @@ return {
     {
         "ice345/markdown-table-wrap.nvim",
         ft = { "markdown", "markdown.mdx", "quarto", "rmd" },
-        cmd = { "MarkdownTableToggleInline" },
         keys = {
-            { "<leader>ntw", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Wrapping" },
+            { "<leader>mi", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Inline View" },
+            { "<leader>mr", "<cmd>MarkdownTableToggleReader<cr>", desc = "Toggle Markdown Table Reader" },
+            { "<leader>mt", "<cmd>MarkdownTableTogglePreview<cr>", desc = "Toggle Markdown Table Preview" },
         },
-        opts = {},
+        opts = {
+            auto_preview = false,
+            reader = {
+                auto_open = false,
+            },
+        },
     },
 }

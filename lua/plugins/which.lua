@@ -157,9 +157,13 @@ return {
             { "<leader>nr", desc = "Recalculate autolist" },
             { "<leader>ns", desc = "Strikeout text", mode = { "n", "v" } },
             { "<leader>nt", desc = "Twilight" },
-            { "<leader>ntw", desc = "Toggle Markdown Table Wrapping" },
             { "<leader>nw", desc = "Writing mode toggle" },
             { "<leader>nz", desc = "Zen Mode" },
+
+            -- Markdown Tables
+            { "<leader>mi", desc = "Toggle Markdown table inline view" },
+            { "<leader>mr", desc = "Toggle Markdown table reader" },
+            { "<leader>mt", desc = "Toggle Markdown table preview" },
 
             -- Obsidian
             { "<leader>ob", desc = "Show backlinks" },
