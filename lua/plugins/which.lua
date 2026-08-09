@@ -157,6 +157,7 @@ return {
             { "<leader>nr", desc = "Recalculate autolist" },
             { "<leader>ns", desc = "Strikeout text", mode = { "n", "v" } },
             { "<leader>nt", desc = "Twilight" },
+            { "<leader>ntw", desc = "Toggle Markdown Table Wrapping" },
             { "<leader>nw", desc = "Writing mode toggle" },
             { "<leader>nz", desc = "Zen Mode" },
 
