@@ -1,6 +1,5 @@
 return {
-    {
-        "MeanderingProgrammer/render-markdown.nvim",
+    "MeanderingProgrammer/render-markdown.nvim",
     enabled = true,
     dependencies = {
         "nvim-treesitter/nvim-treesitter",
@@ -234,11 +233,5 @@ return {
                 rendered = "nv",
             },
         },
-    },
-    },
-    {
-        "ice345/markdown-table-wrap.nvim",
-        ft = { "markdown", "markdown.mdx", "quarto", "rmd" },
-        opts = {},
     },
 }
