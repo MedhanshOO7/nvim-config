@@ -159,7 +159,7 @@ return {
         scratch = { enabled = true },
         scroll = { enabled = true },
         statuscolumn = { enabled = true },
-        words = { enabled = true },
+        words = { enabled = false }, -- vim-illuminate handles reference highlighting
         zen = { enabled = true },
     },
     init = function()
