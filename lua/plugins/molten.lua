@@ -123,16 +123,16 @@ return {
             return {
                 backend = image_backend,
                 processor = "magick_cli",
-                hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" },
+                hijack_file_patterns = {},
                 integrations = {
                     markdown = {
                         enabled = false,
                     },
                     html = {
-                        enabled = true,
+                        enabled = false,
                     },
                     css = {
-                        enabled = true,
+                        enabled = false,
                     },
                 },
             }
