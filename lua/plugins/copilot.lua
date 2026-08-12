@@ -69,10 +69,6 @@ return {
         end,
     },
     {
-        "zbirenbaum/copilot-cmp",
-        enabled = false, -- Disabled so Copilot acts strictly as inline ghost text without cluttering LSP completion popup
-    },
-    {
         "CopilotC-Nvim/CopilotChat.nvim",
         dependencies = {
             { "zbirenbaum/copilot.lua" },
