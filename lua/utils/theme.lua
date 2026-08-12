@@ -294,12 +294,6 @@ local function apply_editor_chrome(transparent)
         FloatTitle = { fg = accent, bg = float_bg, bold = true },
         WinSeparator = { fg = soft_edge, bg = transparent and "NONE" or normal_bg },
 
-        -- ── Neo-tree ──────────────────────────────────────────────────────────
-        NeoTreeNormal = { fg = normal_fg, bg = sidebar_bg },
-        NeoTreeNormalNC = { fg = normal_fg, bg = sidebar_bg },
-        NeoTreeFloatBorder = { fg = float_border, bg = sidebar_bg },
-        NeoTreeWinSeparator = { fg = soft_edge, bg = transparent and "NONE" or normal_bg },
-
         -- ── Bufferline / tabline ──────────────────────────────────────────────
         BufferLineFill = { bg = sidebar_bg },
         TabLineFill = { bg = sidebar_bg },
@@ -710,26 +704,6 @@ function M.setup()
         group = vim.api.nvim_create_augroup("theme_editor_chrome", { clear = true }),
         callback = function()
             apply_editor_chrome(vim.g.preferred_transparent == true)
-        end,
-    })
-
-    -- Re-apply after NeoTree buffer opens (it resets its own highlights on FileType)
-    vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("theme_neotree_chrome", { clear = true }),
-        pattern = "neo-tree",
-        callback = function()
-            apply_editor_chrome(vim.g.preferred_transparent == true)
-        end,
-    })
-
-    -- Re-apply when focusing back into a NeoTree window
-    vim.api.nvim_create_autocmd("BufEnter", {
-        group = vim.api.nvim_create_augroup("theme_neotree_reenter", { clear = true }),
-        pattern = "*",
-        callback = function()
-            if vim.bo.filetype == "neo-tree" then
-                apply_editor_chrome(vim.g.preferred_transparent == true)
-            end
         end,
     })
 
