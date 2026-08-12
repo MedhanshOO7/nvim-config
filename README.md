@@ -114,7 +114,7 @@ This config uses `pokemon-colorscripts` for the startup screen.
    ```
 2. Clone this repository directly into your config directory.
    ```bash
-   git clone https://github.com/medhansh/nvim-config ~/.config/nvim
+   git clone https://github.com/MedhanshOO7/nvim-config.git ~/.config/nvim
    ```
 3. Launch Neovim.
    ```bash
