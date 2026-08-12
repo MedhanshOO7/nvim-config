@@ -100,7 +100,7 @@ This config uses `pokemon-colorscripts` for the startup screen.
 *   **Others**: Follow the installation guide at [phakt/pokemon-colorscripts](https://gitlab.com/phakt/pokemon-colorscripts).
 
 ### Recommended terminal
-**Kitty** is highly recommended as it provides the most robust support for `image.nvim` and `molten-nvim` image rendering.
+**Kitty** is highly recommended as it provides the most robust support for the Kitty Graphics Protocol used by `snacks.image` and `molten-nvim` for inline image rendering.
 
 ![screenshot](./assets/screenshot.png)
 
@@ -124,7 +124,7 @@ On the first boot, `lazy.nvim` will automatically bootstrap itself, clone all co
 
 ## Aesthetics
 
-*   **Colorscheme**: Dynamically managed via a custom utility. Defaults to [TokyoNight](https://github.com/folke/tokyonight.nvim), but seamlessly supports Catppuccin, Rose Pine, Kanagawa, and Nightfox.
+*   **Colorscheme**: Dynamically managed via a custom utility. Defaults to [TokyoNight](https://github.com/folke/tokyonight.nvim), but seamlessly supports Catppuccin, Rose Pine, Kanagawa, Nightfox, Gruvbox, VSCode, Dracula, Everforest, Cyberdream, and Pywal.
 *   **Font**: [JetBrains Mono Nerd Font](https://www.nerdfonts.com/font-downloads), size 16 (configured via your terminal emulator).
 *   **Transparency**: Editor chrome and floating windows are dynamically blended. You can toggle global background transparency on the fly using `<leader>uy`.
 *   **Statusline**: Powered by `lualine.nvim` with a minimal, uncluttered design that integrates cleanly with the active colorscheme.
@@ -134,143 +134,144 @@ On the first boot, `lazy.nvim` will automatically bootstrap itself, clone all co
 ## Plugins
 
 ### Package management & core
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [folke/lazy.nvim](https://github.com/folke/lazy.nvim) | `main` | Fast, feature-rich plugin manager |
-| [folke/which-key.nvim](https://github.com/folke/which-key.nvim) | `main` | Displays a popup with possible key bindings |
-| [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim) | `master` | Core Lua functions used by many plugins |
-| [MunifTanjim/nui.nvim](https://github.com/MunifTanjim/nui.nvim) | `main` | UI component library for Neovim |
-| [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | `master` | Standard file icons |
-| [echasnovski/mini.icons](https://github.com/echasnovski/mini.icons) | `main` | Modern icon provider |
+| Plugin | Purpose |
+| :--- | :--- |
+| [folke/lazy.nvim](https://github.com/folke/lazy.nvim) | Fast, feature-rich plugin manager |
+| [folke/snacks.nvim](https://github.com/folke/snacks.nvim) | Swiss-army knife — dashboard, explorer, image viewer, picker, zen mode, notifications, smooth scroll, indent guides, and more |
+| [folke/which-key.nvim](https://github.com/folke/which-key.nvim) | Displays a popup with possible key bindings |
+| [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim) | Core Lua functions used by many plugins |
+| [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | Standard file icons |
 
 ### LSP, completion & snippets
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | `master` | Quickstart configs for Nvim LSP |
-| [mason-org/mason.nvim](https://github.com/mason-org/mason.nvim) | `main` | Portable package manager for LSPs, linters, and formatters |
-| [mason-org/mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) | `main` | Bridges mason.nvim with lspconfig |
-| [WhoIsSethDaniel/mason-tool-installer.nvim](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | `main` | Automatically installs 3rd party tools |
-| [folke/lazydev.nvim](https://github.com/folke/lazydev.nvim) | `main` | Faster Lua LS setup for Neovim config |
-| [b0o/schemastore.nvim](https://github.com/b0o/schemastore.nvim) | `main` | JSON/YAML schema validation |
-| [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | `main` | A completion engine plugin for neovim |
-| [hrsh7th/cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp) | `main` | LSP completion source |
-| [hrsh7th/cmp-buffer](https://github.com/hrsh7th/cmp-buffer) | `main` | Buffer text completion source |
-| [hrsh7th/cmp-path](https://github.com/hrsh7th/cmp-path) | `main` | File path completion source |
-| [hrsh7th/cmp-nvim-lua](https://github.com/hrsh7th/cmp-nvim-lua) | `main` | Neovim Lua API completion source |
-| [saadparwaiz1/cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip) | `master` | LuaSnip completion source |
-| [onsails/lspkind.nvim](https://github.com/onsails/lspkind.nvim) | `master` | VSCode-like pictograms for completion |
-| [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip) | `master` | Powerful snippet engine |
-| [rafamadriz/friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | `main` | Collection of standard snippets |
-| [SmiteshP/nvim-navic](https://github.com/SmiteshP/nvim-navic) | `master` | LSP breadcrumbs |
+| Plugin | Purpose |
+| :--- | :--- |
+| [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | Quickstart configs for Nvim LSP |
+| [mason-org/mason.nvim](https://github.com/mason-org/mason.nvim) | Portable package manager for LSPs, linters, and formatters |
+| [mason-org/mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) | Bridges mason.nvim with lspconfig |
+| [WhoIsSethDaniel/mason-tool-installer.nvim](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Automatically installs 3rd party tools |
+| [folke/lazydev.nvim](https://github.com/folke/lazydev.nvim) | Faster Lua LS setup for Neovim config |
+| [b0o/schemastore.nvim](https://github.com/b0o/schemastore.nvim) | JSON/YAML schema validation |
+| [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | Completion engine with LSP, buffer, path, and snippet sources |
+| [onsails/lspkind.nvim](https://github.com/onsails/lspkind.nvim) | VSCode-like pictograms for completion |
+| [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Powerful snippet engine |
+| [rafamadriz/friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | Collection of standard snippets |
+| [SmiteshP/nvim-navic](https://github.com/SmiteshP/nvim-navic) | LSP breadcrumbs |
 
 ### Editing, formatting & linting
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | `master` | Nvim Treesitter configurations and abstraction layer |
-| [nvim-treesitter/nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | `master` | Syntax aware text-objects |
-| [windwp/nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) | `main` | Use treesitter to auto close and auto rename html tags |
-| [Wansmer/treesj](https://github.com/Wansmer/treesj) | `main` | Splitting/joining blocks of code |
-| [stevearc/conform.nvim](https://github.com/stevearc/conform.nvim) | `master` | Lightweight yet powerful formatter setup |
-| [mfussenegger/nvim-lint](https://github.com/mfussenegger/nvim-lint) | `master` | Asynchronous linter plugin |
-| [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs) | `master` | Autopairs for Neovim |
-| [numToStr/Comment.nvim](https://github.com/numToStr/Comment.nvim) | `master` | Smart and powerful commenting plugin |
-| [kylechui/nvim-surround](https://github.com/kylechui/nvim-surround) | `main` | Add/change/delete surrounding delimiter pairs |
-| [jake-stewart/multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) | `main` | Advanced multicursor support |
-| [smjonas/inc-rename.nvim](https://github.com/smjonas/inc-rename.nvim) | `main` | Incremental LSP renaming |
-| [ThePrimeagen/refactoring.nvim](https://github.com/ThePrimeagen/refactoring.nvim) | `master` | Refactoring library based on the Refactoring book |
-| [Pocco81/auto-save.nvim](https://github.com/Pocco81/auto-save.nvim) | `main` | Automatic file saving |
+| Plugin | Purpose |
+| :--- | :--- |
+| [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax highlighting, textobjects, and language parsing |
+| [nvim-treesitter/nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Syntax-aware text objects |
+| [windwp/nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) | Auto close and rename HTML/JSX tags |
+| [Wansmer/treesj](https://github.com/Wansmer/treesj) | Splitting/joining blocks of code |
+| [stevearc/conform.nvim](https://github.com/stevearc/conform.nvim) | Lightweight formatter setup |
+| [mfussenegger/nvim-lint](https://github.com/mfussenegger/nvim-lint) | Asynchronous linter |
+| [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs) | Auto-close brackets and quotes |
+| [numToStr/Comment.nvim](https://github.com/numToStr/Comment.nvim) | Smart commenting |
+| [kylechui/nvim-surround](https://github.com/kylechui/nvim-surround) | Add/change/delete surrounding delimiters |
+| [jake-stewart/multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) | Advanced multicursor support |
+| [smjonas/inc-rename.nvim](https://github.com/smjonas/inc-rename.nvim) | Incremental LSP renaming with live preview |
+| [ThePrimeagen/refactoring.nvim](https://github.com/ThePrimeagen/refactoring.nvim) | Refactoring library |
+| [echasnovski/mini.ai](https://github.com/echasnovski/mini.ai) | Extended `a`/`i` textobjects |
+| [gbprod/yanky.nvim](https://github.com/gbprod/yanky.nvim) | Improved yank and put with cycle history |
+| [okuuva/auto-save.nvim](https://github.com/okuuva/auto-save.nvim) | Automatic file saving |
 
 ### Navigation & search
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) | `0.1.x` | Highly extendable fuzzy finder over lists |
-| [debugloop/telescope-undo.nvim](https://github.com/debugloop/telescope-undo.nvim) | `main` | Visual undo tree picker |
-| [nvim-neo-tree/neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) | `v3.x` | File system tree explorer |
-| [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon) | `master` | Lightning fast file navigation |
-| [folke/flash.nvim](https://github.com/folke/flash.nvim) | `main` | Navigate your code with search labels |
-| [MagicDuck/grug-far.nvim](https://github.com/MagicDuck/grug-far.nvim) | `main` | Find and replace in workspace |
-| [stevearc/aerial.nvim](https://github.com/stevearc/aerial.nvim) | `master` | Code outline window |
-| [folke/trouble.nvim](https://github.com/folke/trouble.nvim) | `main` | A pretty diagnostics, references, and telescope results list |
-| [folke/todo-comments.nvim](https://github.com/folke/todo-comments.nvim) | `main` | Highlight, list and search todo comments in your projects |
+| Plugin | Purpose |
+| :--- | :--- |
+| [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) | Highly extendable fuzzy finder |
+| [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon) | Lightning fast file navigation |
+| [folke/flash.nvim](https://github.com/folke/flash.nvim) | Navigate code with search labels |
+| [MagicDuck/grug-far.nvim](https://github.com/MagicDuck/grug-far.nvim) | Find and replace across the workspace |
+| [stevearc/aerial.nvim](https://github.com/stevearc/aerial.nvim) | Code outline window |
+| [folke/trouble.nvim](https://github.com/folke/trouble.nvim) | Diagnostics, references, and results list |
+| [folke/todo-comments.nvim](https://github.com/folke/todo-comments.nvim) | Highlight and search TODO/NOTE/FIX comments |
+| [stevearc/oil.nvim](https://github.com/stevearc/oil.nvim) | Edit your filesystem like a buffer |
+| [mbbill/undotree](https://github.com/mbbill/undotree) | Visual undo history |
 
 ### UI & visual enhancements
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | `master` | A blazing fast and easy to configure neovim statusline |
-| [folke/noice.nvim](https://github.com/folke/noice.nvim) | `main` | Replaces the UI for messages, cmdline and the popupmenu |
-| [rcarriga/nvim-notify](https://github.com/rcarriga/nvim-notify) | `master` | A fancy, configurable notification manager |
-| [OXY2DEV/helpview.nvim](https://github.com/OXY2DEV/helpview.nvim) | `main` | A hackable & fancy vimdoc/help page viewer |
-| [NvChad/nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua) | `master` | High-performance color highlighter (supports ANSI codes) |
-| [lukas-reineke/indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim) | `master` | Indent guides for Neovim |
-| [kevinhwang91/nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) | `main` | Ultra fold in Neovim |
-| [kevinhwang91/promise-async](https://github.com/kevinhwang91/promise-async) | `main` | Promise & Async in Neovim (ufo dependency) |
-| [folke/snacks.nvim](https://github.com/folke/snacks.nvim) | `main` | A collection of small QoL plugins (dashboard, bufdelete) |
-| [karb94/neoscroll.nvim](https://github.com/karb94/neoscroll.nvim) | `master` | Smooth scrolling neovim plugin |
-| [stevearc/dressing.nvim](https://github.com/stevearc/dressing.nvim) | `master` | Neovim plugin to improve the default vim.ui interfaces |
-| [nvim-telescope/telescope-ui-select.nvim](https://github.com/nvim-telescope/telescope-ui-select.nvim) | `master` | Sets vim.ui.select to telescope |
-| [b0o/incline.nvim](https://github.com/b0o/incline.nvim) | `main` | Floating statuslines for windows |
-| [kevinhwang91/nvim-bqf](https://github.com/kevinhwang91/nvim-bqf) | `main` | Better quickfix window |
-| [RRethy/vim-illuminate](https://github.com/RRethy/vim-illuminate) | `master` | Automatically highlighting other uses of the word under the cursor |
-| [petertriho/nvim-scrollbar](https://github.com/petertriho/nvim-scrollbar) | `main` | Extensible Neovim Scrollbar |
-| [kevinhwang91/nvim-hlslens](https://github.com/kevinhwang91/nvim-hlslens) | `main` | Hlsearch Lens for Neovim |
-| [HiPhish/rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) | `master` | Rainbow delimiters for Neovim |
-| [sphamba/smear-cursor.nvim](https://github.com/sphamba/smear-cursor.nvim) | `main` | Smear cursor animation |
-| [tzachar/highlight-undo.nvim](https://github.com/tzachar/highlight-undo.nvim) | `main` | Highlight changed text after Undo / Redo operations |
-| [j-hui/fidget.nvim](https://github.com/j-hui/fidget.nvim) | `main` | Extensible UI for Neovim notifications and LSP progress |
-| [romgrk/barbar.nvim](https://github.com/romgrk/barbar.nvim) | `master` | A tabline plugin for Neovim |
+| Plugin | Purpose |
+| :--- | :--- |
+| [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Blazing fast statusline |
+| [akinsho/bufferline.nvim](https://github.com/akinsho/bufferline.nvim) | Buffer tab bar with diagnostics |
+| [folke/noice.nvim](https://github.com/folke/noice.nvim) | Replaces the UI for messages, cmdline, and popupmenu |
+| [rcarriga/nvim-notify](https://github.com/rcarriga/nvim-notify) | Fancy notification manager |
+| [OXY2DEV/helpview.nvim](https://github.com/OXY2DEV/helpview.nvim) | Fancy vimdoc/help viewer |
+| [NvChad/nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua) | High-performance color highlighter (supports ANSI) |
+| [kevinhwang91/nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) | Ultra fold in Neovim |
+| [b0o/incline.nvim](https://github.com/b0o/incline.nvim) | Floating statuslines for split windows |
+| [kevinhwang91/nvim-bqf](https://github.com/kevinhwang91/nvim-bqf) | Better quickfix window |
+| [RRethy/vim-illuminate](https://github.com/RRethy/vim-illuminate) | Highlight other uses of the word under cursor |
+| [petertriho/nvim-scrollbar](https://github.com/petertriho/nvim-scrollbar) | Extensible scrollbar with diagnostics |
+| [kevinhwang91/nvim-hlslens](https://github.com/kevinhwang91/nvim-hlslens) | Search lens for matches |
+| [HiPhish/rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) | Rainbow-colored matching brackets |
+| [sphamba/smear-cursor.nvim](https://github.com/sphamba/smear-cursor.nvim) | Smooth cursor trail animation |
+| [tzachar/highlight-undo.nvim](https://github.com/tzachar/highlight-undo.nvim) | Highlight changed text after undo/redo |
+| [j-hui/fidget.nvim](https://github.com/j-hui/fidget.nvim) | LSP progress notifications |
+| [m4xshen/smartcolumn.nvim](https://github.com/m4xshen/smartcolumn.nvim) | Smart color column that hides in non-code files |
+| [stevearc/quicker.nvim](https://github.com/stevearc/quicker.nvim) | Quickfix list enhancements |
+| [rachartier/tiny-code-action.nvim](https://github.com/rachartier/tiny-code-action.nvim) | Code actions with live diff preview |
 
 ### Git
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | `main` | Super fast git decorations via extmarks |
-| [NeogitOrg/neogit](https://github.com/NeogitOrg/neogit) | `master` | Magit clone for Neovim |
+| Plugin | Purpose |
+| :--- | :--- |
+| [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | Git decorations via extmarks |
+| [NeogitOrg/neogit](https://github.com/NeogitOrg/neogit) | Magit clone for Neovim |
+| [sindrets/diffview.nvim](https://github.com/sindrets/diffview.nvim) | Single-tabpage diff viewer |
 
 ### Development & debugging
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [mfussenegger/nvim-dap](https://github.com/mfussenegger/nvim-dap) | `master` | Debug Adapter Protocol client |
-| [rcarriga/nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) | `master` | A UI for nvim-dap |
-| [nvim-neotest/nvim-nio](https://github.com/nvim-neotest/nvim-nio) | `master` | Asynchronous IO in Neovim |
-| [theHamsta/nvim-dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text) | `master` | Virtual text for nvim-dap |
-| [mfussenegger/nvim-dap-python](https://github.com/mfussenegger/nvim-dap-python) | `master` | nvim-dap extension for python |
-| [mxsdev/nvim-dap-vscode-js](https://github.com/mxsdev/nvim-dap-vscode-js) | `main` | nvim-dap extension for vscode-js-debug |
-| [nvim-neotest/neotest](https://github.com/nvim-neotest/neotest) | `master` | An extensible framework for interacting with tests |
-| [nvim-neotest/neotest-plenary](https://github.com/nvim-neotest/neotest-plenary) | `master` | Plenary test runner for Neotest |
-| [nvim-neotest/neotest-python](https://github.com/nvim-neotest/neotest-python) | `master` | Python test runner for Neotest |
-| [haydenmeade/neotest-jest](https://github.com/haydenmeade/neotest-jest) | `main` | Jest test runner for Neotest |
-| [alfaix/neotest-gtest](https://github.com/alfaix/neotest-gtest) | `main` | Google Test runner for Neotest |
-| [CRAG666/code_runner.nvim](https://github.com/CRAG666/code_runner.nvim) | `main` | The best code runner you could have |
-| [stevearc/overseer.nvim](https://github.com/stevearc/overseer.nvim) | `master` | A task runner and job management plugin |
-| [akinsho/toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | `main` | A neovim lua plugin to help easily manage multiple terminal windows |
-| [rmagatti/auto-session](https://github.com/rmagatti/auto-session) | `main` | Automated session save and restore |
+| Plugin | Purpose |
+| :--- | :--- |
+| [mfussenegger/nvim-dap](https://github.com/mfussenegger/nvim-dap) | Debug Adapter Protocol client |
+| [rcarriga/nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) | UI for nvim-dap |
+| [nvim-neotest/nvim-nio](https://github.com/nvim-neotest/nvim-nio) | Asynchronous IO |
+| [theHamsta/nvim-dap-virtual-text](https://github.com/theHamsta/nvim-dap-virtual-text) | Virtual text for debug values |
+| [mfussenegger/nvim-dap-python](https://github.com/mfussenegger/nvim-dap-python) | Python debug adapter |
+| [mxsdev/nvim-dap-vscode-js](https://github.com/mxsdev/nvim-dap-vscode-js) | VS Code JS debug adapter |
+| [nvim-neotest/neotest](https://github.com/nvim-neotest/neotest) | Test framework with Python, Plenary, Jest, and GTest adapters |
+| [CRAG666/code_runner.nvim](https://github.com/CRAG666/code_runner.nvim) | Quick code execution |
+| [stevearc/overseer.nvim](https://github.com/stevearc/overseer.nvim) | Task runner and job management |
+| [akinsho/toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | Persistent terminal windows |
+| [rmagatti/auto-session](https://github.com/rmagatti/auto-session) | Session save and restore |
+| [Civitasv/cmake-tools.nvim](https://github.com/Civitasv/cmake-tools.nvim) | CMake integration |
+| [p00f/clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim) | Clangd LSP extensions |
+| [linux-cultist/venv-selector.nvim](https://github.com/linux-cultist/venv-selector.nvim) | Python virtualenv selector |
+| [kristijanhusak/vim-dadbod-ui](https://github.com/kristijanhusak/vim-dadbod-ui) | Database UI with SQL execution |
+
+### AI assistance
+| Plugin | Purpose |
+| :--- | :--- |
+| [zbirenbaum/copilot.lua](https://github.com/zbirenbaum/copilot.lua) | GitHub Copilot inline ghost text |
+| [CopilotC-Nvim/CopilotChat.nvim](https://github.com/CopilotC-Nvim/CopilotChat.nvim) | Chat with Copilot in a split |
+| [supermaven-inc/supermaven-nvim](https://github.com/supermaven-inc/supermaven-nvim) | Supermaven AI code completion |
+| [olimorris/codecompanion.nvim](https://github.com/olimorris/codecompanion.nvim) | AI chat and inline assistant |
 
 ### Notes & markdown
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [epwalsh/obsidian.nvim](https://github.com/epwalsh/obsidian.nvim) | `main` | Obsidian integration and note management |
-| [MeanderingProgrammer/render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | `main` | Plugin to improve viewing Markdown files |
-| [iamcco/markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) | `master` | Markdown preview plugin for (neo)vim |
-| [benlubas/molten-nvim](https://github.com/benlubas/molten-nvim) | `main` | An interactive REPL and notebook runner |
-| [3rd/image.nvim](https://github.com/3rd/image.nvim) | `master` | Bringing images to Neovim |
-| [folke/zen-mode.nvim](https://github.com/folke/zen-mode.nvim) | `main` | Distraction-free coding for Neovim |
-| [folke/twilight.nvim](https://github.com/folke/twilight.nvim) | `main` | Dim unfocused text |
-| [dkarter/bullets.vim](https://github.com/dkarter/bullets.vim) | `master` | Simple bullet lists |
-| [gaoDean/autolist.nvim](https://github.com/gaoDean/autolist.nvim) | `main` | Automatic list continuation and formatting |
+| Plugin | Purpose |
+| :--- | :--- |
+| [epwalsh/obsidian.nvim](https://github.com/epwalsh/obsidian.nvim) | Obsidian vault integration and note management |
+| [MeanderingProgrammer/render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) | Rich in-buffer markdown rendering |
+| [Kicamon/markdown-table-mode.nvim](https://github.com/Kicamon/markdown-table-mode.nvim) | Markdown table formatting and wrapping |
+| [iamcco/markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) | Browser-based markdown preview |
+| [benlubas/molten-nvim](https://github.com/benlubas/molten-nvim) | Interactive Jupyter REPL and notebook runner |
+| [3rd/image.nvim](https://github.com/3rd/image.nvim) | Kitty protocol image rendering (Molten output cells) |
+| [dkarter/bullets.vim](https://github.com/dkarter/bullets.vim) | Bullet list continuation |
+| [gaoDean/autolist.nvim](https://github.com/gaoDean/autolist.nvim) | Automatic list continuation and formatting |
 
 ### Themes & colorschemes
-| Plugin | Version | Purpose |
-| :--- | :--- | :--- |
-| [folke/tokyonight.nvim](https://github.com/folke/tokyonight.nvim) | `main` | A clean, dark Neovim theme |
-| [catppuccin/nvim](https://github.com/catppuccin/nvim) | `main` | Soothing pastel theme for the high-spirited |
-| [rebelot/kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim) | `master` | NeoVim dark colorscheme inspired by the colors of the famous painting |
-| [rose-pine/neovim](https://github.com/rose-pine/neovim) | `main` | All natural pine, faux fur and a bit of soho vibes |
-| [EdenEast/nightfox.nvim](https://github.com/EdenEast/nightfox.nvim) | `main` | Highly customizable theme |
-| [ellisonleao/gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim) | `main` | Lua port of the most famous vim colorscheme |
-| [Mofiqul/vscode.nvim](https://github.com/Mofiqul/vscode.nvim) | `main` | VSCode theme |
-| [Mofiqul/dracula.nvim](https://github.com/Mofiqul/dracula.nvim) | `main` | Dracula colorscheme |
-| [sainnhe/everforest](https://github.com/sainnhe/everforest) | `master` | Green based colorscheme |
-| [scottmckendry/cyberdream.nvim](https://github.com/scottmckendry/cyberdream.nvim) | `main` | High-contrast, futuristic theme |
-| [AlphaTechnolog/pywal.nvim](https://github.com/AlphaTechnolog/pywal.nvim) | `main` | Pywal theme |
+| Plugin | Purpose |
+| :--- | :--- |
+| [folke/tokyonight.nvim](https://github.com/folke/tokyonight.nvim) | Default — clean, dark theme |
+| [catppuccin/nvim](https://github.com/catppuccin/nvim) | Soothing pastel theme |
+| [rebelot/kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim) | Japanese painting-inspired palette |
+| [rose-pine/neovim](https://github.com/rose-pine/neovim) | All natural pine with soho vibes |
+| [EdenEast/nightfox.nvim](https://github.com/EdenEast/nightfox.nvim) | Highly customizable theme |
+| [ellisonleao/gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim) | The classic retro groove |
+| [Mofiqul/vscode.nvim](https://github.com/Mofiqul/vscode.nvim) | VS Code dark/light theme |
+| [Mofiqul/dracula.nvim](https://github.com/Mofiqul/dracula.nvim) | Dracula colorscheme |
+| [sainnhe/everforest](https://github.com/sainnhe/everforest) | Green-based comfortable colorscheme |
+| [scottmckendry/cyberdream.nvim](https://github.com/scottmckendry/cyberdream.nvim) | High-contrast futuristic theme |
+| [AlphaTechnolog/pywal.nvim](https://github.com/AlphaTechnolog/pywal.nvim) | Pywal-generated colors |
 
 ## Keybinds
 
@@ -283,7 +284,7 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 #### Files, Buffers & Search
 | Key | Action | Plugin/builtin |
 | :--- | :--- | :--- |
-| `<leader>e` | Open or close the file sidebar | Neo-tree |
+| `<leader>e` | Open or close the file sidebar | snacks.explorer |
 | `<leader>fe` | Open the classic netrw file list | Builtin |
 | `<leader>fs` | Save the current file | Builtin |
 | `<leader>q` | Quit the current window | Builtin |
@@ -291,7 +292,7 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 | `<leader>bb` | Browse open buffers | Telescope |
 | `<leader>bn` | Go to the next buffer | Builtin |
 | `<leader>bp` | Go to the previous buffer | Builtin |
-| `<leader>bd` | Delete the current buffer | snacks.nvim |
+| `<leader>bd` | Delete the current buffer | snacks.bufdelete |
 | `<leader>bo` | Delete every other buffer | Builtin |
 | `<C-1>` to `<C-9>` | Go to buffer 1-9 | Builtin |
 | `<leader>p` | Open the command palette | Telescope |
@@ -309,6 +310,7 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 | `<leader>sr` | Search and replace across the project | grug-far.nvim |
 | `<leader>sw` | Search for the word under the cursor across the project | grug-far.nvim |
 | `<leader>sB` | Search and replace only in the current file | grug-far.nvim |
+| `<leader>si` | Browse images (floating preview) | snacks.picker |
 | `<leader>sj` | Jump (flash) | flash.nvim |
 | `<leader>ss` | Treesitter jump (flash) | flash.nvim |
 | `<leader>ha` | Add to harpoon | Harpoon |
@@ -320,7 +322,7 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 | :--- | :--- | :--- |
 | `<leader>cf` | Format the current file | conform.nvim |
 | `<leader>uf` | Toggle auto-format on save | conform.nvim |
-| `<leader>ca` | Code actions | LSP |
+| `<leader>ca` | Code actions (visual preview) | tiny-code-action.nvim |
 | `<leader>rn` | Rename symbol (incremental preview) | inc-rename.nvim |
 | `gd` | Go to definition | LSP |
 | `gD` | Go to declaration | LSP |
@@ -360,6 +362,9 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 | `<leader>gD` | Compare this file against git | gitsigns.nvim |
 | `<leader>gg` | Open the full git panel | Neogit |
 | `<leader>gc` | Start a git commit | Neogit |
+| `<leader>gl` | Open Lazygit | snacks.lazygit |
+| `<leader>gf` | Lazygit current file history | snacks.lazygit |
+| `<leader>gB` | Open git permalink in browser | snacks.gitbrowse |
 
 #### Terminal, Tasks & Debugging
 | Key | Action | Plugin/builtin |
@@ -386,16 +391,18 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 #### Notes & Markdown
 | Key | Action | Plugin/builtin |
 | :--- | :--- | :--- |
-| `<leader>zz` | Focus on writing or reading without distractions | zen-mode.nvim |
+| `<leader>zz` | Focus on writing without distractions | snacks.zen |
+| `<leader>z` | Toggle Zen Mode | snacks.zen |
+| `<leader>Z` | Toggle Zoom Mode | snacks.zen |
 | `<leader>zw` | Toggle low-noise writing mode for this buffer | Custom utils |
 | `<leader>zb` | Toggle Brainstorm mode (Universal) | Custom utils |
-| `<leader>nt` | Dim unfocused text around the cursor | twilight.nvim |
 | `<leader>ns` | Strikeout the word under the cursor | Builtin |
 | `<leader>np` | Open or close the markdown browser preview | markdown-preview.nvim |
 | `<leader>nB` | Markdown: Brainstorm Mode | Custom utils |
 | `<leader>nP` | Markdown: Professional Mode | Custom utils |
 | `<leader>no` | Open the document or code outline | aerial.nvim |
 | `<leader>nn` | Open outline navigation in a floating picker | aerial.nvim |
+| `<leader>ih` | Hover image preview | snacks.image |
 | `<leader>os` | Obsidian: Search notes | obsidian.nvim |
 | `<leader>of` | Obsidian: Find notes | obsidian.nvim |
 | `<leader>on` | Obsidian: New note | obsidian.nvim |
@@ -448,8 +455,13 @@ Note: `<C-x>` refers to pressing `Control` and `x` simultaneously. `<M-x>` refer
 | `<leader>wh` | Split the window horizontally | Builtin |
 | `<leader>wc` | Close the current window | Builtin |
 | `<leader>wo` | Keep only the current window | Builtin |
+| `<leader>wm` | Maximize / Zoom window | snacks.toggle |
 | `<leader>wr` | Restore session | auto-session |
 | `<leader>ws` | Save session | auto-session |
+| `<leader>.` | Toggle scratch buffer | snacks.scratch |
+| `<leader>S` | Select scratch buffer | snacks.scratch |
+| `<leader>n` | Notification history | snacks.notifier |
+| `<leader>cR` | Rename file (LSP) | snacks.rename |
 
 #### Multicursor
 | Key | Action | Plugin/builtin |
