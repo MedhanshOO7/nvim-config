@@ -157,7 +157,7 @@ return {
         quickfile = { enabled = true },
         scope = { enabled = true },
         scratch = { enabled = true },
-        scroll = { enabled = false },
+        scroll = { enabled = true },
         statuscolumn = { enabled = true },
         words = { enabled = false }, -- vim-illuminate handles reference highlighting
         zen = { enabled = true },
