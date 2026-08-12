@@ -177,12 +177,7 @@ map("n", "<leader>th", cmd("TerminalHorizontal"), { desc = "Open a bottom termin
 map("n", "<leader>tv", cmd("TerminalVertical"), { desc = "Open a side terminal panel" })
 map("n", "<leader>tg", cmd("TerminalSelect"), { desc = "Pick from active terminal sessions" })
 map("n", "<leader>zz", function()
-    local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.zen then
-        snacks.zen()
-    else
-        pcall(vim.cmd, "ZenMode")
-    end
+    require("snacks").zen()
 end, { desc = "Focus on writing or reading without distractions" })
 map("n", "<leader>zw", function()
     require("utils.writing").toggle()

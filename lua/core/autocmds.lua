@@ -21,9 +21,9 @@ vim.api.nvim_create_autocmd("FileType", {
         if not in_project then
             -- Use schedule to avoid issues with window initialization
             vim.schedule(function()
-                local view_ok, view = pcall(require, "zen-mode.view")
-                if view_ok and not view.is_open() then
-                    pcall(vim.cmd, "ZenMode")
+                local ok, snacks = pcall(require, "snacks")
+                if ok and snacks.zen then
+                    snacks.zen()
                 end
             end)
         end
