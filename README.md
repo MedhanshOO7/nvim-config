@@ -47,9 +47,9 @@ This configuration is built for performance and deep tool integration. To ensure
 
 #### Arch Linux
 ```bash
-sudo pacman -S --needed neovim git curl ripgrep fd tree-sitter-cli nodejs npm \
+sudo pacman -S --needed neovim git curl ripgrep fd nodejs npm \
   base-devel unzip python python-pip xdg-utils wl-clipboard man-db lazygit \
-  imagemagick kitty make shfmt
+  imagemagick kitty make shfmt tree-sitter
 ```
 For the custom dashboard (AUR):
 ```bash
@@ -59,14 +59,15 @@ yay -S pokemon-colorscripts-git
 #### Debian / Ubuntu
 ```bash
 sudo apt update
-sudo apt install -y neovim git curl ripgrep fd-find tree-sitter-cli nodejs npm \
+sudo apt install -y neovim git curl ripgrep fd-find nodejs npm \
   build-essential unzip python3 python3-venv python3-pip xdg-utils wl-clipboard \
   man-db lazygit imagemagick kitty make shfmt
 ```
-*Note: Symlink `fdfind` to `fd` for Telescope compatibility:*
+*Note: Symlink `fdfind` to `fd` for Telescope compatibility, and install `tree-sitter-cli` via npm if tree-sitter parsing is needed:*
 ```bash
 mkdir -p ~/.local/bin
 ln -sf "$(command -v fdfind)" ~/.local/bin/fd
+sudo npm install -g tree-sitter-cli
 ```
 
 #### Fedora
@@ -78,7 +79,7 @@ sudo dnf install neovim git curl ripgrep fd-find tree-sitter-cli nodejs npm \
 
 #### macOS (Homebrew)
 ```bash
-brew install neovim git ripgrep fd tree-sitter-cli node python lazygit \
+brew install neovim git ripgrep fd tree-sitter node python lazygit \
   imagemagick make shfmt stylua
 ```
 
