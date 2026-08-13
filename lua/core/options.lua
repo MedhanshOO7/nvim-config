@@ -11,6 +11,7 @@ opt.cursorlineopt  = "number,line" -- give the active line a stronger anchor
 opt.scrolloff      = 3     -- keep a little context around the cursor
 opt.sidescrolloff  = 0     -- no horizontal cursor padding
 opt.wrap           = false -- don't wrap long lines
+opt.virtualedit    = "block" -- free cursor in visual block mode
 opt.colorcolumn    = ""    -- no hard ruler by default
 opt.showmode       = false -- mode is shown in the statusline instead
 opt.cmdheight      = 1     -- command bar height
@@ -79,6 +80,7 @@ opt.fillchars:append({
     foldopen = "",
     foldclose = "",
     foldsep = " ",
+    eob = " ",
 })
 
 -- ── Misc ────────────────────────────────────────────────────
