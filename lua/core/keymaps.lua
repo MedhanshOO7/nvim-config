@@ -24,114 +24,12 @@ local function toggle_explorer()
 end
 
 local function keymap_help()
-    local pickers = require("telescope.pickers")
-    local finders = require("telescope.finders")
-    local conf = require("telescope.config").values
-    local actions = require("telescope.actions")
-    local action_state = require("telescope.actions.state")
-
-    local modes = { "n", "i", "v", "x", "s", "o", "t", "c" }
-    local mode_names = {
-        n = "NORMAL",
-        i = "INSERT",
-        v = "VISUAL",
-        x = "VISUAL-BLOCK",
-        s = "SELECT",
-        o = "OPERATOR",
-        t = "TERMINAL",
-        c = "COMMAND",
-    }
-
-    local seen = {}
-    local items = {}
-
-    local function add_maps(mode, maps, scope)
-        for _, mapinfo in ipairs(maps) do
-            local key = table.concat({
-                scope,
-                mode,
-                mapinfo.lhs or "",
-                mapinfo.rhs or "",
-                mapinfo.desc or "",
-            }, "\x1f")
-
-            if not seen[key] then
-                seen[key] = true
-
-                local desc = mapinfo.desc or mapinfo.rhs or ""
-                if desc == "" then
-                    desc = "[no description]"
-                end
-
-                table.insert(items, {
-                    mode = mode,
-                    mode_label = mode_names[mode] or mode,
-                    lhs = mapinfo.lhs or "",
-                    rhs = mapinfo.rhs or "",
-                    desc = desc,
-                    scope = scope,
-                    ordinal = table.concat({
-                        mapinfo.lhs or "",
-                        desc,
-                        mode_names[mode] or mode,
-                        scope,
-                    }, " "),
-                    display = string.format(
-                        "%-12s %-18s %s",
-                        mode_names[mode] or mode,
-                        mapinfo.lhs or "",
-                        desc
-                    ),
-                })
-            end
-        end
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then
+        snacks.picker.keymaps()
+    else
+        vim.cmd("checkhealth keymaps")
     end
-
-    for _, mode in ipairs(modes) do
-        add_maps(mode, vim.api.nvim_get_keymap(mode), "global")
-        add_maps(mode, vim.api.nvim_buf_get_keymap(0, mode), "buffer")
-    end
-
-    table.sort(items, function(a, b)
-        if a.mode == b.mode then
-            return a.lhs < b.lhs
-        end
-        return a.mode < b.mode
-    end)
-
-    pickers.new({}, {
-        prompt_title = "All Keymaps",
-        finder = finders.new_table({
-            results = items,
-            entry_maker = function(entry)
-                return {
-                    value = entry,
-                    display = entry.display,
-                    ordinal = entry.ordinal,
-                }
-            end,
-        }),
-        sorter = conf.generic_sorter({}),
-        previewer = false,
-        attach_mappings = function(prompt_bufnr)
-            actions.select_default:replace(function()
-                local selection = action_state.get_selected_entry()
-                actions.close(prompt_bufnr)
-
-                if selection and selection.value then
-                    local message = string.format(
-                        "%s %s -> %s",
-                        selection.value.mode_label,
-                        selection.value.lhs,
-                        selection.value.desc
-                    )
-                    vim.notify(message)
-                end
-            end)
-
-            return true
-        end,
-    }):find()
 end
 
 local function multicursor()
