@@ -171,6 +171,16 @@ return {
                 end
             end,
         })
+        vim.api.nvim_create_user_command("ImageToggle", function()
+            if Snacks.image and Snacks.image.doc then
+                Snacks.image.doc.enabled = not Snacks.image.doc.enabled
+                vim.notify(
+                    Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 🖼️" or "Hovering Image Previews DISABLED 🚫",
+                    vim.log.levels.INFO,
+                    { title = "Image Previews" }
+                )
+            end
+        end, { desc = "Toggle hovering image previews ON or OFF" })
     end,
     keys = {
         { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
@@ -186,7 +196,35 @@ return {
             end,
             desc = "Browse Images (Floating Preview)",
         },
-        { "<leader>ih", function() Snacks.image.hover() end, desc = "Hover Image Preview" },
+        { "<leader>ih", function() Snacks.image.hover() end, desc = "Hover Image Preview (Manual)" },
+        {
+            "<leader>ui",
+            function()
+                if Snacks.image and Snacks.image.doc then
+                    Snacks.image.doc.enabled = not Snacks.image.doc.enabled
+                    vim.notify(
+                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 🖼️" or "Hovering Image Previews DISABLED 🚫",
+                        vim.log.levels.INFO,
+                        { title = "Image Previews" }
+                    )
+                end
+            end,
+            desc = "Toggle Hovering Image Previews",
+        },
+        {
+            "<leader>iu",
+            function()
+                if Snacks.image and Snacks.image.doc then
+                    Snacks.image.doc.enabled = not Snacks.image.doc.enabled
+                    vim.notify(
+                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 🖼️" or "Hovering Image Previews DISABLED 🚫",
+                        vim.log.levels.INFO,
+                        { title = "Image Previews" }
+                    )
+                end
+            end,
+            desc = "Toggle Hovering Image Previews",
+        },
         { "<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit (VS Code-style panel)" },
         { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
         { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Open Git Permalink in Browser" },
