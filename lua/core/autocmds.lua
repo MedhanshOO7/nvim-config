@@ -165,7 +165,7 @@ vim.api.nvim_create_autocmd("StdinReadPost", {
         opt.colorcolumn = ""
         opt.cursorline = false
         opt.foldcolumn = "0"
-        opt.laststatus = 0
+        vim.o.laststatus = 0
 
         local opts = { buffer = true, silent = true }
         vim.keymap.set("n", "q", "<cmd>qa!<cr>", vim.tbl_extend("force", opts, { desc = "Quit pager" }))
