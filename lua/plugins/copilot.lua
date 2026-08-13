@@ -1,7 +1,7 @@
 return {
     {
         "zbirenbaum/copilot.lua",
-        lazy = false,
+        event = { "BufReadPre", "BufNewFile" },
         opts = {
             panel = {
                 enabled = true,
