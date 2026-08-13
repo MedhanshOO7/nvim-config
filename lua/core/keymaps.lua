@@ -170,7 +170,18 @@ map("n", "<leader>q", cmd("quit"), { desc = "Quit the current window" })
 
 -- Terminals and writing
 map({ "n", "i", "t" }, "<C-`>", "<cmd>ToggleTerm<cr>", { desc = "Toggle terminal" })
-map("n", "<leader>rr", cmd("RunCode"), { desc = "Run the current file" })
+map("n", "<leader>rr", function()
+    local ok, overseer = pcall(require, "overseer")
+    if ok then
+        overseer.run_template({ name = vim.bo.filetype .. "_run_current" }, function(task)
+            if not task then
+                vim.cmd("OverseerRun")
+            end
+        end)
+    else
+        pcall(vim.cmd, "RunCode")
+    end
+end, { desc = "Run current file" })
 map("n", "<leader>to", cmd("ToggleTerm"), { desc = "Open or close the floating terminal" })
 map("n", "<leader>tf", cmd("TerminalProject"), { desc = "Open the main project shell" })
 map("n", "<leader>th", cmd("TerminalHorizontal"), { desc = "Open a bottom terminal panel" })
@@ -207,9 +218,6 @@ map("n", "<leader>bd", function()
     end
 end, { desc = "Delete the current buffer" })
 map("n", "<leader>bo", cmd("BufferCloseAllButCurrent"), { desc = "Delete every other buffer" })
-for i = 1, 9 do
-    map("n", "<C-" .. i .. ">", cmd("BufferGoto " .. i), { desc = "Go to buffer " .. i })
-end
 
 -- Folding
 map("n", "<leader>fo", "zO", { desc = "Open the fold under the cursor completely" })
