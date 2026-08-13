@@ -68,6 +68,19 @@ return {
     },
     {
         "CopilotC-Nvim/CopilotChat.nvim",
+        branch = "main",
+        build = "make tiktoken",
+        cmd = {
+            "CopilotChat",
+            "CopilotChatToggle",
+            "CopilotChatOpen",
+            "CopilotChatClose",
+            "CopilotChatExplain",
+            "CopilotChatFix",
+            "CopilotChatDocs",
+            "CopilotChatTests",
+            "CopilotChatCommit",
+        },
         dependencies = {
             { "zbirenbaum/copilot.lua" },
             { "nvim-lua/plenary.nvim" },
@@ -77,11 +90,18 @@ return {
             auto_insert_mode = true,
             window = {
                 layout = "vertical",
-                width = 0.35,
+                width = 0.38,
+                border = "rounded",
+                title = " 🤖 Copilot Chat ",
+            },
+            headers = {
+                user = "👤 User: ",
+                copilot = "🤖 Copilot: ",
             },
         },
         keys = {
             { "<leader>Cc", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat Window" },
+            { "<leader>co", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat Window" },
             {
                 "<leader>Cq",
                 function()
