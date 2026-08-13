@@ -23,7 +23,6 @@ return {
         },
         opts = {
             ensure_installed = {
-                "black",
                 "debugpy",
                 "codelldb",
                 "clang-format",
