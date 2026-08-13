@@ -2,7 +2,27 @@ return {
     "NvChad/nvim-colorizer.lua",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-        filetypes = { "*", "!lazy" },
+        filetypes = {
+            "*",
+            "!lazy",
+            "!mason",
+            "!copilot-chat",
+            "!copilot-input",
+            "!snacks_picker_input",
+            "!snacks_explorer",
+            "!noice",
+            "!prompt",
+            "!notify",
+            "!toggleterm",
+            "!Trouble",
+        },
+        buftypes = {
+            "*",
+            "!nofile",
+            "!prompt",
+            "!terminal",
+            "!quickfix",
+        },
         user_default_options = {
             RGB = true,
             RRGGBB = true,
