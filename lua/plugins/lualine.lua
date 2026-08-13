@@ -23,6 +23,15 @@ return {
             return "󰑋 REC @" .. reg
         end
 
+        local function copilot_status()
+            local ok, client = pcall(require, "copilot.client")
+            if not ok then return "" end
+            if client.is_disabled() then
+                return "󰚩 "
+            end
+            return "🤖 "
+        end
+
         local function apply()
             require("lualine").setup({
                 options = {
@@ -57,6 +66,7 @@ return {
                     },
                     lualine_x = {
                         { macro_recording, color = { fg = "#f38ba8", gui = "bold" } },
+                        { copilot_status, color = { fg = "#a6e3a1", gui = "bold" } },
                         {
                             "diagnostics",
                             sources = { "nvim_diagnostic" },
@@ -79,7 +89,7 @@ return {
                         "searchcount",
                         "filetype",
                     },
-                    lualine_y = { "progress", "fileencoding", "fileformat" },
+                    lualine_y = { "progress", "fileencoding" },
                     lualine_z = {
                         { "location", separator = { right = "" }, padding = { left = 2, right = 0 } },
                     },
