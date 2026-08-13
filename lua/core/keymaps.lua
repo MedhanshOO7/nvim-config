@@ -206,7 +206,10 @@ map("n", "<leader>ns", "viw<esc>a~~<esc>hbi~~<esc>lel", { desc = "Strikeout the 
 map("v", "<leader>ns", "c~~<C-r>\"~~<esc>", { desc = "Strikeout the selection" })
 
 -- Buffers
-map("n", "<leader>bb", cmd("Telescope buffers"), { desc = "Browse open buffers" })
+map("n", "<leader>bb", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then snacks.picker.buffers() else vim.cmd("Telescope buffers") end
+end, { desc = "Browse open buffers" })
 map("n", "<leader>bn", cmd("BufferNext"), { desc = "Go to the next buffer" })
 map("n", "<leader>bp", cmd("BufferPrevious"), { desc = "Go to the previous buffer" })
 map("n", "<leader>bd", function()
@@ -274,15 +277,30 @@ local function pick_keymaps()
     if ok and snacks.picker then snacks.picker.keymaps() else vim.cmd("Telescope keymaps") end
 end
 
-map("n", "<leader>p", cmd("Telescope commands"), { desc = "Open the command palette" })
+map("n", "<leader>p", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then snacks.picker.commands() else vim.cmd("Telescope commands") end
+end, { desc = "Open the command palette" })
 map("n", "<leader>ff", pick_files, { desc = "Find a file by name" })
 map("n", "<leader>fg", live_grep, { desc = "Search for text in the project" })
-map("n", "<leader>f/", cmd("Telescope current_buffer_fuzzy_find"), { desc = "Search in the current file" })
+map("n", "<leader>f/", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then snacks.picker.lines() else vim.cmd("Telescope current_buffer_fuzzy_find") end
+end, { desc = "Search in the current file" })
 map("n", "<leader>fb", pick_buffers, { desc = "Switch between open files" })
-map("n", "<leader>fp", cmd("Telescope git_files"), { desc = "Find a tracked project file" })
+map("n", "<leader>fp", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then snacks.picker.git_files() else vim.cmd("Telescope git_files") end
+end, { desc = "Find a tracked project file" })
 map("n", "<leader>fr", pick_recent, { desc = "Reopen a recent file" })
-map("n", "<leader>fS", cmd("Telescope lsp_document_symbols"), { desc = "Search symbols in this file" })
-map("n", "<leader>fw", cmd("Telescope lsp_workspace_symbols"), { desc = "Search workspace symbols" })
+map("n", "<leader>fS", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then snacks.picker.lsp_symbols() else vim.cmd("Telescope lsp_document_symbols") end
+end, { desc = "Search symbols in this file" })
+map("n", "<leader>fw", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.picker then snacks.picker.lsp_workspace_symbols() else vim.cmd("Telescope lsp_workspace_symbols") end
+end, { desc = "Search workspace symbols" })
 map("n", "<leader>ft", cmd("TodoTelescope"), { desc = "Find every TODO, NOTE, or FIX comment" })
 map("n", "]t", function() require("todo-comments").jump_next() end, { desc = "Next TODO comment" })
 map("n", "[t", function() require("todo-comments").jump_prev() end, { desc = "Previous TODO comment" })
