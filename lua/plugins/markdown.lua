@@ -279,9 +279,15 @@ return {
             vim.g.mkdp_refresh_slow = 0 -- Instant refresh on text change
             vim.g.mkdp_command_for_global = 0
             vim.g.mkdp_open_to_the_world = 0
-            vim.g.mkdp_browser = "zen-browser"
             vim.g.mkdp_echo_preview_url = 1
             vim.g.mkdp_page_title = "「${name}」"
+
+            vim.cmd([[
+                function! OpenZenBrowser(url)
+                    silent execute '!zen-browser ' . shellescape(a:url) . ' &'
+                endfunction
+            ]])
+            vim.g.mkdp_browserfunc = "OpenZenBrowser"
         end,
         keys = {
             { "<leader>np", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Browser Preview (Auto-Sync)" },
