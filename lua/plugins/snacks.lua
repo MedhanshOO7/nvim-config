@@ -199,6 +199,6 @@ return {
         { "]r", function() Snacks.words.jump(1, true) end, desc = "Next LSP Word Reference" },
         { "[r", function() Snacks.words.jump(-1, true) end, desc = "Prev LSP Word Reference" },
         { "<leader>wm", function() Snacks.toggle.zoom() end, desc = "Maximize / Zoom Window" },
-        { "<leader>n", function() Snacks.notifier.show_history() end, desc = "Notification History" },
+        { "<leader>un", function() Snacks.notifier.show_history() end, desc = "Notification History" },
     },
 }
