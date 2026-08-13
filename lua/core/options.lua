@@ -11,12 +11,14 @@ opt.cursorlineopt  = "number,line" -- give the active line a stronger anchor
 opt.scrolloff      = 3     -- keep a little context around the cursor
 opt.sidescrolloff  = 0     -- no horizontal cursor padding
 opt.wrap           = false -- don't wrap long lines
-opt.colorcolumn    = "0"   -- no hard ruler by default
+opt.colorcolumn    = ""    -- no hard ruler by default
 opt.showmode       = false -- mode is shown in the statusline instead
 opt.cmdheight      = 1     -- command bar height
 opt.laststatus     = 3     -- single statusline across all windows
 opt.showtabline    = 2     -- keep the bufferline visible as a stable navigation rail
-opt.winborder      = "rounded" -- use a consistent premium border for native floats
+if vim.fn.has("nvim-0.11") == 1 then
+    opt.winborder  = "rounded" -- use a consistent premium border for native floats
+end
 
 -- ── Indentation ─────────────────────────────────────────────
 opt.expandtab      = true -- convert tabs → spaces
