@@ -86,17 +86,39 @@ return {
             { "nvim-lua/plenary.nvim" },
         },
         opts = {
+            model = "gpt-4o", -- Default to GPT-4o model (or switch dynamically)
             show_folds = false,
             auto_insert_mode = true,
             window = {
                 layout = "vertical",
                 width = 0.38,
                 border = "rounded",
-                title = " 🤖 Copilot Chat ",
+                title = " 🤖 Copilot Chat (GPT-4o) ",
             },
             headers = {
                 user = "👤 User: ",
                 copilot = "🤖 Copilot: ",
+            },
+            mappings = {
+                complete = {
+                    detail = "Use @file, @buffer, or @git for context",
+                    insert = "<Tab>",
+                },
+                close = {
+                    normal = "q",
+                    insert = "<C-c>",
+                },
+                reset = {
+                    normal = "<C-l>",
+                    insert = "<C-l>",
+                },
+                accept_diff = {
+                    normal = "<C-y>",
+                    insert = "<C-y>",
+                },
+                show_diff = {
+                    normal = "gd",
+                },
             },
         },
         keys = {
@@ -117,6 +139,8 @@ return {
             { "<leader>CD", "<cmd>CopilotChatDocs<cr>", mode = { "n", "v" }, desc = "Copilot Write Documentation" },
             { "<leader>Ct", "<cmd>CopilotChatTests<cr>", mode = { "n", "v" }, desc = "Copilot Generate Tests" },
             { "<leader>Cg", "<cmd>CopilotChatCommit<cr>", desc = "Copilot Generate Commit Message" },
+            { "<leader>CR", "<cmd>CopilotChatReset<cr>", desc = "Reset Chat History" },
+            { "<leader>CM", "<cmd>CopilotChatModels<cr>", desc = "Switch Copilot Model (GPT-4o / Claude)" },
         },
     },
 }
