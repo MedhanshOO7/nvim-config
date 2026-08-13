@@ -86,14 +86,13 @@ return {
             { "nvim-lua/plenary.nvim" },
         },
         opts = {
-            model = "gpt-4o", -- Default to GPT-4o model (or switch dynamically)
             show_folds = false,
             auto_insert_mode = true,
             window = {
                 layout = "vertical",
                 width = 0.38,
                 border = "rounded",
-                title = " 🤖 Copilot Chat (GPT-4o) ",
+                title = " 🤖 Copilot Chat ",
             },
             headers = {
                 user = "👤 User: ",
