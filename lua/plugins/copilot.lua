@@ -56,10 +56,10 @@ return {
                 local client = require("copilot.client")
                 if client.is_disabled() then
                     vim.cmd("Copilot enable")
-                    vim.notify("Copilot Engine ENABLED ⚡", vim.log.levels.INFO, { title = "Copilot" })
+                    vim.notify("Copilot Engine ENABLED 󱐌 ", vim.log.levels.INFO, { title = "Copilot" })
                 else
                     vim.cmd("Copilot disable")
-                    vim.notify("Copilot Engine DISABLED 🚫", vim.log.levels.WARN, { title = "Copilot" })
+                    vim.notify("Copilot Engine DISABLED 󰂭 ", vim.log.levels.WARN, { title = "Copilot" })
                 end
             end
 
@@ -92,11 +92,11 @@ return {
                 layout = "vertical",
                 width = 0.38,
                 border = "rounded",
-                title = " 🤖 Copilot Chat ",
+                title = " 󰚩 Copilot Chat ",
             },
             headers = {
-                user = "👤 User: ",
-                copilot = "🤖 Copilot: ",
+                user = "󰏏 User: ",
+                copilot = "󰚩 Copilot: ",
             },
             mappings = {
                 complete = {

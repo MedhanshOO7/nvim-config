@@ -175,7 +175,7 @@ return {
             if Snacks.image and Snacks.image.doc then
                 Snacks.image.doc.enabled = not Snacks.image.doc.enabled
                 vim.notify(
-                    Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 🖼️" or "Hovering Image Previews DISABLED 🚫",
+                    Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 " or "Hovering Image Previews DISABLED 󰂭 ",
                     vim.log.levels.INFO,
                     { title = "Image Previews" }
                 )
@@ -203,7 +203,7 @@ return {
                 if Snacks.image and Snacks.image.doc then
                     Snacks.image.doc.enabled = not Snacks.image.doc.enabled
                     vim.notify(
-                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 🖼️" or "Hovering Image Previews DISABLED 🚫",
+                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 " or "Hovering Image Previews DISABLED 󰂭 ",
                         vim.log.levels.INFO,
                         { title = "Image Previews" }
                     )
@@ -217,7 +217,7 @@ return {
                 if Snacks.image and Snacks.image.doc then
                     Snacks.image.doc.enabled = not Snacks.image.doc.enabled
                     vim.notify(
-                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 🖼️" or "Hovering Image Previews DISABLED 🚫",
+                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 " or "Hovering Image Previews DISABLED 󰂭 ",
                         vim.log.levels.INFO,
                         { title = "Image Previews" }
                     )

@@ -62,7 +62,7 @@ end, { desc = "Format the current file" })
 map("n", "<leader>uf", cmd("FormatToggle"), { desc = "Toggle auto-format on save" })
 map("n", "<leader>um", function()
     vim.bo.modifiable = not vim.bo.modifiable
-    vim.notify(vim.bo.modifiable and "Buffer is now MODIFIABLE (editing enabled) 🔓" or "Buffer is now READ-ONLY (editing disabled) 🔒", vim.log.levels.INFO)
+    vim.notify(vim.bo.modifiable and "Buffer is now MODIFIABLE (editing enabled)  " or "Buffer is now READ-ONLY (editing disabled)  ", vim.log.levels.INFO)
 end, { desc = "Toggle buffer modifiable state (unlock editing)" })
 map("n", "<leader>q", cmd("quit"), { desc = "Quit the current window" })
 
