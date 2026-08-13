@@ -172,7 +172,13 @@ local function pick_recent()
 end
 local function pick_keymaps()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.keymaps() else vim.cmd("Telescope keymaps") end
+    if ok and snacks.picker then
+        snacks.picker.keymaps({
+            layout = { preset = "vscode" },
+        })
+    else
+        pcall(function() require("which-key").show() end)
+    end
 end
 
 map("n", "<leader>p", function()
