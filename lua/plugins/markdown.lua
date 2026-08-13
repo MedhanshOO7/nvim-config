@@ -246,14 +246,14 @@ return {
         "ice345/markdown-table-wrap.nvim",
         ft = { "markdown", "markdown.mdx", "quarto", "rmd", "sql" },
         keys = {
-            { "<leader>mi", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Inline View" },
-            { "<leader>mr", "<cmd>MarkdownTableToggleReader<cr>", desc = "Toggle Markdown Table Reader" },
-            { "<leader>mt", "<cmd>MarkdownTableTogglePreview<cr>", desc = "Toggle Markdown Table Preview" },
+            { "<leader>mTi", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Inline View" },
+            { "<leader>mTr", "<cmd>MarkdownTableToggleReader<cr>", desc = "Toggle Markdown Table Reader" },
+            { "<leader>mTp", "<cmd>MarkdownTableTogglePreview<cr>", desc = "Toggle Markdown Table Preview" },
         },
         opts = {
             preview_mode = "inline",
             inline_mode = "replace",
-            auto_preview = false, -- Manual toggle only (<leader>mi, <leader>mt)!
+            auto_preview = false, -- Manual toggle only (<leader>mTi, <leader>mTp)!
             render_all = false,
             inline_viewport_scrolling = true,
             inline_wrap_scope = "cursor",

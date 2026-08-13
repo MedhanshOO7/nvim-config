@@ -42,7 +42,7 @@ return {
             { "<leader>w", group = "Windows and sessions" },
             { "<leader>x", group = "Diagnostics and lists" },
             { "<leader>y", group = "Yanky / Clipboard" },
-            { "<leader>z", group = "Folds" },
+            { "<leader>z", desc = "Toggle Zen Mode" },
 
             -- AI
             { "<leader>aa", desc = "AI Actions", mode = { "n", "v" } },
@@ -161,9 +161,10 @@ return {
             { "<leader>nz", desc = "Zen Mode" },
 
             -- Markdown Tables
-            { "<leader>mi", desc = "Toggle Markdown table inline view" },
-            { "<leader>mr", desc = "Toggle Markdown table reader" },
-            { "<leader>mt", desc = "Toggle Markdown table preview" },
+            { "<leader>mT", group = "Markdown tables" },
+            { "<leader>mTi", desc = "Toggle Markdown table inline view" },
+            { "<leader>mTr", desc = "Toggle Markdown table reader" },
+            { "<leader>mTp", desc = "Toggle Markdown table preview" },
 
             -- Obsidian
             { "<leader>ob", desc = "Show backlinks" },
