@@ -1,6 +1,7 @@
 return {
     "stevearc/conform.nvim",
     event = "BufWritePre",
+    cmd = "FormatToggle",
 
     config = function()
         local conform = require("conform")
