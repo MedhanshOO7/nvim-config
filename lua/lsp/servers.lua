@@ -39,6 +39,7 @@ return {
             less = { validate = true },
         },
     },
+    tailwindcss = {},
     emmet_language_server = {
         filetypes = {
             "css",

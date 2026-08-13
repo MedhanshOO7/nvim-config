@@ -6,6 +6,7 @@ return {
         opts = {
             document_color = { enabled = true, kind = "inline" },
             conceal = { enabled = false },
+            server = { override = false },
         },
     },
 }
