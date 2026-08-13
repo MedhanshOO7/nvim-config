@@ -36,7 +36,7 @@ return {
                 {
                     pane = 2,
                     section = "terminal",
-                    cmd = "colorscript -e square",
+                    cmd = vim.fn.executable("colorscript") == 1 and "colorscript -e square" or "echo ''",
                     height = 5,
                     padding = 1,
                 },
