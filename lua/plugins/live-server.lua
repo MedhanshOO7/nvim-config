@@ -6,6 +6,7 @@ return {
             args = {
                 "--port=5500",
                 "--host=127.0.0.1",
+                "--browser=zen-browser",
             },
         })
     end,
