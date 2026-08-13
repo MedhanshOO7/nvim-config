@@ -46,9 +46,7 @@ return {
         keys = {
             { "<leader>Cp", "<cmd>Copilot panel<cr>", desc = "Copilot Panel" },
             { "<leader>Cd", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
-            { "<leader>cd", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
             { "<leader>Cx", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
-            { "<leader>ct", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
             { "<leader>Cs", "<cmd>Copilot status<cr>", desc = "Copilot Status" },
         },
         config = function(_, opts)
