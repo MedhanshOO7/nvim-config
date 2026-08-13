@@ -2,14 +2,16 @@ return {
     "gorbit99/codewindow.nvim",
     event = "VeryLazy",
     config = function()
-        local codewindow = require("codewindow")
+        local ok, codewindow = pcall(require, "codewindow")
+        if not ok then return end
+
         codewindow.setup({
             active_in_terminals = false,
             auto_enable = false,
             exclude_filetypes = { "help", "dashboard", "snacks_dashboard", "nofile", "prompt" },
             minimap_width = 10,
             use_lsp = true,
-            use_treesitter = true,
+            use_treesitter = false,
             use_git = true,
             width_multiplier = 4,
             z_index = 1,
