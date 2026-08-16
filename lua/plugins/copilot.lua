@@ -86,13 +86,16 @@ return {
             { "nvim-lua/plenary.nvim" },
         },
         opts = {
+            tools = "copilot", -- Enable workspace search/read tools (glob, grep, file, buffer, gitdiff)
+            trusted_tools = { "file", "glob", "grep", "gitdiff", "buffer" }, -- Auto-approve read-only workspace tools
+            sticky = { "@copilot", "#buffer:listed" }, -- Automatically provide @copilot tools and open buffers context
             show_folds = false,
             auto_insert_mode = true,
             window = {
                 layout = "vertical",
-                width = 0.38,
+                width = 0.40,
                 border = "rounded",
-                title = " 󰚩 Copilot Chat ",
+                title = " 󰚩 Copilot Chat (Workspace Aware) ",
             },
             headers = {
                 user = "󰏏 User: ",
@@ -121,8 +124,32 @@ return {
             },
         },
         keys = {
-            { "<leader>Cc", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat Window" },
-            { "<leader>co", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat Window" },
+            {
+                "<leader>Cc",
+                function()
+                    local ok, chat = pcall(require, "CopilotChat")
+                    if not ok then return end
+                    local wins = vim.api.nvim_list_wins()
+                    if #wins == 1 and (vim.bo.filetype == "copilot-chat" or vim.bo.filetype == "copilot-input") then
+                        vim.cmd("enew")
+                    end
+                    pcall(function() chat.toggle() end)
+                end,
+                desc = "Toggle Copilot Chat Window",
+            },
+            {
+                "<leader>co",
+                function()
+                    local ok, chat = pcall(require, "CopilotChat")
+                    if not ok then return end
+                    local wins = vim.api.nvim_list_wins()
+                    if #wins == 1 and (vim.bo.filetype == "copilot-chat" or vim.bo.filetype == "copilot-input") then
+                        vim.cmd("enew")
+                    end
+                    pcall(function() chat.toggle() end)
+                end,
+                desc = "Toggle Copilot Chat Window",
+            },
             {
                 "<leader>Cq",
                 function()
