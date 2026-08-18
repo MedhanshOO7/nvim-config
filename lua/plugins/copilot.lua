@@ -58,6 +58,8 @@ return {
             { "<M-\\>", function() require("copilot.suggestion").next() end, mode = "i", desc = "Trigger Copilot Suggestion" },
             { "<M-w>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word" },
             { "<M-l>", function() require("copilot.suggestion").accept_line() end, mode = "i", desc = "Accept Copilot Line" },
+            { "<C-Left>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word (<C-Left>)" },
+            { "<C-Right>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word (<C-Right>)" },
         },
         config = function(_, opts)
             require("copilot").setup(opts)
