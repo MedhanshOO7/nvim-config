@@ -282,11 +282,14 @@ local function apply_editor_chrome(transparent)
         StatusLine = { fg = normal_fg, bg = sidebar_bg },
         StatusLineNC = { fg = comment, bg = sidebar_bg },
 
-        -- ── Completion menu ────────────────────────────────────────────────────
+        -- ── Completion menu & AI Ghost Text ────────────────────────────────────
         Pmenu = { fg = normal_fg, bg = float_bg },
         PmenuSel = { fg = normal_fg, bg = blend(accent, normal_bg, 0.20), bold = true },
         PmenuSbar = { bg = blend(comment, normal_bg, 0.18) },
         PmenuThumb = { bg = blend(accent, normal_bg, 0.42) },
+        CopilotSuggestion = { fg = blend(comment, normal_bg, 0.65), italic = true },
+        CopilotAnnotation = { fg = blend(comment, normal_bg, 0.45), italic = true },
+        SupermavenSuggestion = { fg = blend(comment, normal_bg, 0.65), italic = true },
 
         -- ── Floating windows ──────────────────────────────────────────────────
         NormalFloat = { fg = normal_fg, bg = float_bg },
