@@ -68,6 +68,8 @@ map("n", "<leader>q", cmd("quit"), { desc = "Quit the current window" })
 
 -- Terminals and writing
 map({ "n", "i", "t" }, "<C-`>", "<cmd>ToggleTerm<cr>", { desc = "Toggle terminal" })
+map("i", "<C-Left>", "<C-o>b", { desc = "Jump backward one word" })
+map("i", "<C-Right>", "<C-o>w", { desc = "Jump forward one word" })
 map("n", "<leader>rr", function()
     local ok, overseer = pcall(require, "overseer")
     if ok then

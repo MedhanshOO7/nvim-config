@@ -56,10 +56,9 @@ return {
             { "<leader>Cx", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
             { "<leader>Cs", "<cmd>Copilot status<cr>", desc = "Copilot Status" },
             { "<M-\\>", function() require("copilot.suggestion").next() end, mode = "i", desc = "Trigger Copilot Suggestion" },
-            { "<M-w>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word" },
-            { "<M-l>", function() require("copilot.suggestion").accept_line() end, mode = "i", desc = "Accept Copilot Line" },
-            { "<C-Left>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word (<C-Left>)" },
-            { "<C-Right>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word (<C-Right>)" },
+            { "<M-w>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word (Alt+W)" },
+            { "<M-Right>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word (Alt+Right)" },
+            { "<M-l>", function() require("copilot.suggestion").accept_line() end, mode = "i", desc = "Accept Copilot Line (Alt+L)" },
         },
         config = function(_, opts)
             require("copilot").setup(opts)
