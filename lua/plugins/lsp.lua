@@ -80,14 +80,7 @@ return {
         end
 
         vim.diagnostic.config({
-            virtual_text = {
-                prefix = "●",
-                spacing = 2,
-                source = "if_many",
-                severity = {
-                    min = vim.diagnostic.severity.WARN,
-                },
-            },
+            virtual_text = false, -- Handled by tiny-inline-diagnostic for sleek curved callouts
             virtual_lines = false,
             signs = {
                 text = {

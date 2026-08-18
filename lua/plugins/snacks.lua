@@ -14,21 +14,21 @@ return {
             enabled = true,
             preset = {
                 header = [[
-███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
-████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
-██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
-██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
-██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
-╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
                 keys = {
-                    { icon = " ", key = "f", desc = "Find Files", action = ":lua Snacks.picker.smart()" },
-                    { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-                    { icon = " ", key = "g", desc = "Find Text (Grep)", action = ":lua Snacks.picker.grep()" },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
-                    { icon = "󰉋 ", key = "e", desc = "File Explorer", action = ":lua Snacks.explorer()" },
-                    { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-                    { icon = "󰒲 ", key = "l", desc = "Lazy Plugins", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-                    { icon = " ", key = "q", desc = "Quit Neovim", action = ":qa" },
+                    { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
+                    { icon = "󰈔 ", key = "n", desc = "New Empty Buffer", action = ":ene | startinsert" },
+                    { icon = " ", key = "g", desc = "Live Grep Workspace", action = ":lua Snacks.picker.grep()" },
+                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
+                    { icon = "󰉋 ", key = "e", desc = "Project Explorer", action = ":lua Snacks.explorer()" },
+                    { icon = "󱐌 ", key = "s", desc = "Restore Session", section = "session" },
+                    { icon = "󰒲 ", key = "l", desc = "Manage Plugins", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+                    { icon = " ", key = "q", desc = "Quit Editor", action = ":qa" },
                 },
             },
             sections = {
@@ -60,7 +60,7 @@ return {
                 { section = "startup" },
             },
         },
-        dim = { enabled = false },
+        dim = { enabled = true },
         explorer = {
             enabled = true,
             replace_netrw = true,
