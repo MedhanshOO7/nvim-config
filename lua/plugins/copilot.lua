@@ -86,6 +86,7 @@ return {
             { "nvim-lua/plenary.nvim" },
         },
         opts = {
+            model = "auto", -- Automatically match GitHub Student Copilot plan model
             tools = "copilot", -- Enable workspace search/read tools (glob, grep, file, buffer, gitdiff)
             trusted_tools = { "file", "glob", "grep", "gitdiff", "buffer" }, -- Auto-approve read-only workspace tools
             sticky = { "@copilot", "#buffer:listed" }, -- Automatically provide @copilot tools and open buffers context
