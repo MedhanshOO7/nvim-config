@@ -27,9 +27,9 @@ return {
             local ok, client = pcall(require, "copilot.client")
             if not ok then return "" end
             if client.is_disabled() then
-                return "󰚩 "
+                return "󰂭 "
             end
-            return "🤖 "
+            return "󰚩 "
         end
 
         local function apply()

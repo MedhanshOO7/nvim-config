@@ -13,7 +13,7 @@ return {
             fn = "",
             itemgroup = "",
             keymap = "",
-            autocmd = "⚡",
+            autocmd = "󱐌 ",
         },
         include_builtin = true,
         include_legendary_cmds = true,
