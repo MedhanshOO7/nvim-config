@@ -39,7 +39,21 @@ return {
             less = { validate = true },
         },
     },
-    tailwindcss = {},
+    tailwindcss = {
+        filetypes = {
+            "html",
+            "css",
+            "scss",
+            "less",
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact",
+            "vue",
+            "svelte",
+            "astro",
+        },
+    },
     emmet_language_server = {
         filetypes = {
             "css",
