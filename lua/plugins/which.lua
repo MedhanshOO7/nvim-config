@@ -199,13 +199,20 @@ return {
             -- UI and theme
             { "<leader>ua", desc = "Toggle auto-save (global)" },
             { "<leader>ub", desc = "Toggle auto-save (buffer)" },
+            { "<leader>uc", desc = "Toggle conceal level" },
+            { "<leader>ud", desc = "Toggle LSP diagnostics" },
             { "<leader>uf", desc = "Toggle auto-format" },
-            { "<leader>un", desc = "Next theme" },
+            { "<leader>uh", desc = "Toggle LSP inlay hints" },
+            { "<leader>ui", desc = "Toggle image hover previews" },
+            { "<leader>ul", desc = "Toggle relative line numbers" },
+            { "<leader>um", desc = "Toggle buffer modifiable" },
+            { "<leader>un", desc = "Notification history / Next theme" },
             { "<leader>up", desc = "Prev theme" },
             { "<leader>us", desc = "Toggle spell check" },
             { "<leader>ut", desc = "Theme picker" },
-            { "<leader>uy", desc = "Toggle transparency" },
             { "<leader>uw", desc = "Toggle text wrap" },
+            { "<leader>ux", desc = "Toggle Treesitter sticky header" },
+            { "<leader>uy", desc = "Toggle transparency" },
 
             -- Windows and sessions
             { "<leader>wc", desc = "Close window" },

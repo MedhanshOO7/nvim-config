@@ -305,21 +305,61 @@ map({ "n", "i", "x" }, "<M-LeftMouse>", function()
     multicursor().handleMouse()
 end, { desc = "Toggle cursor at mouse position" })
 
--- Themes and utility toggles
+-- Themes and comprehensive distro-grade UI toggles (<leader>u...)
 map("n", "<leader>ut", cmd("ThemePicker"), { desc = "Choose a theme" })
 map("n", "<leader>un", cmd("ThemeNext"), { desc = "Switch to the next theme" })
 map("n", "<leader>up", cmd("ThemePrev"), { desc = "Switch to the previous theme" })
+map("n", "<leader>uy", cmd("ThemeTransparencyToggle"), { desc = "Turn transparency on or off" })
+
+map("n", "<leader>ud", function()
+    local enabled = vim.diagnostic.is_enabled()
+    vim.diagnostic.enable(not enabled)
+    vim.notify(not enabled and "LSP Diagnostics ENABLED 󰒕 " or "LSP Diagnostics DISABLED 󰂭 ", vim.log.levels.INFO)
+end, { desc = "Toggle LSP diagnostics" })
+
+map("n", "<leader>uh", function()
+    local filter = { bufnr = 0 }
+    local enabled = vim.lsp.inlay_hint.is_enabled(filter)
+    vim.lsp.inlay_hint.enable(not enabled, filter)
+    vim.notify(not enabled and "Inlay Hints ENABLED 󰌵 " or "Inlay Hints DISABLED 󰂭 ", vim.log.levels.INFO)
+end, { desc = "Toggle LSP inlay hints" })
+
+map("n", "<leader>ul", function()
+    if vim.wo.relativenumber then
+        vim.wo.relativenumber = false
+        vim.notify("Line numbers: Absolute", vim.log.levels.INFO)
+    else
+        vim.wo.relativenumber = true
+        vim.notify("Line numbers: Relative", vim.log.levels.INFO)
+    end
+end, { desc = "Toggle relative line numbers" })
+
+map("n", "<leader>uc", function()
+    local level = vim.wo.conceallevel == 0 and 2 or 0
+    vim.wo.conceallevel = level
+    vim.notify("Conceal level: " .. level, vim.log.levels.INFO)
+end, { desc = "Toggle conceal level" })
+
+map("n", "<leader>ux", function()
+    local ok, ts_ctx = pcall(require, "treesitter-context")
+    if ok then
+        ts_ctx.toggle()
+        vim.notify("Treesitter Context toggled", vim.log.levels.INFO)
+    end
+end, { desc = "Toggle Treesitter sticky header" })
+
 map("n", "<leader>us", function()
     vim.opt_local.spell = not vim.opt_local.spell:get()
-    vim.notify(vim.opt_local.spell:get() and "Spell check is on" or "Spell check is off")
+    vim.notify(vim.opt_local.spell:get() and "Spell check is on" or "Spell check is off", vim.log.levels.INFO)
 end, { desc = "Toggle spell check" })
-map("n", "<leader>uy", cmd("ThemeTransparencyToggle"), { desc = "Turn transparency on or off" })
-map("n", "<leader>ua", cmd("AutoSaveToggle"), { desc = "Turn autosave on or off" })
-map("n", "<leader>ub", cmd("AutoSaveBufferToggle"), { desc = "Turn autosave on or off for this file" })
+
 map("n", "<leader>uw", function()
     vim.opt_local.wrap = not vim.opt_local.wrap:get()
-    vim.notify(vim.opt_local.wrap:get() and "Text wrap is on" or "Text wrap is off")
+    vim.notify(vim.opt_local.wrap:get() and "Text wrap is on" or "Text wrap is off", vim.log.levels.INFO)
 end, { desc = "Toggle text wrapping" })
+
+map("n", "<leader>ua", cmd("AutoSaveToggle"), { desc = "Turn autosave on or off" })
+map("n", "<leader>ub", cmd("AutoSaveBufferToggle"), { desc = "Turn autosave on or off for this file" })
 
 -- Windows and sessions
 map("n", "<leader>wv", cmd("vsplit"), { desc = "Split the window vertically" })
