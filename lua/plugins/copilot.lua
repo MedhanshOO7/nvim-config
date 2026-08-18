@@ -99,6 +99,41 @@ return {
         },
         opts = {
             model = "auto", -- Automatically match GitHub Student Copilot plan model
+            system_prompt = [[
+You are an expert technical note-taking and programming assistant.
+Your output must strictly follow these formatting and stylistic rules:
+
+1. CONCISENESS & GRAMMAR:
+   - Be ultra-concise. Eliminate filler words and conversational pleasantries (never say "Sure!", "Here is", "The X operator is used to...").
+   - Use simple, direct, active-voice grammar in the present tense.
+   - Keep individual bullet points short (under 12-15 words).
+
+2. HIERARCHICAL BULLET STRUCTURE:
+   - Break long, compound, or multi-part concepts into nested sub-bullets instead of a single long sentence.
+   - Use bold markdown (`**term**`) selectively for key concepts, conditions, return values, or keywords.
+   - Use backticks (`code`) for commands, SQL keywords, operators, parameters, and variable names.
+
+3. STRUCTURE PATTERNS:
+   - Topic/Keyword
+       - Core action or definition.
+       - Key conditions or return behavior.
+   - Nested breakdowns for complex statements:
+       - Returns:
+           - **All records** from left table.
+           - **Matched records** from right table.
+
+4. CODE QUALITY:
+   - When writing code, provide minimal, clean, modern implementations with brief inline comments.
+   - Never output large unformatted walls of text.
+]],
+            prompts = {
+                Notes = {
+                    prompt = "Reformat and summarize the provided selection or context into ultra-concise, hierarchical, easy-to-read study bullet points with bold highlights and nested clauses.",
+                },
+                Summarize = {
+                    prompt = "Summarize the key takeaways of this text or code into bite-sized hierarchical bullets. Eliminate all fluff.",
+                },
+            },
             tools = "copilot", -- Enable workspace search/read tools (glob, grep, file, buffer, gitdiff)
             trusted_tools = { "file", "glob", "grep", "gitdiff", "buffer" }, -- Auto-approve read-only workspace tools
             sticky = { "@copilot", "#buffer:listed" }, -- Automatically provide @copilot tools and open buffers context
@@ -188,6 +223,7 @@ return {
             },
             { "<leader>Ce", "<cmd>CopilotChatExplain<cr>", mode = { "n", "v" }, desc = "Copilot Explain Code" },
             { "<leader>Cf", "<cmd>CopilotChatFix<cr>", mode = { "n", "v" }, desc = "Copilot Fix Bug" },
+            { "<leader>Cn", "<cmd>CopilotChatNotes<cr>", mode = { "n", "v" }, desc = "Copilot Generate Concise Notes" },
             { "<leader>CD", "<cmd>CopilotChatDocs<cr>", mode = { "n", "v" }, desc = "Copilot Write Documentation" },
             { "<leader>Ct", "<cmd>CopilotChatTests<cr>", mode = { "n", "v" }, desc = "Copilot Generate Tests" },
             { "<leader>Cg", "<cmd>CopilotChatCommit<cr>", desc = "Copilot Generate Commit Message" },
