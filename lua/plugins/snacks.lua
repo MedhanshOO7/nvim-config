@@ -124,6 +124,12 @@ return {
             enabled = true,
             ui_select = true,
             sources = {
+                files = {
+                    hidden = true,
+                },
+                grep = {
+                    hidden = true,
+                },
                 explorer = {
                     layout = {
                         preset = "sidebar",
