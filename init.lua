@@ -54,6 +54,7 @@ require("core.options")
 require("core.autocmds")
 require("core.lazy")
 require("utils.theme").setup()
+require("utils.updater").setup()
 require("core.keymaps")
 
 -- Fix "Unknown filetype" warnings for LSP and Noice

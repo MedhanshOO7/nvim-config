@@ -210,6 +210,7 @@ return {
             { "<leader>up", desc = "Prev theme" },
             { "<leader>us", desc = "Toggle spell check" },
             { "<leader>ut", desc = "Theme picker" },
+            { "<leader>uu", desc = "Update Neovim config (Git Pull & Sync)" },
             { "<leader>uw", desc = "Toggle text wrap" },
             { "<leader>ux", desc = "Toggle Treesitter sticky header" },
             { "<leader>uy", desc = "Toggle transparency" },
