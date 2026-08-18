@@ -32,14 +32,87 @@ return {
             return "󰚩 "
         end
 
+        local function hl_hex(name, key, default)
+            local ok, val = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+            if ok and val and val[key] then
+                return string.format("#%06x", val[key])
+            end
+            return default
+        end
+
+        local function get_opaque_theme()
+            local bg_dark = hl_hex("TabLineFill", "bg", hl_hex("StatusLine", "bg", "#181825"))
+            local bg_surface = hl_hex("CursorLine", "bg", hl_hex("Pmenu", "bg", "#1e1e2e"))
+            local fg_text = hl_hex("Normal", "fg", "#cdd6f4")
+            local fg_muted = hl_hex("Comment", "fg", "#6c7086")
+
+            local blue = hl_hex("Function", "fg", "#89b4fa")
+            local green = hl_hex("String", "fg", "#a6e3a1")
+            local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
+            local purple = hl_hex("Statement", "fg", "#cba6f7")
+            local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
+            local cyan = hl_hex("Special", "fg", "#89dceb")
+
+            return {
+                normal = {
+                    a = { fg = bg_dark, bg = blue, gui = "bold" },
+                    b = { fg = fg_text, bg = bg_surface },
+                    c = { fg = fg_text, bg = bg_dark },
+                    x = { fg = fg_text, bg = bg_dark },
+                    y = { fg = fg_text, bg = bg_surface },
+                    z = { fg = bg_dark, bg = blue, gui = "bold" },
+                },
+                insert = {
+                    a = { fg = bg_dark, bg = green, gui = "bold" },
+                    b = { fg = fg_text, bg = bg_surface },
+                    c = { fg = fg_text, bg = bg_dark },
+                    x = { fg = fg_text, bg = bg_dark },
+                    y = { fg = fg_text, bg = bg_surface },
+                    z = { fg = bg_dark, bg = green, gui = "bold" },
+                },
+                visual = {
+                    a = { fg = bg_dark, bg = purple, gui = "bold" },
+                    b = { fg = fg_text, bg = bg_surface },
+                    c = { fg = fg_text, bg = bg_dark },
+                    x = { fg = fg_text, bg = bg_dark },
+                    y = { fg = fg_text, bg = bg_surface },
+                    z = { fg = bg_dark, bg = purple, gui = "bold" },
+                },
+                replace = {
+                    a = { fg = bg_dark, bg = red, gui = "bold" },
+                    b = { fg = fg_text, bg = bg_surface },
+                    c = { fg = fg_text, bg = bg_dark },
+                    x = { fg = fg_text, bg = bg_dark },
+                    y = { fg = fg_text, bg = bg_surface },
+                    z = { fg = bg_dark, bg = red, gui = "bold" },
+                },
+                command = {
+                    a = { fg = bg_dark, bg = yellow, gui = "bold" },
+                    b = { fg = fg_text, bg = bg_surface },
+                    c = { fg = fg_text, bg = bg_dark },
+                    x = { fg = fg_text, bg = bg_dark },
+                    y = { fg = fg_text, bg = bg_surface },
+                    z = { fg = bg_dark, bg = yellow, gui = "bold" },
+                },
+                inactive = {
+                    a = { fg = fg_muted, bg = bg_surface },
+                    b = { fg = fg_muted, bg = bg_surface },
+                    c = { fg = fg_muted, bg = bg_dark },
+                    x = { fg = fg_muted, bg = bg_dark },
+                    y = { fg = fg_muted, bg = bg_surface },
+                    z = { fg = fg_muted, bg = bg_surface },
+                },
+            }
+        end
+
         local function apply()
             require("lualine").setup({
                 options = {
-                    theme = "auto",
+                    theme = get_opaque_theme(),
                     globalstatus = true,
-                    section_separators = { left = "", right = "" },
-                    component_separators = { left = "", right = "" },
-                    always_divide_middle = false,
+                    section_separators = { left = "", right = "" },
+                    component_separators = { left = "│", right = "│" },
+                    always_divide_middle = true,
                     disabled_filetypes = {
                         statusline = { "snacks_picker_input", "snacks_explorer", "noice", "nui", "notify", "prompt", "lazy", "mason" },
                         winbar = { "snacks_picker_input", "snacks_explorer", "noice", "nui", "notify", "prompt", "Trouble", "toggleterm", "aerial" },
@@ -49,8 +122,7 @@ return {
                     lualine_a = {
                         {
                             "mode",
-                            separator = { left = "" },
-                            padding = { left = 0, right = 2 },
+                            padding = { left = 1, right = 1 },
                             fmt = function(value)
                                 return value:sub(1, 1)
                             end,
@@ -91,7 +163,7 @@ return {
                     },
                     lualine_y = { "progress", "fileencoding" },
                     lualine_z = {
-                        { "location", separator = { right = "" }, padding = { left = 2, right = 0 } },
+                        { "location", padding = { left = 1, right = 1 } },
                     },
                 },
                 inactive_sections = {
