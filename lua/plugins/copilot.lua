@@ -92,11 +92,12 @@ return {
             sticky = { "@copilot", "#buffer:listed" }, -- Automatically provide @copilot tools and open buffers context
             show_folds = false,
             auto_insert_mode = true,
+            insert_at_end = true, -- Auto-place cursor at the bottom input position
             window = {
                 layout = "vertical",
                 width = 0.40,
                 border = "rounded",
-                title = " 󰚩 Copilot Chat (Workspace Aware) ",
+                title = " 󰚩 Copilot Chat ",
             },
             headers = {
                 user = "󰏏 User: ",
@@ -152,14 +153,26 @@ return {
                 desc = "Toggle Copilot Chat Window",
             },
             {
+                "<leader>cp",
+                function()
+                    vim.ui.input({ prompt = " 󰚩 Ask Copilot: " }, function(input)
+                        if input and input ~= "" then
+                            require("CopilotChat").ask(input)
+                        end
+                    end)
+                end,
+                desc = "Floating Prompt Input Box",
+            },
+            {
                 "<leader>Cq",
                 function()
-                    local input = vim.fn.input("Quick Chat: ")
-                    if input ~= "" then
-                        require("CopilotChat").ask(input)
-                    end
+                    vim.ui.input({ prompt = " 󰚩 Ask Copilot: " }, function(input)
+                        if input and input ~= "" then
+                            require("CopilotChat").ask(input)
+                        end
+                    end)
                 end,
-                desc = "Quick Chat",
+                desc = "Quick Prompt Box",
             },
             { "<leader>Ce", "<cmd>CopilotChatExplain<cr>", mode = { "n", "v" }, desc = "Copilot Explain Code" },
             { "<leader>Cf", "<cmd>CopilotChatFix<cr>", mode = { "n", "v" }, desc = "Copilot Fix Bug" },
