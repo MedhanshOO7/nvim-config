@@ -110,9 +110,9 @@ return {
                 options = {
                     theme = get_opaque_theme(),
                     globalstatus = true,
-                    section_separators = { left = "", right = "" },
-                    component_separators = { left = "│", right = "│" },
-                    always_divide_middle = true,
+                    section_separators = { left = "", right = "" },
+                    component_separators = { left = "", right = "" },
+                    always_divide_middle = false,
                     disabled_filetypes = {
                         statusline = { "snacks_picker_input", "snacks_explorer", "noice", "nui", "notify", "prompt", "lazy", "mason" },
                         winbar = { "snacks_picker_input", "snacks_explorer", "noice", "nui", "notify", "prompt", "Trouble", "toggleterm", "aerial" },
@@ -122,7 +122,8 @@ return {
                     lualine_a = {
                         {
                             "mode",
-                            padding = { left = 1, right = 1 },
+                            separator = { left = "" },
+                            padding = { left = 0, right = 2 },
                             fmt = function(value)
                                 return value:sub(1, 1)
                             end,
@@ -163,7 +164,7 @@ return {
                     },
                     lualine_y = { "progress", "fileencoding" },
                     lualine_z = {
-                        { "location", padding = { left = 1, right = 1 } },
+                        { "location", separator = { right = "" }, padding = { left = 2, right = 0 } },
                     },
                 },
                 inactive_sections = {
