@@ -21,22 +21,29 @@ return {
             suggestion = {
                 enabled = true,
                 auto_trigger = true,
-                debounce = 75,
+                debounce = 40,
                 keymap = {
-                    accept = false, -- Handled deterministically via <Tab> in cmp.lua
-                    accept_word = false,
-                    accept_line = false,
+                    accept = false, -- Handled with top priority via <Tab> in cmp.lua
+                    accept_word = "<M-w>", -- Press Alt+W to accept next word
+                    accept_line = "<M-l>", -- Press Alt+L to accept next sentence/line
                     next = "<M-]>",
                     prev = "<M-[>",
                     dismiss = "<C-]>",
                 },
             },
             filetypes = {
-                yaml = false,
                 markdown = true,
-                help = false,
+                text = true,
                 gitcommit = true,
                 gitrebase = true,
+                quarto = true,
+                rmd = true,
+                asciidoc = true,
+                typst = true,
+                tex = true,
+                plaintex = true,
+                yaml = false,
+                help = false,
                 hgcommit = false,
                 svn = false,
                 cvs = false,
@@ -48,6 +55,9 @@ return {
             { "<leader>Cd", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
             { "<leader>Cx", "<cmd>CopilotToggle<cr>", desc = "Kill Switch: Disable/Toggle Copilot Engine" },
             { "<leader>Cs", "<cmd>Copilot status<cr>", desc = "Copilot Status" },
+            { "<M-\\>", function() require("copilot.suggestion").next() end, mode = "i", desc = "Trigger Copilot Suggestion" },
+            { "<M-w>", function() require("copilot.suggestion").accept_word() end, mode = "i", desc = "Accept Copilot Word" },
+            { "<M-l>", function() require("copilot.suggestion").accept_line() end, mode = "i", desc = "Accept Copilot Line" },
         },
         config = function(_, opts)
             require("copilot").setup(opts)
