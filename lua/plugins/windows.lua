@@ -16,7 +16,7 @@ return {
                 desc = "Equalize Windows",
             },
             {
-                "<leader>wz",
+                "<leader>wm",
                 function()
                     Snacks.zen.zoom()
                 end,
@@ -28,7 +28,7 @@ return {
                 desc = "Windows: Equalize sizes",
             },
             {
-                "<leader>ws",
+                "<leader>wh",
                 "<cmd>split<cr>",
                 desc = "Windows: Split horizontal",
             },

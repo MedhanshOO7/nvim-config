@@ -242,13 +242,13 @@ return {
 
             -- Windows and sessions
             { "<leader>wc", desc = "Close window", icon = { icon = "󰅖", color = "red" } },
-            { "<leader>ws", desc = "Split horizontal", icon = { icon = "󰤼", color = "blue" } },
+            { "<leader>wh", desc = "Split horizontal", icon = { icon = "󰤼", color = "blue" } },
             { "<leader>wv", desc = "Split vertical", icon = { icon = "󰤻", color = "blue" } },
             { "<leader>wo", desc = "Only window", icon = { icon = "󰖲", color = "blue" } },
-            { "<leader>wz", desc = "Maximize / Zoom window", icon = { icon = "󰈈", color = "purple" } },
+            { "<leader>wm", desc = "Maximize / Zoom window", icon = { icon = "󰈈", color = "purple" } },
             { "<leader>w=", desc = "Equalize window sizes", icon = { icon = "󰝤", color = "cyan" } },
             { "<leader>wr", desc = "Restore session", icon = { icon = "󰦛", color = "green" } },
-            { "<leader>wS", desc = "Save session", icon = { icon = "󰆓", color = "green" } },
+            { "<leader>ws", desc = "Save session", icon = { icon = "󰆓", color = "green" } },
             { "<leader>wl", desc = "Search sessions", icon = { icon = "", color = "blue" } },
 
             -- Diagnostics and lists
