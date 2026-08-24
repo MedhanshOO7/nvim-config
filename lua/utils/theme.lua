@@ -267,10 +267,10 @@ local function apply_editor_chrome(transparent)
     end
 
     local float_bg = get_glass_bg(normal_bg, normal_fg, transparent)
-    local float_border = blend(accent, normal_bg, 0.45)
+    local float_border = blend(accent, normal_bg, 0.60)
     local sidebar_bg = transparent and "NONE" or blend(normal_fg, normal_bg, 0.04)
     local accent_bg = transparent and "NONE" or blend(accent, normal_bg, 0.12)
-    local soft_edge = blend(comment, normal_bg, 0.45)
+    local soft_edge = blend(comment, normal_bg, 0.60)
 
     local highlights = {
         -- ── Editor chrome ─────────────────────────────────────────────────────
@@ -292,7 +292,7 @@ local function apply_editor_chrome(transparent)
         PmenuSbar = { bg = blend(comment, normal_bg, 0.18) },
         PmenuThumb = { bg = blend(accent, normal_bg, 0.42) },
         CopilotSuggestion = { fg = blend(comment, normal_bg, 0.65), italic = true },
-        CopilotAnnotation = { fg = blend(comment, normal_bg, 0.45), italic = true },
+        CopilotAnnotation = { fg = blend(comment, normal_bg, 0.60), italic = true },
         SupermavenSuggestion = { fg = blend(comment, normal_bg, 0.65), italic = true },
 
         -- ── Floating windows ──────────────────────────────────────────────────
@@ -442,7 +442,7 @@ local function apply_editor_chrome(transparent)
 
         -- ── Aerial ────────────────────────────────────────────────────────────
         AerialLine = { bg = blend(accent, normal_bg, 0.12) },
-        AerialGuide = { fg = blend(comment, normal_bg, 0.45) },
+        AerialGuide = { fg = blend(comment, normal_bg, 0.60) },
         AerialNormal = { fg = normal_fg, bg = sidebar_bg },
 
         -- ── Overseer ──────────────────────────────────────────────────────────
