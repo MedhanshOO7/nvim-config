@@ -364,8 +364,4 @@ end, { desc = "Toggle text wrapping" })
 map("n", "<leader>ua", cmd("AutoSaveToggle"), { desc = "Turn autosave on or off" })
 map("n", "<leader>ub", cmd("AutoSaveBufferToggle"), { desc = "Turn autosave on or off for this file" })
 
--- Windows and sessions
-map("n", "<leader>wv", cmd("vsplit"), { desc = "Split the window vertically" })
-map("n", "<leader>wh", cmd("split"), { desc = "Split the window horizontally" })
-map("n", "<leader>wc", cmd("close"), { desc = "Close the current window" })
-map("n", "<leader>wo", cmd("only"), { desc = "Keep only the current window" })
+-- Windows and sessions are defined in lua/plugins/windows.lua
