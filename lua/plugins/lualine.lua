@@ -17,9 +17,9 @@ return {
             local ok, client = pcall(require, "copilot.client")
             if not ok then return "" end
             if client.is_disabled() then
-                return "󰂭"
+                return "󰂭 Off"
             end
-            return "󰚩"
+            return "󰚩 Ready"
         end
 
         local function lsp_status()
@@ -44,7 +44,6 @@ return {
 
         local function get_floating_theme()
             local bg_dark = "NONE"
-            local bg_pill = hl_hex("CursorLine", "bg", hl_hex("Pmenu", "bg", "#1e1e2e"))
             local fg_text = hl_hex("Normal", "fg", "#cdd6f4")
             local fg_muted = hl_hex("Comment", "fg", "#6c7086")
 
@@ -53,62 +52,71 @@ return {
             local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
             local purple = hl_hex("Statement", "fg", "#cba6f7")
             local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
+            local cyan = hl_hex("Type", "fg", "#89dceb")
+            local dark_bg = "#11111b"
 
             return {
                 normal = {
-                    a = { fg = "#11111b", bg = blue, gui = "bold" },
-                    b = { fg = fg_text, bg = bg_pill },
+                    a = { fg = dark_bg, bg = blue, gui = "bold" },
+                    b = { fg = dark_bg, bg = purple, gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = fg_text, bg = bg_pill },
-                    z = { fg = "#11111b", bg = blue, gui = "bold" },
+                    y = { fg = dark_bg, bg = cyan, gui = "bold" },
+                    z = { fg = dark_bg, bg = blue, gui = "bold" },
                 },
                 insert = {
-                    a = { fg = "#11111b", bg = green, gui = "bold" },
-                    b = { fg = fg_text, bg = bg_pill },
+                    a = { fg = dark_bg, bg = green, gui = "bold" },
+                    b = { fg = dark_bg, bg = purple, gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = fg_text, bg = bg_pill },
-                    z = { fg = "#11111b", bg = green, gui = "bold" },
+                    y = { fg = dark_bg, bg = cyan, gui = "bold" },
+                    z = { fg = dark_bg, bg = green, gui = "bold" },
                 },
                 visual = {
-                    a = { fg = "#11111b", bg = purple, gui = "bold" },
-                    b = { fg = fg_text, bg = bg_pill },
+                    a = { fg = dark_bg, bg = purple, gui = "bold" },
+                    b = { fg = dark_bg, bg = blue, gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = fg_text, bg = bg_pill },
-                    z = { fg = "#11111b", bg = purple, gui = "bold" },
+                    y = { fg = dark_bg, bg = cyan, gui = "bold" },
+                    z = { fg = dark_bg, bg = purple, gui = "bold" },
                 },
                 replace = {
-                    a = { fg = "#11111b", bg = red, gui = "bold" },
-                    b = { fg = fg_text, bg = bg_pill },
+                    a = { fg = dark_bg, bg = red, gui = "bold" },
+                    b = { fg = dark_bg, bg = purple, gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = fg_text, bg = bg_pill },
-                    z = { fg = "#11111b", bg = red, gui = "bold" },
+                    y = { fg = dark_bg, bg = cyan, gui = "bold" },
+                    z = { fg = dark_bg, bg = red, gui = "bold" },
                 },
                 command = {
-                    a = { fg = "#11111b", bg = yellow, gui = "bold" },
-                    b = { fg = fg_text, bg = bg_pill },
+                    a = { fg = dark_bg, bg = yellow, gui = "bold" },
+                    b = { fg = dark_bg, bg = purple, gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = fg_text, bg = bg_pill },
-                    z = { fg = "#11111b", bg = yellow, gui = "bold" },
+                    y = { fg = dark_bg, bg = cyan, gui = "bold" },
+                    z = { fg = dark_bg, bg = yellow, gui = "bold" },
                 },
                 inactive = {
-                    a = { fg = fg_muted, bg = bg_pill },
-                    b = { fg = fg_muted, bg = bg_pill },
+                    a = { fg = fg_muted, bg = "#313244" },
+                    b = { fg = fg_muted, bg = "#313244" },
                     c = { fg = fg_muted, bg = bg_dark },
                     x = { fg = fg_muted, bg = bg_dark },
-                    y = { fg = fg_muted, bg = bg_pill },
-                    z = { fg = fg_muted, bg = bg_pill },
+                    y = { fg = fg_muted, bg = "#313244" },
+                    z = { fg = fg_muted, bg = "#313244" },
                 },
             }
         end
 
         local function apply()
             local theme = get_floating_theme()
-            local bg_pill = hl_hex("CursorLine", "bg", hl_hex("Pmenu", "bg", "#1e1e2e"))
+            local blue = hl_hex("Function", "fg", "#89b4fa")
+            local green = hl_hex("String", "fg", "#a6e3a1")
+            local purple = hl_hex("Statement", "fg", "#cba6f7")
+            local peach = hl_hex("DiagnosticWarn", "fg", "#fab387")
+            local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
+            local cyan = hl_hex("Type", "fg", "#89dceb")
+            local lavender = hl_hex("Special", "fg", "#b4befe")
+            local dark_fg = "#11111b"
 
             vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
             vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
@@ -158,14 +166,14 @@ return {
                         {
                             "branch",
                             icon = "",
-                            color = { bg = bg_pill },
+                            color = { fg = dark_fg, bg = purple, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
-                            color = { bg = bg_pill },
+                            color = { fg = dark_fg, bg = lavender, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -186,13 +194,13 @@ return {
                     lualine_x = {
                         {
                             macro_recording,
-                            color = { fg = "#f38ba8", bg = bg_pill, gui = "bold" },
+                            color = { fg = dark_fg, bg = red, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             copilot_status,
-                            color = { fg = "#a6e3a1", bg = bg_pill, gui = "bold" },
+                            color = { fg = dark_fg, bg = green, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -200,13 +208,13 @@ return {
                             "diagnostics",
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
-                            color = { bg = bg_pill },
+                            color = { fg = dark_fg, bg = peach, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             lsp_status,
-                            color = { fg = "#89b4fa", bg = bg_pill, gui = "bold" },
+                            color = { fg = dark_fg, bg = blue, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -215,13 +223,13 @@ return {
                         {
                             "filetype",
                             icon_only = false,
-                            color = { bg = bg_pill },
+                            color = { fg = dark_fg, bg = cyan, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "progress",
-                            color = { bg = bg_pill },
+                            color = { fg = dark_fg, bg = lavender, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -230,6 +238,7 @@ return {
                         {
                             "location",
                             icon = "",
+                            color = { fg = dark_fg, bg = blue, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
