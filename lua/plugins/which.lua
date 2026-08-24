@@ -28,6 +28,7 @@ return {
             { "<leader>d", group = "Debug" },
             { "<leader>f", group = "Find" },
             { "<leader>g", group = "Git" },
+            { "<leader>gc", group = "Git Conflicts" },
             { "<leader>h", group = "Harpoon" },
             { "<leader>hv", group = "Helpview" },
             { "<leader>l", group = "LSP" },
@@ -36,6 +37,7 @@ return {
             { "<leader>n", group = "Notes and writing" },
             { "<leader>o", group = "Obsidian" },
             { "<leader>P", group = "Python" },
+            { "<leader>r", group = "Run Code" },
             { "<leader>s", group = "Search and jump" },
             { "<leader>T", group = "Testing (Neotest)" },
             { "<leader>t", group = "Terminal and tasks" },
@@ -61,6 +63,12 @@ return {
             { "<leader>cf", desc = "Format file" },
             { "<leader>rn", desc = "Rename symbol" },
 
+            -- Run Code
+            { "<leader>rr", desc = "Run code selection / block" },
+            { "<leader>rf", desc = "Run current file" },
+            { "<leader>rp", desc = "Run project" },
+            { "<leader>rc", desc = "Close runner output" },
+
             -- Debug
             { "<leader>db", desc = "Toggle breakpoint" },
             { "<leader>dc", desc = "Continue" },
@@ -78,13 +86,14 @@ return {
             { "<leader>ff", desc = "Find file" },
             { "<leader>fg", desc = "Live grep" },
             { "<leader>fk", desc = "Keymap help" },
+            { "<leader>fm", desc = "Mini.files directory browser" },
             { "<leader>fO", desc = "Open Oil file browser" },
             { "<leader>fp", desc = "Git files" },
             { "<leader>fr", desc = "Recent files" },
             { "<leader>fS", desc = "LSP document symbols" },
             { "<leader>ft", desc = "Search TODOs" },
             { "<leader>fw", desc = "LSP workspace symbols" },
-            { "<leader>fy", desc = "Find Yank History" },
+            { "<leader>fy", desc = "Find Registers / Yank history" },
 
             -- Folds
             { "<leader>za", desc = "Toggle fold" },
@@ -95,8 +104,8 @@ return {
             { "<leader>zv", desc = "Preview fold" },
 
             -- Git
-            { "<leader>gb", desc = "Blame line" },
-            { "<leader>gc", desc = "Git commit" },
+            { "<leader>gb", desc = "Toggle inline blame" },
+            { "<leader>gB", desc = "Toggle floating blame window" },
             { "<leader>gd", desc = "Preview hunk" },
             { "<leader>gD", desc = "Diff this" },
             { "<leader>gg", desc = "Neogit status" },
@@ -105,6 +114,15 @@ return {
             { "<leader>gr", desc = "Reset hunk" },
             { "<leader>gs", desc = "Stage hunk" },
             { "<leader>gu", desc = "Undo stage hunk" },
+
+            -- Git Conflicts
+            { "<leader>gco", desc = "Conflict: Choose Ours" },
+            { "<leader>gct", desc = "Conflict: Choose Theirs" },
+            { "<leader>gcb", desc = "Conflict: Choose Both" },
+            { "<leader>gc0", desc = "Conflict: Choose None" },
+            { "<leader>gc]", desc = "Conflict: Next conflict" },
+            { "<leader>gc[", desc = "Conflict: Prev conflict" },
+            { "<leader>gcq", desc = "Conflict: Quickfix list" },
 
             -- Harpoon
             { "<leader>ha", desc = "Add to harpoon" },
@@ -218,12 +236,14 @@ return {
 
             -- Windows and sessions
             { "<leader>wc", desc = "Close window" },
-            { "<leader>wh", desc = "Split horizontal" },
-            { "<leader>wo", desc = "Only window" },
-            { "<leader>wr", desc = "Restore session" },
-            { "<leader>ws", desc = "Save session" },
-            { "<leader>wl", desc = "Search sessions" },
+            { "<leader>ws", desc = "Split horizontal" },
             { "<leader>wv", desc = "Split vertical" },
+            { "<leader>wo", desc = "Only window" },
+            { "<leader>wz", desc = "Maximize / Zoom window" },
+            { "<leader>w=", desc = "Equalize window sizes" },
+            { "<leader>wr", desc = "Restore session" },
+            { "<leader>wS", desc = "Save session" },
+            { "<leader>wl", desc = "Search sessions" },
 
             -- Diagnostics and lists
             { "<leader>xd", desc = "Buffer diagnostics" },
