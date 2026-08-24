@@ -230,6 +230,8 @@ local function set_transparent_highlights(enabled)
         "SnacksPickerList",
         "SnacksPickerInput",
         "SnacksPickerBox",
+        "InclineNormal",
+        "InclineNormalNC",
     }
 
     for _, group in ipairs(groups) do
@@ -279,8 +281,10 @@ local function apply_editor_chrome(transparent)
         Search = { fg = normal_fg, bg = blend(warning, normal_bg, 0.26) },
         IncSearch = { fg = normal_fg, bg = blend(danger, normal_bg, 0.30) },
         CurSearch = { fg = normal_fg, bg = blend(danger, normal_bg, 0.30), bold = true },
-        StatusLine = { fg = normal_fg, bg = sidebar_bg },
-        StatusLineNC = { fg = comment, bg = sidebar_bg },
+        StatusLine = { fg = normal_fg, bg = "NONE" },
+        StatusLineNC = { fg = comment, bg = "NONE" },
+        InclineNormal = { bg = "NONE" },
+        InclineNormalNC = { bg = "NONE" },
 
         -- ── Completion menu & AI Ghost Text ────────────────────────────────────
         Pmenu = { fg = normal_fg, bg = float_bg },
