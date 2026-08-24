@@ -106,6 +106,7 @@ return {
             multiline_threshold = 20,
             trim_scope = "outer",
             mode = "cursor",
+            separator = "─",
         },
     },
 }
