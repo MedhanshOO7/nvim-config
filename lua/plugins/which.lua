@@ -50,6 +50,11 @@ return {
             -- AI
             { "<leader>aa", desc = "AI Actions", mode = { "n", "v" }, icon = { icon = "󱚣", color = "green" } },
             { "<leader>ac", desc = "Toggle AI Chat", mode = { "n", "v" }, icon = { icon = "󰭹", color = "green" } },
+            { "<leader>Ca", desc = "Copilot: Authenticate", icon = { icon = "󰚩", color = "green" } },
+            { "<leader>Cd", desc = "Copilot: Disable / Toggle engine", icon = { icon = "󰂭", color = "red" } },
+            { "<leader>Cp", desc = "Copilot: Open panel", icon = { icon = "󰚩", color = "green" } },
+            { "<leader>Cs", desc = "Copilot: Status", icon = { icon = "󰚩", color = "green" } },
+            { "<leader>Cx", desc = "Copilot: Toggle engine", icon = { icon = "󰚩", color = "green" } },
 
             -- Buffers
             { "<leader>bb", desc = "Browse open buffers", icon = { icon = "󰓩", color = "cyan" } },
