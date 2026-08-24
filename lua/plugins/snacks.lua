@@ -1,3 +1,14 @@
+local function greeting()
+    local hour = tonumber(os.date("%H")) or 12
+    if hour < 12 then
+        return "󰖨  Good morning, Medhansh"
+    elseif hour < 18 then
+        return "󰖙  Good afternoon, Medhansh"
+    else
+        return "  Good evening, Medhansh"
+    end
+end
+
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -5,8 +16,8 @@ return {
     opts = {
         animate = {
             enabled = true,
-            duration = 20, -- Slower, more 'luxurious' feel
-            fps = 100,     -- High refresh rate for Kitty
+            duration = 20,
+            fps = 100,
         },
         bigfile = { enabled = true },
         bufdelete = { enabled = true },
@@ -33,6 +44,13 @@ return {
             },
             sections = {
                 { section = "header" },
+                {
+                    text = {
+                        { " " .. greeting() .. " ", hl = "Function" },
+                    },
+                    align = "center",
+                    padding = 1,
+                },
                 {
                     pane = 2,
                     section = "terminal",
@@ -180,7 +198,7 @@ return {
         scratch = { enabled = true },
         scroll = { enabled = true },
         statuscolumn = { enabled = true },
-        words = { enabled = false }, -- vim-illuminate handles reference highlighting
+        words = { enabled = false },
         zen = { enabled = true },
     },
     init = function()
@@ -220,20 +238,6 @@ return {
         { "<leader>ih", function() Snacks.image.hover() end, desc = "Hover Image Preview (Manual)" },
         {
             "<leader>ui",
-            function()
-                if Snacks.image and Snacks.image.doc then
-                    Snacks.image.doc.enabled = not Snacks.image.doc.enabled
-                    vim.notify(
-                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 " or "Hovering Image Previews DISABLED 󰂭 ",
-                        vim.log.levels.INFO,
-                        { title = "Image Previews" }
-                    )
-                end
-            end,
-            desc = "Toggle Hovering Image Previews",
-        },
-        {
-            "<leader>iu",
             function()
                 if Snacks.image and Snacks.image.doc then
                     Snacks.image.doc.enabled = not Snacks.image.doc.enabled
