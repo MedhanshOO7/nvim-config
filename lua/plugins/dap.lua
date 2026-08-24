@@ -31,7 +31,6 @@ return {
             "theHamsta/nvim-dap-virtual-text",
             "nvim-neotest/nvim-nio",
             "mfussenegger/nvim-dap-python",
-            "mxsdev/nvim-dap-vscode-js",
         },
         config = function()
             local dap = require("dap")
@@ -39,7 +38,6 @@ return {
             local dapui_ok, dapui = pcall(require, "dapui")
             local virtual_text_ok, dap_virtual_text = pcall(require, "nvim-dap-virtual-text")
             local dap_python_ok, dap_python = pcall(require, "dap-python")
-            local js_debug_ok, dap_vscode_js = pcall(require, "dap-vscode-js")
 
             local codelldb_path = mason_path .. "/codelldb/extension/adapter/codelldb"
             local debugpy_path = mason_path .. "/debugpy/venv/bin/python"
@@ -121,22 +119,31 @@ return {
                 end
             end
 
-            if js_debug_ok and vim.fn.executable(js_debug_cmd) == 1 then
-                dap_vscode_js.setup({
-                    debugger_cmd = { js_debug_cmd },
-                    adapters = {
-                        "pwa-node",
-                        "node-terminal",
+            if vim.fn.executable(js_debug_cmd) == 1 then
+                dap.adapters["pwa-node"] = {
+                    type = "server",
+                    host = "localhost",
+                    port = "${port}",
+                    executable = {
+                        command = js_debug_cmd,
+                        args = { "${port}" },
                     },
-                })
+                }
 
-                for _, language in ipairs({ "javascript", "typescript" }) do
+                for _, language in ipairs({ "javascript", "typescript", "javascriptreact", "typescriptreact" }) do
                     dap.configurations[language] = {
                         {
                             type = "pwa-node",
                             request = "launch",
                             name = "Launch current file",
                             program = "${file}",
+                            cwd = "${workspaceFolder}",
+                        },
+                        {
+                            type = "pwa-node",
+                            request = "attach",
+                            name = "Attach to Node process",
+                            processId = require("dap.utils").pick_process,
                             cwd = "${workspaceFolder}",
                         },
                     }
