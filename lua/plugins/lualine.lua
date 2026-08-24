@@ -51,10 +51,7 @@ return {
 
         local function copilot_status()
             local ok, client = pcall(require, "copilot.client")
-            if not ok then return "" end
-            if client.is_disabled() then
-                return "󰂭 Off"
-            end
+            if not ok or client.is_disabled() then return "" end
             return "󰚩 Ready"
         end
 
@@ -65,7 +62,12 @@ return {
             end
             local names = {}
             for _, client in ipairs(clients) do
-                table.insert(names, client.name)
+                if client.name ~= "copilot" then
+                    table.insert(names, client.name)
+                end
+            end
+            if #names == 0 then
+                return ""
             end
             return " " .. table.concat(names, ", ")
         end
