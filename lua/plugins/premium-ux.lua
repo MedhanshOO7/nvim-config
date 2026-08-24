@@ -78,24 +78,26 @@ return {
                     local icon, icon_hl = devicons.get_icon_color(filename)
                     local diagnostics = vim.diagnostic.count(buf)
 
-                    local pill_bg = props.focused
-                        and (hl_hex("CursorLine", "bg") or hl_hex("Pmenu", "bg") or "#1e1e2e")
-                        or (hl_hex("NormalNC", "bg") or hl_hex("Pmenu", "bg") or "#181825")
+                    -- Vibrant colored pill palette
+                    local accent_color = hl_hex("Function", "fg") or hl_hex("Directory", "fg") or "#89b4fa"
+                    local dark_text = "#11111b"
+                    local unfocused_bg = hl_hex("CursorLine", "bg") or hl_hex("Pmenu", "bg") or "#313244"
+                    local unfocused_fg = hl_hex("Comment", "fg") or "#a6adc8"
 
-                    local text_fg = props.focused
-                        and (hl_hex("Normal", "fg") or "#cdd6f4")
-                        or (hl_hex("Comment", "fg") or "#6c7086")
+                    local pill_bg = props.focused and accent_color or unfocused_bg
+                    local text_fg = props.focused and dark_text or unfocused_fg
+                    local icon_fg = props.focused and dark_text or (icon_hl or unfocused_fg)
 
                     local parts = {}
 
-                    -- Smooth left rounded pill cap (seamless against editor background)
+                    -- Smooth left rounded pill cap
                     table.insert(parts, { "", guifg = pill_bg, guibg = "NONE" })
 
                     -- File icon
                     if icon then
                         table.insert(parts, {
                             icon .. " ",
-                            guifg = icon_hl,
+                            guifg = icon_fg,
                             guibg = pill_bg,
                         })
                     end
@@ -112,26 +114,26 @@ return {
                     local git = vim.b[buf].gitsigns_status_dict
                     if git then
                         if git.added and git.added > 0 then
-                            table.insert(parts, { " +" .. git.added, guifg = "#a6e3a1", guibg = pill_bg })
+                            table.insert(parts, { " +" .. git.added, guifg = props.focused and "#1e4732" or "#a6e3a1", guibg = pill_bg, gui = "bold" })
                         end
                         if git.changed and git.changed > 0 then
-                            table.insert(parts, { " ~" .. git.changed, guifg = "#f9e2af", guibg = pill_bg })
+                            table.insert(parts, { " ~" .. git.changed, guifg = props.focused and "#4a3c10" or "#f9e2af", guibg = pill_bg, gui = "bold" })
                         end
                         if git.removed and git.removed > 0 then
-                            table.insert(parts, { " -" .. git.removed, guifg = "#f38ba8", guibg = pill_bg })
+                            table.insert(parts, { " -" .. git.removed, guifg = props.focused and "#5e1919" or "#f38ba8", guibg = pill_bg, gui = "bold" })
                         end
                     end
 
                     -- Diagnostics
                     if diagnostics[vim.diagnostic.severity.ERROR] and diagnostics[vim.diagnostic.severity.ERROR] > 0 then
-                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.ERROR], guifg = "#f38ba8", guibg = pill_bg })
+                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.ERROR], guifg = props.focused and "#5e1919" or "#f38ba8", guibg = pill_bg, gui = "bold" })
                     elseif diagnostics[vim.diagnostic.severity.WARN] and diagnostics[vim.diagnostic.severity.WARN] > 0 then
-                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.WARN], guifg = "#fab387", guibg = pill_bg })
+                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.WARN], guifg = props.focused and "#4a3c10" or "#fab387", guibg = pill_bg, gui = "bold" })
                     end
 
                     -- Modified indicator
                     if modified then
-                        table.insert(parts, { " ●", guifg = "#f9e2af", guibg = pill_bg })
+                        table.insert(parts, { " ●", guifg = props.focused and "#4a3c10" or "#f9e2af", guibg = pill_bg, gui = "bold" })
                     end
 
                     -- Smooth right rounded pill cap
