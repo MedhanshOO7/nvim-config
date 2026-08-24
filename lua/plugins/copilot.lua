@@ -88,6 +88,11 @@ return {
             local function toggle_copilot()
                 local client = require("copilot.client")
                 if client.is_disabled() then
+                    -- Stop Supermaven before enabling Copilot to avoid dual ghost-text
+                    pcall(function()
+                        local sm_api = require("supermaven-nvim.api")
+                        if sm_api.is_running() then sm_api.stop() end
+                    end)
                     vim.cmd("Copilot enable")
                     vim.notify("Copilot Engine ENABLED 󱐌", vim.log.levels.INFO, { title = "Copilot" })
                 else
