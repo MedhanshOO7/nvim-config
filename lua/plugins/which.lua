@@ -218,6 +218,7 @@ return {
             -- UI and theme
             { "<leader>ua", desc = "Toggle auto-save (global)", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>ub", desc = "Toggle auto-save (buffer)", icon = { icon = "󰔎", color = "cyan" } },
+            { "<leader>uC", desc = "Toggle Copilot AI engine", icon = { icon = "󰚩", color = "green" } },
             { "<leader>uc", desc = "Toggle conceal level", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>ud", desc = "Toggle LSP diagnostics", icon = { icon = "󱖫", color = "red" } },
             { "<leader>uf", desc = "Toggle auto-format", icon = { icon = "󰉢", color = "green" } },
