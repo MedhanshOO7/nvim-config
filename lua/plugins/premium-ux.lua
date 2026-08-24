@@ -39,7 +39,9 @@ return {
 
             local function hex_to_rgb(hex)
                 hex = to_hex(hex)
-                if type(hex) ~= "string" then hex = "#1e1e2e" end
+                if type(hex) ~= "string" then
+                    hex = "#1e1e2e"
+                end
                 hex = hex:gsub("#", "")
                 if hex == "" or hex:lower() == "none" then
                     hex = "1e1e2e"
@@ -95,7 +97,7 @@ return {
                 hide = {
                     cursorline = false,
                     focused_win = false,
-                    only_win = true,
+                    only_win = false,
                 },
                 highlight = {
                     groups = {
@@ -123,7 +125,8 @@ return {
                     local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
                     local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
 
-                    local pill_bg = props.focused and blend(accent, normal_bg, 0.60) or blend(normal_fg, normal_bg, 0.15)
+                    local pill_bg = props.focused and blend(accent, normal_bg, 0.60)
+                        or blend(normal_fg, normal_bg, 0.15)
                     local text_fg = props.focused and (hl_hex("Normal", "fg") or "#ffffff") or comment
 
                     local parts = {}
@@ -163,10 +166,25 @@ return {
                     end
 
                     -- Diagnostics
-                    if diagnostics[vim.diagnostic.severity.ERROR] and diagnostics[vim.diagnostic.severity.ERROR] > 0 then
-                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.ERROR], guifg = red, guibg = pill_bg, gui = "bold" })
-                    elseif diagnostics[vim.diagnostic.severity.WARN] and diagnostics[vim.diagnostic.severity.WARN] > 0 then
-                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.WARN], guifg = yellow, guibg = pill_bg, gui = "bold" })
+                    if
+                        diagnostics[vim.diagnostic.severity.ERROR]
+                        and diagnostics[vim.diagnostic.severity.ERROR] > 0
+                    then
+                        table.insert(parts, {
+                            "  " .. diagnostics[vim.diagnostic.severity.ERROR],
+                            guifg = red,
+                            guibg = pill_bg,
+                            gui = "bold",
+                        })
+                    elseif
+                        diagnostics[vim.diagnostic.severity.WARN] and diagnostics[vim.diagnostic.severity.WARN] > 0
+                    then
+                        table.insert(parts, {
+                            "  " .. diagnostics[vim.diagnostic.severity.WARN],
+                            guifg = yellow,
+                            guibg = pill_bg,
+                            gui = "bold",
+                        })
                     end
 
                     -- Modified indicator
