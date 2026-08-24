@@ -127,7 +127,16 @@ return {
 
                     local pill_bg = props.focused and blend(accent, normal_bg, 0.60)
                         or blend(normal_fg, normal_bg, 0.15)
-                    local text_fg = props.focused and (hl_hex("Normal", "fg") or "#ffffff") or comment
+                    local function contrast_fg(bg_color)
+                        local r, g, b = hex_to_rgb(bg_color)
+                        local lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+                        if lum > 0.36 then
+                            return normal_bg ~= "NONE" and normal_bg or "#181825"
+                        else
+                            return normal_fg ~= "NONE" and normal_fg or "#cdd6f4"
+                        end
+                    end
+                    local pill_text_fg = props.focused and contrast_fg(pill_bg) or comment
 
                     local parts = {}
 
@@ -138,7 +147,7 @@ return {
                     if icon then
                         table.insert(parts, {
                             icon .. " ",
-                            guifg = props.focused and (icon_hl or accent) or comment,
+                            guifg = pill_text_fg,
                             guibg = pill_bg,
                         })
                     end
@@ -146,7 +155,7 @@ return {
                     -- Filename
                     table.insert(parts, {
                         filename,
-                        guifg = text_fg,
+                        guifg = pill_text_fg,
                         guibg = pill_bg,
                         gui = props.focused and "bold" or "NONE",
                     })
@@ -155,13 +164,13 @@ return {
                     local git = vim.b[buf].gitsigns_status_dict
                     if git then
                         if git.added and git.added > 0 then
-                            table.insert(parts, { " +" .. git.added, guifg = green, guibg = pill_bg })
+                            table.insert(parts, { " +" .. git.added, guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
                         end
                         if git.changed and git.changed > 0 then
-                            table.insert(parts, { " ~" .. git.changed, guifg = yellow, guibg = pill_bg })
+                            table.insert(parts, { " ~" .. git.changed, guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
                         end
                         if git.removed and git.removed > 0 then
-                            table.insert(parts, { " -" .. git.removed, guifg = red, guibg = pill_bg })
+                            table.insert(parts, { " -" .. git.removed, guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
                         end
                     end
 
@@ -172,7 +181,7 @@ return {
                     then
                         table.insert(parts, {
                             "  " .. diagnostics[vim.diagnostic.severity.ERROR],
-                            guifg = red,
+                            guifg = pill_text_fg,
                             guibg = pill_bg,
                             gui = "bold",
                         })
@@ -181,7 +190,7 @@ return {
                     then
                         table.insert(parts, {
                             "  " .. diagnostics[vim.diagnostic.severity.WARN],
-                            guifg = yellow,
+                            guifg = pill_text_fg,
                             guibg = pill_bg,
                             gui = "bold",
                         })
@@ -189,7 +198,7 @@ return {
 
                     -- Modified indicator
                     if modified then
-                        table.insert(parts, { " ●", guifg = yellow, guibg = pill_bg, gui = "bold" })
+                        table.insert(parts, { " ●", guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
                     end
 
                     -- Smooth right rounded pill cap
