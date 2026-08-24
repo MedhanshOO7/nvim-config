@@ -107,9 +107,15 @@ return {
         end
 
         local function apply()
+            local theme = get_floating_theme()
+            local bg_pill = hl_hex("CursorLine", "bg", hl_hex("Pmenu", "bg", "#1e1e2e"))
+
+            vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
+            vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
+
             require("lualine").setup({
                 options = {
-                    theme = get_floating_theme(),
+                    theme = theme,
                     globalstatus = true,
                     section_separators = { left = "", right = "" },
                     component_separators = { left = "", right = "" },
@@ -152,12 +158,14 @@ return {
                         {
                             "branch",
                             icon = "",
+                            color = { bg = bg_pill },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
+                            color = { bg = bg_pill },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -178,13 +186,13 @@ return {
                     lualine_x = {
                         {
                             macro_recording,
-                            color = { fg = "#f38ba8", gui = "bold" },
-                            separator = { left = "", right = "" },
+                            color = { fg = "#f38ba8", bg = bg_pill, gui = "bold" },
+                            separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             copilot_status,
-                            color = { fg = "#a6e3a1", gui = "bold" },
+                            color = { fg = "#a6e3a1", bg = bg_pill, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -192,12 +200,13 @@ return {
                             "diagnostics",
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                            color = { bg = bg_pill },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             lsp_status,
-                            color = { fg = "#89b4fa", gui = "bold" },
+                            color = { fg = "#89b4fa", bg = bg_pill, gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -206,11 +215,13 @@ return {
                         {
                             "filetype",
                             icon_only = false,
+                            color = { bg = bg_pill },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "progress",
+                            color = { bg = bg_pill },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
