@@ -123,8 +123,8 @@ return {
                     local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
                     local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
 
-                    local pill_bg = props.focused and blend(accent, normal_bg, 0.18) or blend(normal_fg, normal_bg, 0.08)
-                    local text_fg = props.focused and accent or comment
+                    local pill_bg = props.focused and blend(accent, normal_bg, 0.45) or blend(normal_fg, normal_bg, 0.15)
+                    local text_fg = props.focused and (hl_hex("Normal", "fg") or "#ffffff") or comment
 
                     local parts = {}
 
