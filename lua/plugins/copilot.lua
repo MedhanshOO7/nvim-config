@@ -53,6 +53,7 @@ return {
         keys = {
             { "<leader>Cp", "<cmd>Copilot panel<cr>", desc = "Copilot: Open Panel" },
             { "<leader>Cs", "<cmd>Copilot status<cr>", desc = "Copilot: Status" },
+            { "<leader>Cd", "<cmd>CopilotToggle<cr>", desc = "Copilot: Disable / Toggle Engine" },
             { "<leader>Cx", "<cmd>CopilotToggle<cr>", desc = "Copilot: Toggle Engine" },
             { "<leader>uC", "<cmd>CopilotToggle<cr>", desc = "Toggle Copilot AI Engine" },
             { "<leader>Ca", "<cmd>Copilot auth<cr>", desc = "Copilot: Authenticate" },
