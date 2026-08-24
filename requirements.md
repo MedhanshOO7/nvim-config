@@ -1,13 +1,14 @@
 # System Requirements
 
-Bro, verified this on my Arch install on 2026-05-18. It works flawlessly. 
+Bro, verified this on my Arch install on 2026-05-18. It works flawlessly.
 
-This file lists the packages you actually need to install yourself. Everything handled by `lazy.nvim`, `mason.nvim` is left out unless it needs a system runtime. 
+This file lists the packages you actually need to install yourself. Everything handled by `lazy.nvim`, `mason.nvim` is left out unless it needs a system runtime.
 
 My config expects:
+
 - `~/.venvs/neovim/bin/python` to exist (don't skip this)
 - `pynvim` installed in that venv
-- `git`, `rg`, `fd`, `tree-sitter`, `node`, and a C/C++ toolchain 
+- `git`, `rg`, `fd`, `tree-sitter`, `node`, and a C/C++ toolchain
 - `man` support cause I use Neovim as a manpager
 - `imagemagick` for `image.nvim`
 - `pokemon-colorscripts` for my sick dashboard
@@ -24,31 +25,34 @@ sudo pacman -S --needed neovim git curl ripgrep fd tree-sitter-cli nodejs npm \
 ```
 
 For the Pokémon dashboard (it's in the AUR):
+
 ```bash
 # Using yay:
 yay -S pokemon-colorscripts-git
 ```
 
 Create the Python host environment:
+
 ```bash
 python -m venv ~/.venvs/neovim
 ~/.venvs/neovim/bin/pip install --upgrade pip
-~/.venvs/neovim/bin/pip install pynvim 
+~/.venvs/neovim/bin/pip install pynvim
 ```
 
 Why u need this stuff:
+
 - `neovim`: duh
 - `kitty`: required for `image.nvim` to actually work.
 - `imagemagick`: allows Neovim to parse images.
 - `pokemon-colorscripts`: the ASCII art generator for the startup screen.
 - `git` and `curl`: plugin bootstrap
-- `ripgrep`: Telescope and search 
+- `ripgrep`: Telescope and search
 - `fd`: fast file discovery
 - `tree-sitter-cli`: parser tooling
-- `nodejs` and `npm`: markdown preview and Mason tooling 
+- `nodejs` and `npm`: markdown preview and Mason tooling
 - `base-devel` and `unzip`: native plugin compilation
 - `python`, `python-pip`: Python provider
-- `xdg-utils`: open URLs 
+- `xdg-utils`: open URLs
 - `wl-clipboard`: Wayland clipboard support
 - `man-db`: manpager workflow
 - `lazygit`: the visual Git UI (`<leader>gl`)
@@ -65,6 +69,7 @@ sudo apt install -y neovim git curl ripgrep fd-find tree-sitter-cli nodejs npm \
 ```
 
 Debian ships `fd-find` as `fdfind` so u gotta symlink it:
+
 ```bash
 mkdir -p ~/.local/bin
 ln -sf "$(command -v fdfind)" ~/.local/bin/fd
@@ -87,6 +92,7 @@ winget install Neovim.Neovim Git.Git BurntSushi.ripgrep.MSVC sharkdp.fd tree-sit
 ```
 
 Create the Python host environment (PowerShell):
+
 ```powershell
 python -m venv "$HOME\.venvs\neovim"
 & "$HOME\.venvs\neovim\Scripts\pip.exe" install --upgrade pip
@@ -96,6 +102,7 @@ python -m venv "$HOME\.venvs\neovim"
 ## Not Included On Purpose
 
 Mason handles these so don't install them system-wide or it'll conflict:
+
 - `clangd`, `black`, `ruff`, `prettier`, `stylua`
 - Debuggers: `debugpy`, `codelldb`, `js-debug-adapter`
 - Testing Adapters: `neotest-gtest`, `neotest-jest`, etc.
