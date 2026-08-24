@@ -30,6 +30,27 @@ return {
         config = function()
             local devicons = require("nvim-web-devicons")
 
+            local function hl_hex(name, key, fallback)
+                local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+                if ok and hl and hl[key] then
+                    return string.format("#%06x", hl[key])
+                end
+                return fallback
+            end
+
+            local function apply_incline_transparent_hl()
+                vim.api.nvim_set_hl(0, "InclineNormal", { bg = "NONE" })
+                vim.api.nvim_set_hl(0, "InclineNormalNC", { bg = "NONE" })
+            end
+
+            apply_incline_transparent_hl()
+
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                group = vim.api.nvim_create_augroup("incline_transparent_sync", { clear = true }),
+                pattern = "*",
+                callback = apply_incline_transparent_hl,
+            })
+
             require("incline").setup({
                 debounce_threshold = {
                     falling = 40,
@@ -42,8 +63,8 @@ return {
                 },
                 highlight = {
                     groups = {
-                        InclineNormal = { default = true, group = "NormalFloat" },
-                        InclineNormalNC = { default = true, group = "NormalFloat" },
+                        InclineNormal = { default = false, group = "InclineNormal" },
+                        InclineNormalNC = { default = false, group = "InclineNormalNC" },
                     },
                 },
                 render = function(props)
@@ -56,55 +77,65 @@ return {
                     local modified = vim.bo[buf].modified
                     local icon, icon_hl = devicons.get_icon_color(filename)
                     local diagnostics = vim.diagnostic.count(buf)
+
+                    local pill_bg = props.focused
+                        and (hl_hex("CursorLine", "bg") or hl_hex("Pmenu", "bg") or "#1e1e2e")
+                        or (hl_hex("NormalNC", "bg") or hl_hex("Pmenu", "bg") or "#181825")
+
+                    local text_fg = props.focused
+                        and (hl_hex("Normal", "fg") or "#cdd6f4")
+                        or (hl_hex("Comment", "fg") or "#6c7086")
+
                     local parts = {}
 
-                    -- Leading bubble cap
-                    table.insert(parts, { " ", group = props.focused and "Function" or "Comment" })
+                    -- Smooth left rounded pill cap (seamless against editor background)
+                    table.insert(parts, { "", guifg = pill_bg, guibg = "NONE" })
 
                     -- File icon
                     if icon then
                         table.insert(parts, {
                             icon .. " ",
                             guifg = icon_hl,
-                            group = props.focused and "NormalFloat" or "Comment",
+                            guibg = pill_bg,
                         })
                     end
 
                     -- Filename
                     table.insert(parts, {
                         filename,
+                        guifg = text_fg,
+                        guibg = pill_bg,
                         gui = props.focused and "bold" or "NONE",
-                        group = props.focused and "NormalFloat" or "Comment",
                     })
 
-                    -- Git status if present
+                    -- Git diff status
                     local git = vim.b[buf].gitsigns_status_dict
                     if git then
                         if git.added and git.added > 0 then
-                            table.insert(parts, { " +" .. git.added, group = "DiagnosticOk" })
+                            table.insert(parts, { " +" .. git.added, guifg = "#a6e3a1", guibg = pill_bg })
                         end
                         if git.changed and git.changed > 0 then
-                            table.insert(parts, { " ~" .. git.changed, group = "DiagnosticWarn" })
+                            table.insert(parts, { " ~" .. git.changed, guifg = "#f9e2af", guibg = pill_bg })
                         end
                         if git.removed and git.removed > 0 then
-                            table.insert(parts, { " -" .. git.removed, group = "DiagnosticError" })
+                            table.insert(parts, { " -" .. git.removed, guifg = "#f38ba8", guibg = pill_bg })
                         end
                     end
 
                     -- Diagnostics
                     if diagnostics[vim.diagnostic.severity.ERROR] and diagnostics[vim.diagnostic.severity.ERROR] > 0 then
-                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.ERROR], group = "DiagnosticError" })
+                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.ERROR], guifg = "#f38ba8", guibg = pill_bg })
                     elseif diagnostics[vim.diagnostic.severity.WARN] and diagnostics[vim.diagnostic.severity.WARN] > 0 then
-                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.WARN], group = "DiagnosticWarn" })
+                        table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.WARN], guifg = "#fab387", guibg = pill_bg })
                     end
 
                     -- Modified indicator
                     if modified then
-                        table.insert(parts, { " ●", group = "DiagnosticWarn" })
+                        table.insert(parts, { " ●", guifg = "#f9e2af", guibg = pill_bg })
                     end
 
-                    -- Trailing bubble cap
-                    table.insert(parts, { " ", group = props.focused and "Function" or "Comment" })
+                    -- Smooth right rounded pill cap
+                    table.insert(parts, { "", guifg = pill_bg, guibg = "NONE" })
 
                     return parts
                 end,
@@ -112,6 +143,14 @@ return {
                     margin = { horizontal = 1, vertical = 0 },
                     padding = 0,
                     placement = { horizontal = "right", vertical = "top" },
+                    winhighlight = {
+                        active = {
+                            Normal = "InclineNormal",
+                        },
+                        inactive = {
+                            Normal = "InclineNormalNC",
+                        },
+                    },
                 },
             })
         end,
