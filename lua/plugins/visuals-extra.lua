@@ -9,10 +9,36 @@ return {
             trailing_stiffness = 0.5,
             distance_stop_animating = 0.5,
             hide_target_hack = false,
+            legacy_computing_symbols_support = true,
         },
     },
 
-    -- 2. Multi-Action Micro-Glimmer Animations
+    -- 2. Smooth Scrolling & Physics Transitions
+    -- Makes viewport jumps, <C-d>/<C-u>, and search jumps smooth as butter.
+    {
+        "declancm/cinnamon.nvim",
+        version = "*",
+        event = "VeryLazy",
+        opts = {
+            keymaps = {
+                basic = true,
+                extra = true,
+            },
+            options = {
+                mode = "window",
+                delay = 5,
+                max_delta = {
+                    time = 200,
+                },
+                step_size = {
+                    vertical = 1,
+                    horizontal = 2,
+                },
+            },
+        },
+    },
+
+    -- 3. Multi-Action Micro-Glimmer Animations
     -- Smooth fade/pulse feedback on yank, paste, undo/redo, and search jumps.
     {
         "rachartier/tiny-glimmer.nvim",
@@ -22,14 +48,14 @@ return {
             default_animation = "fade",
             animations = {
                 fade = {
-                    max_duration = 300,
-                    min_duration = 150,
+                    max_duration = 250,
+                    min_duration = 120,
                     easing = "outQuad",
                     chars_for_max_duration = 10,
                 },
                 pulse = {
-                    max_duration = 300,
-                    min_duration = 150,
+                    max_duration = 250,
+                    min_duration = 120,
                     chars_for_max_duration = 15,
                     pulse_count = 1,
                     intensity = 1.2,
@@ -41,13 +67,16 @@ return {
                     default_animation = "fade",
                 },
                 paste = {
-                    enabled = false,
+                    enabled = true,
+                    default_animation = "fade",
                 },
                 undo = {
-                    enabled = false,
+                    enabled = true,
+                    default_animation = "pulse",
                 },
                 redo = {
-                    enabled = false,
+                    enabled = true,
+                    default_animation = "pulse",
                 },
                 search = {
                     enabled = true,
@@ -59,7 +88,7 @@ return {
         },
     },
 
-    -- 3. Glowing Active Window Split Separators
+    -- 4. Glowing Active Window Split Separators
     -- Highlights the active split border so you immediately know which window has focus.
     {
         "nvim-zh/colorful-winsep.nvim",
@@ -82,7 +111,7 @@ return {
         },
     },
 
-    -- 4. Translucent Decorative Satellite Scrollbar
+    -- 5. Translucent Decorative Satellite Scrollbar
     -- Displays glanceable diagnostic errors, git changes, and search matches on the right rail.
     {
         "lewis6991/satellite.nvim",
@@ -131,7 +160,7 @@ return {
         },
     },
 
-    -- 5. Rainbow Delimiters
+    -- 6. Rainbow Delimiters
     -- Uses Treesitter to color-code matching parentheses, brackets, and braces.
     {
         "HiPhish/rainbow-delimiters.nvim",
