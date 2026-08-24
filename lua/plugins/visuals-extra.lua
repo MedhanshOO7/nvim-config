@@ -38,8 +38,8 @@ return {
         },
     },
 
-    -- 3. Multi-Action Micro-Glimmer Animations
-    -- Smooth fade/pulse feedback on yank, paste, undo/redo, and search jumps.
+    -- 3. Multi-Action Micro-Glimmer Animations (Colorful Flash Flares)
+    -- Smooth fade/pulse feedback with custom vibrant colors on yank, paste, undo/redo, and search.
     {
         "rachartier/tiny-glimmer.nvim",
         event = "VeryLazy",
@@ -58,29 +58,34 @@ return {
                     min_duration = 120,
                     chars_for_max_duration = 15,
                     pulse_count = 1,
-                    intensity = 1.2,
+                    intensity = 1.3,
                 },
             },
             commands = {
                 yank = {
                     enabled = true,
                     default_animation = "fade",
+                    highlight = "IncSearch",
                 },
                 paste = {
                     enabled = true,
                     default_animation = "fade",
+                    highlight = "DiagnosticOk",
                 },
                 undo = {
                     enabled = true,
                     default_animation = "pulse",
+                    highlight = "DiagnosticInfo",
                 },
                 redo = {
                     enabled = true,
                     default_animation = "pulse",
+                    highlight = "DiagnosticHint",
                 },
                 search = {
                     enabled = true,
                     default_animation = "pulse",
+                    highlight = "CurSearch",
                     next_mapping = "n",
                     prev_mapping = "N",
                 },
@@ -160,12 +165,30 @@ return {
         },
     },
 
-    -- 6. Rainbow Delimiters
-    -- Uses Treesitter to color-code matching parentheses, brackets, and braces.
+    -- 6. Vivid Rainbow Delimiters
+    -- Uses Treesitter to color-code matching parentheses, brackets, and braces with vibrant saturated colors.
     {
         "HiPhish/rainbow-delimiters.nvim",
         event = { "BufReadPost", "BufNewFile" },
         config = function()
+            local function apply_rainbow_colors()
+                vim.api.nvim_set_hl(0, "RainbowDelimiterRed", { fg = "#f38ba8", bold = true })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg = "#f9e2af", bold = true })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg = "#89b4fa", bold = true })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterOrange", { fg = "#fab387", bold = true })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterGreen", { fg = "#a6e3a1", bold = true })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterViolet", { fg = "#cba6f7", bold = true })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterCyan", { fg = "#89dceb", bold = true })
+            end
+
+            apply_rainbow_colors()
+
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                group = vim.api.nvim_create_augroup("rainbow_delimiters_vivid_colors", { clear = true }),
+                pattern = "*",
+                callback = apply_rainbow_colors,
+            })
+
             vim.g.rainbow_delimiters = {
                 highlight = {
                     "RainbowDelimiterRed",
