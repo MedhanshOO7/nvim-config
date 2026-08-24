@@ -33,22 +33,20 @@ return {
             local warn_fg = first_hl({ "DiagnosticWarn", "WarningMsg" }, "fg") or "#fab387"
             local modified = first_hl({ "DiagnosticWarn", "String" }, "fg") or "#f9e2af"
 
-            -- inactive clearly darker than active
             local inactive_bg = mantle
-
             local set = vim.api.nvim_set_hl
 
-            -- active — underdouble for thick line, | prefix via sign
-            set(0, "BufferCurrent", { fg = text, bg = base_bg, bold = true, underdouble = true, sp = accent })
-            set(0, "BufferCurrentIndex", { fg = accent, bg = base_bg, underdouble = true, sp = accent })
-            set(0, "BufferCurrentMod", { fg = modified, bg = base_bg, bold = true, underdouble = true, sp = accent })
-            set(0, "BufferCurrentSign", { fg = accent, bg = base_bg, underdouble = true, sp = accent })
+            -- Active buffer tab
+            set(0, "BufferCurrent", { fg = text, bg = base_bg, bold = true })
+            set(0, "BufferCurrentIndex", { fg = accent, bg = base_bg, bold = true })
+            set(0, "BufferCurrentMod", { fg = modified, bg = base_bg, bold = true })
+            set(0, "BufferCurrentSign", { fg = accent, bg = base_bg, bold = true })
             set(0, "BufferCurrentTarget", { fg = error_fg, bg = base_bg, bold = true })
-            set(0, "BufferCurrentIcon", { bg = base_bg, underdouble = true, sp = accent })
-            set(0, "BufferCurrentERROR", { fg = error_fg, bg = base_bg, underdouble = true, sp = accent })
-            set(0, "BufferCurrentWARN", { fg = warn_fg, bg = base_bg, underdouble = true, sp = accent })
+            set(0, "BufferCurrentIcon", { bg = base_bg })
+            set(0, "BufferCurrentERROR", { fg = error_fg, bg = base_bg, bold = true })
+            set(0, "BufferCurrentWARN", { fg = warn_fg, bg = base_bg, bold = true })
 
-            -- inactive — clearly dimmed
+            -- Inactive buffer tabs
             set(0, "BufferInactive", { fg = muted, bg = inactive_bg })
             set(0, "BufferInactiveIndex", { fg = muted, bg = inactive_bg })
             set(0, "BufferInactiveMod", { fg = modified, bg = inactive_bg })
@@ -58,7 +56,7 @@ return {
             set(0, "BufferInactiveERROR", { fg = error_fg, bg = inactive_bg })
             set(0, "BufferInactiveWARN", { fg = warn_fg, bg = inactive_bg })
 
-            -- visible (split)
+            -- Visible in other split
             set(0, "BufferVisible", { fg = subtext, bg = inactive_bg })
             set(0, "BufferVisibleIndex", { fg = subtext, bg = inactive_bg })
             set(0, "BufferVisibleMod", { fg = modified, bg = inactive_bg })
@@ -112,7 +110,9 @@ return {
 
             sidebar_filetypes = {
                 ["snacks_picker_input"] = { event = "BufWipeout", text = "  Explorer", align = "left" },
+                ["snacks_explorer"] = { event = "BufWipeout", text = "  Explorer", align = "left" },
                 ["oil"] = { event = "BufWipeout", text = "  Oil Browser", align = "left" },
+                ["mini.files"] = { event = "BufWipeout", text = "  Mini Files", align = "left" },
             },
 
             highlight_alternate = false,
