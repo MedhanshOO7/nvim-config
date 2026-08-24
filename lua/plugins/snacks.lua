@@ -163,9 +163,7 @@ return {
         },
         lazygit = { enabled = true },
         notifier = {
-            enabled = true,
-            timeout = 3000,
-            style = "compact",
+            enabled = false, -- noice.nvim handles vim.notify()
         },
         picker = {
             enabled = true,
@@ -216,7 +214,7 @@ return {
         quickfile = { enabled = true },
         scope = { enabled = true },
         scratch = { enabled = true },
-        scroll = { enabled = true },
+        scroll = { enabled = false }, -- cinnamon.nvim handles smooth scrolling
         statuscolumn = { enabled = true },
         words = { enabled = false },
         zen = { enabled = true },
@@ -283,13 +281,11 @@ return {
         { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Open Git Permalink in Browser" },
         { "<leader>z", function() Snacks.zen() end, desc = "Toggle Zen Mode" },
         { "<leader>uz", function() Snacks.zen() end, desc = "Toggle Zen Mode" },
-        { "<leader>Z", function() Snacks.zen.zoom() end, desc = "Toggle Zoom Mode" },
         { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
         { "<leader>S", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
         { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File (LSP)" },
         { "]r", function() Snacks.words.jump(1, true) end, desc = "Next LSP Word Reference" },
         { "[r", function() Snacks.words.jump(-1, true) end, desc = "Prev LSP Word Reference" },
-        { "<leader>wm", function() Snacks.toggle.zoom() end, desc = "Maximize / Zoom Window" },
-        { "<leader>un", function() Snacks.notifier.show_history() end, desc = "Notification History" },
+        { "<leader>un", "<cmd>Noice history<cr>", desc = "Notification History" },
     },
 }
