@@ -1,8 +1,5 @@
 return {
     "gbprod/yanky.nvim",
-    dependencies = {
-        "nvim-telescope/telescope.nvim",
-    },
     event = { "BufReadPost", "BufNewFile" },
     opts = {
         ring = { history_length = 100 },
@@ -19,6 +16,16 @@ return {
         { "<leader>yP", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before cursor" },
         { "<M-n>", "<Plug>(YankyCycleForward)", desc = "Cycle forward through yank history" },
         { "<M-p>", "<Plug>(YankyCycleBackward)", desc = "Cycle backward through yank history" },
-        { "<leader>fy", "<cmd>Telescope yank_history<cr>", desc = "Find Yank History" },
+        {
+            "<leader>fy",
+            function()
+                if pcall(require, "snacks") then
+                    Snacks.picker.registers()
+                else
+                    vim.cmd("registers")
+                end
+            end,
+            desc = "Find: Registers / Yank history",
+        },
     },
 }
