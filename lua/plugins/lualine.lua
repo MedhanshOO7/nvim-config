@@ -91,48 +91,48 @@ return {
             local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
             local cyan = hl_hex("Type", "fg", "#89dceb")
 
-            local inactive_bg = blend(fg_text, normal_bg, 0.08)
+            local inactive_bg = blend(fg_text, normal_bg, 0.15)
 
             return {
                 normal = {
-                    a = { fg = blue, bg = blend(blue, normal_bg, 0.22), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.18), gui = "bold" },
+                    a = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
+                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.18), gui = "bold" },
-                    z = { fg = blue, bg = blend(blue, normal_bg, 0.22), gui = "bold" },
+                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
+                    z = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
                 },
                 insert = {
-                    a = { fg = green, bg = blend(green, normal_bg, 0.22), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.18), gui = "bold" },
+                    a = { fg = green, bg = blend(green, normal_bg, 0.45), gui = "bold" },
+                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.18), gui = "bold" },
-                    z = { fg = green, bg = blend(green, normal_bg, 0.22), gui = "bold" },
+                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
+                    z = { fg = green, bg = blend(green, normal_bg, 0.45), gui = "bold" },
                 },
                 visual = {
-                    a = { fg = purple, bg = blend(purple, normal_bg, 0.22), gui = "bold" },
-                    b = { fg = blue, bg = blend(blue, normal_bg, 0.18), gui = "bold" },
+                    a = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
+                    b = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.18), gui = "bold" },
-                    z = { fg = purple, bg = blend(purple, normal_bg, 0.22), gui = "bold" },
+                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
+                    z = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
                 },
                 replace = {
-                    a = { fg = red, bg = blend(red, normal_bg, 0.22), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.18), gui = "bold" },
+                    a = { fg = red, bg = blend(red, normal_bg, 0.45), gui = "bold" },
+                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.18), gui = "bold" },
-                    z = { fg = red, bg = blend(red, normal_bg, 0.22), gui = "bold" },
+                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
+                    z = { fg = red, bg = blend(red, normal_bg, 0.45), gui = "bold" },
                 },
                 command = {
-                    a = { fg = yellow, bg = blend(yellow, normal_bg, 0.22), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.18), gui = "bold" },
+                    a = { fg = yellow, bg = blend(yellow, normal_bg, 0.45), gui = "bold" },
+                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
                     c = { fg = fg_text, bg = bg_dark },
                     x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.18), gui = "bold" },
-                    z = { fg = yellow, bg = blend(yellow, normal_bg, 0.22), gui = "bold" },
+                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
+                    z = { fg = yellow, bg = blend(yellow, normal_bg, 0.45), gui = "bold" },
                 },
                 inactive = {
                     a = { fg = fg_muted, bg = inactive_bg },
@@ -204,14 +204,14 @@ return {
                         {
                             "branch",
                             icon = "",
-                            color = { fg = purple, bg = blend(purple, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
-                            color = { fg = lavender, bg = blend(lavender, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = lavender, bg = blend(lavender, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -232,13 +232,13 @@ return {
                     lualine_x = {
                         {
                             macro_recording,
-                            color = { fg = red, bg = blend(red, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = red, bg = blend(red, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             copilot_status,
-                            color = { fg = green, bg = blend(green, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = green, bg = blend(green, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -246,13 +246,13 @@ return {
                             "diagnostics",
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
-                            color = { fg = peach, bg = blend(peach, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = peach, bg = blend(peach, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             lsp_status,
-                            color = { fg = blue, bg = blend(blue, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -261,13 +261,13 @@ return {
                         {
                             "filetype",
                             icon_only = false,
-                            color = { fg = cyan, bg = blend(cyan, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "progress",
-                            color = { fg = lavender, bg = blend(lavender, normal_bg, 0.18), gui = "bold" },
+                            color = { fg = lavender, bg = blend(lavender, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -276,7 +276,7 @@ return {
                         {
                             "location",
                             icon = "",
-                            color = { fg = blue, bg = blend(blue, normal_bg, 0.22), gui = "bold" },
+                            color = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
