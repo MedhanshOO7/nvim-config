@@ -42,39 +42,75 @@ return {
                 },
                 highlight = {
                     groups = {
-                        InclineNormal = "InclineNormal",
-                        InclineNormalNC = "InclineNormalNC",
+                        InclineNormal = { default = true, group = "NormalFloat" },
+                        InclineNormalNC = { default = true, group = "NormalFloat" },
                     },
                 },
                 render = function(props)
                     local buf = props.buf
                     local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
+                    if filename == "" then
+                        filename = "[No Name]"
+                    end
+
                     local modified = vim.bo[buf].modified
                     local icon, icon_hl = devicons.get_icon_color(filename)
                     local diagnostics = vim.diagnostic.count(buf)
                     local parts = {}
 
+                    -- Leading bubble cap
+                    table.insert(parts, { " ", group = props.focused and "Function" or "Comment" })
+
+                    -- File icon
                     if icon then
-                        table.insert(parts, { icon .. " ", guifg = icon_hl })
+                        table.insert(parts, {
+                            icon .. " ",
+                            guifg = icon_hl,
+                            group = props.focused and "NormalFloat" or "Comment",
+                        })
                     end
 
-                    table.insert(parts, filename ~= "" and filename or "[No Name]")
+                    -- Filename
+                    table.insert(parts, {
+                        filename,
+                        gui = props.focused and "bold" or "NONE",
+                        group = props.focused and "NormalFloat" or "Comment",
+                    })
 
+                    -- Git status if present
+                    local git = vim.b[buf].gitsigns_status_dict
+                    if git then
+                        if git.added and git.added > 0 then
+                            table.insert(parts, { " +" .. git.added, group = "DiagnosticOk" })
+                        end
+                        if git.changed and git.changed > 0 then
+                            table.insert(parts, { " ~" .. git.changed, group = "DiagnosticWarn" })
+                        end
+                        if git.removed and git.removed > 0 then
+                            table.insert(parts, { " -" .. git.removed, group = "DiagnosticError" })
+                        end
+                    end
+
+                    -- Diagnostics
                     if diagnostics[vim.diagnostic.severity.ERROR] and diagnostics[vim.diagnostic.severity.ERROR] > 0 then
                         table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.ERROR], group = "DiagnosticError" })
                     elseif diagnostics[vim.diagnostic.severity.WARN] and diagnostics[vim.diagnostic.severity.WARN] > 0 then
                         table.insert(parts, { "  " .. diagnostics[vim.diagnostic.severity.WARN], group = "DiagnosticWarn" })
                     end
 
+                    -- Modified indicator
                     if modified then
                         table.insert(parts, { " ●", group = "DiagnosticWarn" })
                     end
+
+                    -- Trailing bubble cap
+                    table.insert(parts, { " ", group = props.focused and "Function" or "Comment" })
 
                     return parts
                 end,
                 window = {
                     margin = { horizontal = 1, vertical = 0 },
-                    padding = 1,
+                    padding = 0,
                     placement = { horizontal = "right", vertical = "top" },
                 },
             })
