@@ -80,83 +80,116 @@ return {
             return default
         end
 
+        -- Dynamically extracts all palette colors from whichever theme is active
+        local function get_theme_palette()
+            local normal_bg = hl_hex("Normal", "bg", hl_hex("NormalFloat", "bg", "#1e1e2e"))
+            local normal_fg = hl_hex("Normal", "fg", hl_hex("NormalFloat", "fg", "#cdd6f4"))
+            local comment   = hl_hex("Comment", "fg", "#6c7086")
+
+            local blue      = hl_hex("Function", "fg", hl_hex("Directory", "fg", "#89b4fa"))
+            local green     = hl_hex("String", "fg", hl_hex("DiagnosticOk", "fg", "#a6e3a1"))
+            local yellow    = hl_hex("DiagnosticWarn", "fg", hl_hex("Constant", "fg", "#f9e2af"))
+            local purple    = hl_hex("Statement", "fg", hl_hex("Keyword", "fg", "#cba6f7"))
+            local red       = hl_hex("DiagnosticError", "fg", hl_hex("Error", "fg", "#f38ba8"))
+            local cyan      = hl_hex("Type", "fg", hl_hex("Special", "fg", "#89dceb"))
+            local teal      = hl_hex("SpecialChar", "fg", hl_hex("Special", "fg", "#94e2d5"))
+            local lavender  = hl_hex("Identifier", "fg", hl_hex("PreProc", "fg", "#b4befe"))
+            local peach     = hl_hex("DiagnosticWarn", "fg", hl_hex("Number", "fg", "#fab387"))
+
+            return {
+                normal_bg = normal_bg,
+                normal_fg = normal_fg,
+                comment   = comment,
+                blue      = blue,
+                green     = green,
+                yellow    = yellow,
+                purple    = purple,
+                red       = red,
+                cyan      = cyan,
+                teal      = teal,
+                lavender  = lavender,
+                peach     = peach,
+            }
+        end
+
+        local function contrast_fg(bg_color)
+            local p = get_theme_palette()
+            local r, g, b = hex_to_rgb(bg_color)
+            local lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+            if lum > 0.36 then
+                return p.normal_bg ~= "NONE" and p.normal_bg or "#181825"
+            else
+                return p.normal_fg ~= "NONE" and p.normal_fg or "#cdd6f4"
+            end
+        end
+
         local function get_floating_theme()
+            local p = get_theme_palette()
             local bg_dark = "NONE"
-            local normal_bg = hl_hex("Normal", "bg", "#1e1e2e")
-            local fg_text = hl_hex("Normal", "fg", "#cdd6f4")
-            local fg_muted = hl_hex("Comment", "fg", "#6c7086")
 
-            local blue = hl_hex("Function", "fg", "#89b4fa")
-            local green = hl_hex("String", "fg", "#a6e3a1")
-            local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
-            local purple = hl_hex("Statement", "fg", "#cba6f7")
-            local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
-            local cyan = hl_hex("Type", "fg", "#89dceb")
-
-            local inactive_bg = blend(fg_text, normal_bg, 0.15)
+            local norm_bg   = blend(p.blue, p.normal_bg, 0.60)
+            local ins_bg    = blend(p.green, p.normal_bg, 0.60)
+            local vis_bg    = blend(p.purple, p.normal_bg, 0.60)
+            local rep_bg    = blend(p.red, p.normal_bg, 0.60)
+            local cmd_bg    = blend(p.yellow, p.normal_bg, 0.60)
+            local pill_b_bg = blend(p.purple, p.normal_bg, 0.60)
+            local pill_y_bg = blend(p.cyan, p.normal_bg, 0.60)
+            local inact_bg  = blend(p.normal_fg, p.normal_bg, 0.15)
 
             return {
                 normal = {
-                    a = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
-                    c = { fg = fg_text, bg = bg_dark },
-                    x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
-                    z = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
+                    a = { fg = contrast_fg(norm_bg), bg = norm_bg, gui = "bold" },
+                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    c = { fg = p.normal_fg, bg = bg_dark },
+                    x = { fg = p.normal_fg, bg = bg_dark },
+                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    z = { fg = contrast_fg(norm_bg), bg = norm_bg, gui = "bold" },
                 },
                 insert = {
-                    a = { fg = green, bg = blend(green, normal_bg, 0.45), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
-                    c = { fg = fg_text, bg = bg_dark },
-                    x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
-                    z = { fg = green, bg = blend(green, normal_bg, 0.45), gui = "bold" },
+                    a = { fg = contrast_fg(ins_bg), bg = ins_bg, gui = "bold" },
+                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    c = { fg = p.normal_fg, bg = bg_dark },
+                    x = { fg = p.normal_fg, bg = bg_dark },
+                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    z = { fg = contrast_fg(ins_bg), bg = ins_bg, gui = "bold" },
                 },
                 visual = {
-                    a = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
-                    b = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
-                    c = { fg = fg_text, bg = bg_dark },
-                    x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
-                    z = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
+                    a = { fg = contrast_fg(vis_bg), bg = vis_bg, gui = "bold" },
+                    b = { fg = contrast_fg(norm_bg), bg = norm_bg, gui = "bold" },
+                    c = { fg = p.normal_fg, bg = bg_dark },
+                    x = { fg = p.normal_fg, bg = bg_dark },
+                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    z = { fg = contrast_fg(vis_bg), bg = vis_bg, gui = "bold" },
                 },
                 replace = {
-                    a = { fg = red, bg = blend(red, normal_bg, 0.45), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
-                    c = { fg = fg_text, bg = bg_dark },
-                    x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
-                    z = { fg = red, bg = blend(red, normal_bg, 0.45), gui = "bold" },
+                    a = { fg = contrast_fg(rep_bg), bg = rep_bg, gui = "bold" },
+                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    c = { fg = p.normal_fg, bg = bg_dark },
+                    x = { fg = p.normal_fg, bg = bg_dark },
+                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    z = { fg = contrast_fg(rep_bg), bg = rep_bg, gui = "bold" },
                 },
                 command = {
-                    a = { fg = yellow, bg = blend(yellow, normal_bg, 0.45), gui = "bold" },
-                    b = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
-                    c = { fg = fg_text, bg = bg_dark },
-                    x = { fg = fg_text, bg = bg_dark },
-                    y = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
-                    z = { fg = yellow, bg = blend(yellow, normal_bg, 0.45), gui = "bold" },
+                    a = { fg = contrast_fg(cmd_bg), bg = cmd_bg, gui = "bold" },
+                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    c = { fg = p.normal_fg, bg = bg_dark },
+                    x = { fg = p.normal_fg, bg = bg_dark },
+                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    z = { fg = contrast_fg(cmd_bg), bg = cmd_bg, gui = "bold" },
                 },
                 inactive = {
-                    a = { fg = fg_muted, bg = inactive_bg },
-                    b = { fg = fg_muted, bg = inactive_bg },
-                    c = { fg = fg_muted, bg = bg_dark },
-                    x = { fg = fg_muted, bg = bg_dark },
-                    y = { fg = fg_muted, bg = inactive_bg },
-                    z = { fg = fg_muted, bg = inactive_bg },
+                    a = { fg = p.comment, bg = inact_bg },
+                    b = { fg = p.comment, bg = inact_bg },
+                    c = { fg = p.comment, bg = bg_dark },
+                    x = { fg = p.comment, bg = bg_dark },
+                    y = { fg = p.comment, bg = inact_bg },
+                    z = { fg = p.comment, bg = inact_bg },
                 },
             }
         end
 
         local function apply()
             local theme = get_floating_theme()
-            local normal_bg = hl_hex("Normal", "bg", "#1e1e2e")
-            local blue = hl_hex("Function", "fg", "#89b4fa")
-            local green = hl_hex("String", "fg", "#a6e3a1")
-            local purple = hl_hex("Statement", "fg", "#cba6f7")
-            local peach = hl_hex("DiagnosticWarn", "fg", "#fab387")
-            local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
-            local cyan = hl_hex("Type", "fg", "#89dceb")
-            local lavender = hl_hex("Special", "fg", "#b4befe")
 
             vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
             vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
@@ -206,14 +239,25 @@ return {
                         {
                             "branch",
                             icon = "",
-                            color = { fg = purple, bg = blend(purple, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local git = vim.b.gitsigns_status_dict
+                                local is_clean = git and (git.added or 0) == 0 and (git.changed or 0) == 0 and (git.removed or 0) == 0
+                                local branch_accent = is_clean and p.green or p.peach
+                                local branch_bg = blend(branch_accent, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(branch_bg), bg = branch_bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
-                            color = { fg = lavender, bg = blend(lavender, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local bg = blend(p.purple, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -234,13 +278,21 @@ return {
                     lualine_x = {
                         {
                             macro_recording,
-                            color = { fg = red, bg = blend(red, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local bg = blend(p.red, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             copilot_status,
-                            color = { fg = green, bg = blend(green, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local bg = blend(p.teal, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -248,13 +300,21 @@ return {
                             "diagnostics",
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
-                            color = { fg = peach, bg = blend(peach, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local bg = blend(p.peach, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             lsp_status,
-                            color = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local bg = blend(p.lavender, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -263,7 +323,11 @@ return {
                         {
                             "filetype",
                             icon_only = false,
-                            color = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
+                            color = function()
+                                local p = get_theme_palette()
+                                local bg = blend(p.cyan, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -272,7 +336,6 @@ return {
                         {
                             "location",
                             icon = "",
-                            color = { fg = blue, bg = blend(blue, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -294,9 +357,8 @@ return {
 
         vim.api.nvim_create_autocmd("ColorScheme", {
             group = lualine_group,
-            callback = function()
-                vim.schedule(apply)
-            end,
+            pattern = "*",
+            callback = apply,
         })
     end,
 }
