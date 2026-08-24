@@ -222,7 +222,7 @@ return {
                         {
                             "filename",
                             file_status = true,
-                            path = 1,
+                            path = 4,
                             symbols = {
                                 modified = " ●",
                                 readonly = " 󰌾",
@@ -264,12 +264,6 @@ return {
                             "filetype",
                             icon_only = false,
                             color = { fg = cyan, bg = blend(cyan, normal_bg, 0.45), gui = "bold" },
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                        {
-                            "progress",
-                            color = { fg = lavender, bg = blend(lavender, normal_bg, 0.45), gui = "bold" },
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
