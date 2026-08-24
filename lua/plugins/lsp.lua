@@ -2,7 +2,7 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-        "hrsh7th/cmp-nvim-lsp",
+        "saghen/blink.cmp",
         "folke/lazydev.nvim",
         "b0o/schemastore.nvim",
         "mason-org/mason.nvim",
@@ -32,8 +32,16 @@ return {
             vim.lsp.buf.rename()
         end
 
-        local cmp_lsp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-        local capabilities = cmp_lsp_ok and cmp_nvim_lsp.default_capabilities() or vim.lsp.protocol.make_client_capabilities()
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        local blink_ok, blink = pcall(require, "blink.cmp")
+        if blink_ok then
+            capabilities = blink.get_lsp_capabilities(capabilities)
+        else
+            local cmp_lsp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+            if cmp_lsp_ok then
+                capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+            end
+        end
         capabilities.textDocument.foldingRange = {
             dynamicRegistration = false,
             lineFoldingOnly = true,
