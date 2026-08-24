@@ -80,6 +80,19 @@ brew install neovim git ripgrep fd tree-sitter-cli node python lazygit imagemagi
 
 macOS users also need to manually build `pokemon-colorscripts`.
 
+## Windows (winget)
+
+```powershell
+winget install Neovim.Neovim Git.Git BurntSushi.ripgrep.MSVC sharkdp.fd tree-sitter.tree-sitter OpenJS.NodeJS.LTS Python.Python.3.12 JesseDuffield.lazygit ImageMagick.ImageMagick LLVM.LLVM 7zip.7zip
+```
+
+Create the Python host environment (PowerShell):
+```powershell
+python -m venv "$HOME\.venvs\neovim"
+& "$HOME\.venvs\neovim\Scripts\pip.exe" install --upgrade pip
+& "$HOME\.venvs\neovim\Scripts\pip.exe" install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
+```
+
 ## Not Included On Purpose
 
 Mason handles these so don't install them system-wide or it'll conflict:

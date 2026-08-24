@@ -8,6 +8,9 @@ local image_enabled = image_backend ~= "none"
 
 local function jupytext_bin()
     local local_bin = vim.fn.expand("~/.venvs/neovim/bin/jupytext")
+    if vim.fn.executable(local_bin) ~= 1 then
+        local_bin = vim.fn.expand("~/.venvs/neovim/Scripts/jupytext.exe")
+    end
     if vim.fn.executable(local_bin) == 1 then
         return local_bin
     end

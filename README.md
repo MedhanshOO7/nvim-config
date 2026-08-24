@@ -95,9 +95,30 @@ brew install neovim git ripgrep fd tree-sitter node python lazygit \
   imagemagick make shfmt stylua
 ```
 
+#### Windows (winget)
+```powershell
+winget install --id Neovim.Neovim -e
+winget install --id Git.Git -e
+winget install --id BurntSushi.ripgrep.MSVC -e
+winget install --id sharkdp.fd -e
+winget install --id tree-sitter.tree-sitter -e
+winget install --id OpenJS.NodeJS.LTS -e
+winget install --id Python.Python.3.12 -e
+winget install --id JesseDuffield.lazygit -e
+winget install --id ImageMagick.ImageMagick -e
+winget install --id LLVM.LLVM -e
+winget install --id 7zip.7zip -e
+```
+Or in a single command:
+```powershell
+winget install Neovim.Neovim Git.Git BurntSushi.ripgrep.MSVC sharkdp.fd tree-sitter.tree-sitter OpenJS.NodeJS.LTS Python.Python.3.12 JesseDuffield.lazygit ImageMagick.ImageMagick LLVM.LLVM 7zip.7zip
+```
+*(Optional: Install **JetBrains Mono Nerd Font** and **Windows Terminal**: `winget install Microsoft.WindowsTerminal NerdFonts.JetBrainsMono -e`)*
+
 ### Dedicated Python environment
 The configuration uses a dedicated virtual environment for the Python provider and Jupyter (Molten) support:
 
+#### Linux / macOS
 ```bash
 # Create the venv
 python3 -m venv ~/.venvs/neovim
@@ -107,12 +128,25 @@ python3 -m venv ~/.venvs/neovim
 ~/.venvs/neovim/bin/pip install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
 ```
 
+#### Windows (PowerShell)
+```powershell
+# Create the venv
+python -m venv "$HOME\.venvs\neovim"
+
+# Install core dependencies
+& "$HOME\.venvs\neovim\Scripts\pip.exe" install --upgrade pip
+& "$HOME\.venvs\neovim\Scripts\pip.exe" install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
+```
+
 ### Recommended terminal
-**Kitty** is recommended as it provides native support for the Kitty Graphics Protocol used by `snacks.image` and `molten-nvim` for in-terminal floating image rendering.
+* **Linux / macOS**: **Kitty** is recommended as it provides native support for the Kitty Graphics Protocol used by `snacks.image` and `molten-nvim` for in-terminal floating image rendering.
+* **Windows**: **Windows Terminal** or **WezTerm**.
 
 ---
 
 ## Installation
+
+### Linux / macOS
 
 1. Back up your existing Neovim configuration:
    ```bash
@@ -125,6 +159,22 @@ python3 -m venv ~/.venvs/neovim
    ```
 3. Launch Neovim:
    ```bash
+   nvim
+   ```
+
+### Windows (PowerShell)
+
+1. Back up your existing Neovim configuration:
+   ```powershell
+   Rename-Item -Path "$env:LOCALAPPDATA\nvim" -NewName "nvim.bak" -ErrorAction SilentlyContinue
+   Rename-Item -Path "$env:LOCALAPPDATA\nvim-data" -NewName "nvim-data.bak" -ErrorAction SilentlyContinue
+   ```
+2. Clone this repository directly into your config directory:
+   ```powershell
+   git clone https://github.com/MedhanshOO7/nvim-config.git "$env:LOCALAPPDATA\nvim"
+   ```
+3. Launch Neovim:
+   ```powershell
    nvim
    ```
 
