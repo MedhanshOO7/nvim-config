@@ -1,5 +1,6 @@
 return {
     "echasnovski/mini.files",
+    enabled = false, -- snacks.explorer and oil.nvim cover file exploration
     version = false,
     keys = {
         {
