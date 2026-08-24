@@ -9,6 +9,15 @@ local function greeting()
     end
 end
 
+local function apply_dashboard_gradients()
+    vim.api.nvim_set_hl(0, "SnacksDashGrad1", { fg = "#89dceb", bold = true })
+    vim.api.nvim_set_hl(0, "SnacksDashGrad2", { fg = "#89b4fa", bold = true })
+    vim.api.nvim_set_hl(0, "SnacksDashGrad3", { fg = "#b4befe", bold = true })
+    vim.api.nvim_set_hl(0, "SnacksDashGrad4", { fg = "#cba6f7", bold = true })
+    vim.api.nvim_set_hl(0, "SnacksDashGrad5", { fg = "#f5c2e7", bold = true })
+    vim.api.nvim_set_hl(0, "SnacksDashGrad6", { fg = "#fab387", bold = true })
+end
+
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -43,7 +52,18 @@ return {
                 },
             },
             sections = {
-                { section = "header" },
+                {
+                    text = {
+                        { "   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗\n", hl = "SnacksDashGrad1" },
+                        { "   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║\n", hl = "SnacksDashGrad2" },
+                        { "   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║\n", hl = "SnacksDashGrad3" },
+                        { "   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║\n", hl = "SnacksDashGrad4" },
+                        { "   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║\n", hl = "SnacksDashGrad5" },
+                        { "   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝\n", hl = "SnacksDashGrad6" },
+                    },
+                    align = "center",
+                    padding = 1,
+                },
                 {
                     text = {
                         { " " .. greeting() .. " ", hl = "Function" },
@@ -202,6 +222,14 @@ return {
         zen = { enabled = true },
     },
     init = function()
+        apply_dashboard_gradients()
+
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            group = vim.api.nvim_create_augroup("snacks_dashboard_gradient_sync", { clear = true }),
+            pattern = "*",
+            callback = apply_dashboard_gradients,
+        })
+
         vim.api.nvim_create_autocmd("User", {
             pattern = "OilActionsPost",
             callback = function(event)
