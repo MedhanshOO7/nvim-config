@@ -208,15 +208,6 @@ return {
                 map_lsp("n", "<leader>rn", smart_rename, "Rename this symbol everywhere")
                 map_lsp({ "n", "v" }, "<leader>ca", smart_code_action, "Show suggested code fixes and actions")
 
-                vim.schedule(function()
-                    local navic_ok, navic = pcall(require, "nvim-navic")
-                    if client and navic_ok and client:supports_method("textDocument/documentSymbol") then
-                        if vim.api.nvim_buf_is_valid(event.buf) and not vim.b[event.buf].navic_attached then
-                            navic.attach(client, event.buf)
-                            vim.b[event.buf].navic_attached = true
-                        end
-                    end
-                end)
 
 
 
