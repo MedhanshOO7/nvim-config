@@ -196,8 +196,12 @@ return {
             win = {
                 style = "input",
                 border = "rounded",
-                backdrop = 60,
+                backdrop = false, -- Eliminates rectangular shadow bleeding
                 position = "float",
+                wo = {
+                    winhighlight = "NormalFloat:SnacksInputNormal,FloatBorder:SnacksInputBorder,FloatTitle:SnacksInputTitle",
+                    winblend = 0,
+                },
             },
         },
         lazygit = { enabled = true },

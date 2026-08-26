@@ -550,10 +550,11 @@ local function apply_editor_chrome(transparent)
 
         -- ── Snacks Input (Floating Input Dialogs) ────────────────────────────
         SnacksInputNormal = { fg = normal_fg, bg = float_bg },
-        SnacksInputBorder = { fg = float_border, bg = "NONE" },
+        SnacksInputBorder = { fg = accent, bg = "NONE" },
         SnacksInputTitle = { fg = accent, bg = "NONE", bold = true },
         SnacksInputPrompt = { fg = accent_alt, bold = true },
         SnacksInputIcon = { fg = accent },
+        SnacksBackdrop = { bg = "NONE" },
 
         -- ── Completion item kinds ─────────────────────────────────────────────
         CmpItemKindFunction = { fg = accent },
