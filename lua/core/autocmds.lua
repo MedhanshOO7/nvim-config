@@ -219,3 +219,43 @@ vim.api.nvim_create_autocmd("BufReadPre", {
         end
     end,
 })
+
+-- ── Window & Explorer Size Inspector ─────────────────────────
+vim.api.nvim_create_user_command("WinSize", function()
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_win_get_buf(win)
+    local w = vim.api.nvim_win_get_width(win)
+    local h = vim.api.nvim_win_get_height(win)
+    local total_w = vim.o.columns
+    local total_h = vim.o.lines
+    local pct_w = math.floor((w / total_w) * 100)
+    local pct_h = math.floor((h / total_h) * 100)
+    local ft = vim.bo[buf].filetype
+    if ft == "" then ft = "none" end
+    local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
+    if name == "" then name = "[No Name]" end
+
+    local msg = string.format("📐 %s (%s)\n• Width:  %d columns (%d%% of screen)\n• Height: %d rows (%d%% of screen)", name, ft, w, pct_w, h, pct_h)
+    vim.notify(msg, vim.log.levels.INFO, { title = "Window Size" })
+end, { desc = "Show current window dimensions" })
+
+vim.api.nvim_create_user_command("ExplorerSize", function()
+    -- Look for explorer window
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local ft = vim.bo[buf].filetype
+        if ft == "snacks_explorer" or ft:match("explorer") then
+            local w = vim.api.nvim_win_get_width(win)
+            local h = vim.api.nvim_win_get_height(win)
+            local total_w = vim.o.columns
+            local pct_w = math.floor((w / total_w) * 100)
+            local msg = string.format("📁 File Explorer Size:\n• Width:  %d columns (%d%%)\n• Height: %d rows", w, pct_w, h)
+            vim.notify(msg, vim.log.levels.INFO, { title = "Explorer Size" })
+            return
+        end
+    end
+    -- If not open or focused elsewhere, check current
+    local w = vim.api.nvim_win_get_width(0)
+    local msg = string.format("Current Window Width: %d columns", w)
+    vim.notify(msg, vim.log.levels.INFO, { title = "Window Size" })
+end, { desc = "Show explorer window dimensions" })
