@@ -39,9 +39,25 @@ return {
             local virtual_text_ok, dap_virtual_text = pcall(require, "nvim-dap-virtual-text")
             local dap_python_ok, dap_python = pcall(require, "dap-python")
 
+            local is_win = vim.fn.has("win32") == 1
             local codelldb_path = mason_path .. "/codelldb/extension/adapter/codelldb"
+            if is_win or vim.fn.executable(codelldb_path .. ".exe") == 1 then
+                if vim.fn.executable(codelldb_path .. ".exe") == 1 then
+                    codelldb_path = codelldb_path .. ".exe"
+                end
+            end
+
             local debugpy_path = mason_path .. "/debugpy/venv/bin/python"
+            if vim.fn.executable(debugpy_path) ~= 1 then
+                debugpy_path = mason_path .. "/debugpy/venv/Scripts/python.exe"
+            end
+
             local js_debug_cmd = mason_path .. "/js-debug-adapter/js-debug-adapter"
+            if is_win or vim.fn.executable(js_debug_cmd .. ".cmd") == 1 then
+                if vim.fn.executable(js_debug_cmd .. ".cmd") == 1 then
+                    js_debug_cmd = js_debug_cmd .. ".cmd"
+                end
+            end
 
             if virtual_text_ok then
                 dap_virtual_text.setup({})
@@ -100,7 +116,8 @@ return {
                             type = "codelldb",
                             request = "launch",
                             program = function()
-                                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                                local default_exe = vim.fn.getcwd() .. "/" .. vim.fn.expand("%:t:r") .. (is_win and ".exe" or "")
+                                return vim.fn.input("Path to executable: ", default_exe, "file")
                             end,
                             cwd = "${workspaceFolder}",
                             stopOnEntry = false,
@@ -110,7 +127,7 @@ return {
                             type = "codelldb",
                             request = "launch",
                             program = function()
-                                return vim.fn.getcwd() .. "/" .. vim.fn.expand("%:t:r")
+                                return vim.fn.getcwd() .. "/" .. vim.fn.expand("%:t:r") .. (is_win and ".exe" or "")
                             end,
                             cwd = "${workspaceFolder}",
                             stopOnEntry = false,

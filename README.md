@@ -17,6 +17,7 @@ Built to understand the editor, not just use it. Engineered for embedded hardwar
 - [Project Structure](#project-structure)
 - [Requirements](#requirements)
 - [Installation](#installation)
+  - [🪟 Windows Setup Guide (windows.md)](windows.md)
 - [Aesthetics](#aesthetics)
 - [Plugins](#plugins)
   - [Package Management & Core](#package-management--core)
@@ -170,9 +171,10 @@ brew install neovim git ripgrep fd node python make imagemagick
 
 ```powershell
 winget install Neovim.Neovim Git.Git BurntSushi.ripgrep.MSVC sharkdp.fd `
-  OpenJS.NodeJS.LTS Python.Python.3.12 ImageMagick.ImageMagick LLVM.LLVM GnuWin32.Make 7zip.7zip
+  OpenJS.NodeJS.LTS Python.Python.3.12 LLVM.LLVM JesseDuffield.lazygit 7zip.7zip `
+  Microsoft.WindowsTerminal NerdFonts.JetBrainsMono -e
 ```
-*(Optional: `winget install Microsoft.WindowsTerminal NerdFonts.JetBrainsMono -e`)*
+*(See [windows.md](windows.md) for full Windows Terminal configs, Nerd Fonts, and `Ctrl+G` setup)*
 
 ### Dedicated Python Environment
 
@@ -227,30 +229,45 @@ Install these only if you need their specific workflows:
     ```
 2. Clone this repository:
     ```bash
-    git clone https://github.com/MedhanshOO7/nvim-config.git ~/.config/nvim
+    git clone https://github.com/codebyneeraj/nvim-config.git ~/.config/nvim
     ```
-3. Launch Neovim:
+3. Create the dedicated Python virtual environment:
+    ```bash
+    python3 -m venv ~/.venvs/neovim
+    ~/.venvs/neovim/bin/pip install --upgrade pip
+    ~/.venvs/neovim/bin/pip install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
+    ```
+4. Launch Neovim:
     ```bash
     nvim
     ```
 
 ### Windows (PowerShell)
 
+> [!TIP]
+> For a full Windows guide with aesthetic Windows Terminal configs, `Ctrl+G` quick-launch shortcuts, and troubleshooting common path/symlink issues, see the dedicated [🪟 Windows Setup Guide (windows.md)](windows.md).
+
 1. Back up your existing Neovim configuration:
     ```powershell
     Rename-Item -Path "$env:LOCALAPPDATA\nvim" -NewName "nvim.bak" -ErrorAction SilentlyContinue
     Rename-Item -Path "$env:LOCALAPPDATA\nvim-data" -NewName "nvim-data.bak" -ErrorAction SilentlyContinue
     ```
-2. Clone this repository:
+2. Clone this repository directly into your Windows Neovim directory:
     ```powershell
-    git clone https://github.com/MedhanshOO7/nvim-config.git "$env:LOCALAPPDATA\nvim"
+    git clone https://github.com/codebyneeraj/nvim-config.git "$env:LOCALAPPDATA\nvim"
     ```
-3. Launch Neovim:
+3. Create the dedicated Python virtual environment (for Python LSP, Molten, and DAP support):
+    ```powershell
+    python -m venv "$HOME\.venvs\neovim"
+    & "$HOME\.venvs\neovim\Scripts\pip.exe" install --upgrade pip
+    & "$HOME\.venvs\neovim\Scripts\pip.exe" install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
+    ```
+4. Launch Neovim:
     ```powershell
     nvim
     ```
 
-On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plugins, build parsers, and install Mason tools.
+On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plugins, compile treesitter parsers, and Mason will install configured language servers and tools. Verify your installation inside Neovim with `:checkhealth`.
 
 ---
 

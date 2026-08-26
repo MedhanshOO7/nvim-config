@@ -19,7 +19,7 @@ return {
             "--header-insertion=iwyu",
             "--fallback-style=WebKit",
             "--log=error",
-            "--query-driver=/usr/bin/arm-none-eabi-*",
+            "--query-driver=**/*arm-none-eabi*,/usr/bin/arm-none-eabi-*,/usr/bin/*gcc*,/usr/bin/*g++*",
         },
         init_options = {
             clangdFileStatus = false,

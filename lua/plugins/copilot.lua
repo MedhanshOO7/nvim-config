@@ -128,7 +128,7 @@ return {
     {
         "CopilotC-Nvim/CopilotChat.nvim",
         branch = "main",
-        build = "make tiktoken",
+        build = vim.fn.executable("make") == 1 and "make tiktoken" or nil,
         cmd = {
             "CopilotChat",
             "CopilotChatToggle",

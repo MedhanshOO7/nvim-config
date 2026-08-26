@@ -22,12 +22,15 @@ return {
             callback = function()
                 local venv = vim.fn.finddir(".venv", vim.fn.getcwd() .. ";")
                 if venv ~= "" then
-                    local venv_path = vim.fn.fnamemodify(venv, ":p"):gsub("/$", "")
+                    local venv_path = vim.fn.fnamemodify(venv, ":p"):gsub("[/\\]$", "")
                     -- If not already active
                     if vim.env.VIRTUAL_ENV ~= venv_path then
+                        local is_win = vim.fn.has("win32") == 1
+                        local bin_dir = is_win and (venv_path .. "\\Scripts") or (venv_path .. "/bin")
+                        local sep = is_win and ";" or ":"
                         vim.env.VIRTUAL_ENV = venv_path
-                        vim.env.PATH = venv_path .. "/bin:" .. vim.env.PATH
-                        vim.notify("Auto-activated uv venv: " .. venv_path, vim.log.levels.INFO, { title = "Python" })
+                        vim.env.PATH = bin_dir .. sep .. vim.env.PATH
+                        vim.notify("Auto-activated venv: " .. venv_path, vim.log.levels.INFO, { title = "Python" })
                         -- Restart LSPs to pick up the new environment
                         vim.cmd("LspRestart pylsp ruff")
                     end
