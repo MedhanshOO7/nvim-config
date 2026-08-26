@@ -240,6 +240,7 @@ return {
             { "<leader>ux", desc = "Toggle Treesitter sticky header", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>uy", desc = "Toggle transparency", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>uS", desc = "Statusline & Header style picker", icon = { icon = "󰔎", color = "cyan" } },
+            { "<leader>uT", desc = "Terminal & Runner style picker", icon = { icon = "󰹚", color = "cyan" } },
 
             -- Windows and sessions
             { "<leader>wc", desc = "Close window", icon = { icon = "󰅖", color = "red" } },

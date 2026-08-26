@@ -8,16 +8,9 @@ return {
         { "<leader>rc", "<cmd>RunClose<cr>", desc = "Run: Close runner window" },
     },
     opts = {
-        mode = "float",
-        float = {
-            border = "rounded",
-            height = 0.8,
-            width = 0.8,
-            x = 0.5,
-            y = 0.5,
-            border_hl = "FloatBorder",
-            float_hl = "NormalFloat",
-        },
+        mode = "toggleterm",
+        focus = true,
+        startinsert = true,
         filetype = {
             python = "python3 -u",
             typescript = "deno run --allow-all",
@@ -43,4 +36,7 @@ return {
             go = "go run",
         },
     },
+    config = function(_, opts)
+        require("code_runner").setup(opts)
+    end,
 }

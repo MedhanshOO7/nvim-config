@@ -67,22 +67,27 @@ end, { desc = "Toggle buffer modifiable state (unlock editing)" })
 map("n", "<leader>q", cmd("quit"), { desc = "Quit the current window" })
 
 -- Terminals and writing
-map({ "n", "i", "t" }, "<C-`>", "<cmd>ToggleTerm<cr>", { desc = "Toggle terminal" })
+map({ "n", "i", "t" }, "<C-`>", function()
+    local ok, ts = pcall(require, "utils.terminal_style")
+    if ok then ts.toggle() else vim.cmd("ToggleTerm") end
+end, { desc = "Toggle active terminal" })
 map("i", "<C-Left>", "<C-o>b", { desc = "Jump backward one word" })
 map("i", "<C-Right>", "<C-o>w", { desc = "Jump forward one word" })
 map("n", "<leader>rr", function()
-    local ok, overseer = pcall(require, "overseer")
-    if ok then
-        overseer.run_template({ name = vim.bo.filetype .. "_run_current" }, function(task)
-            if not task then
-                vim.cmd("OverseerRun")
-            end
-        end)
-    else
-        pcall(vim.cmd, "RunCode")
-    end
-end, { desc = "Run current file" })
-map("n", "<leader>to", cmd("ToggleTerm"), { desc = "Open or close the floating terminal" })
+    pcall(vim.cmd, "RunCode")
+end, { desc = "Run: Code / file in active terminal layout" })
+map("n", "<leader>to", function()
+    local ok, ts = pcall(require, "utils.terminal_style")
+    if ok then ts.toggle() else vim.cmd("ToggleTerm") end
+end, { desc = "Open or close the active terminal" })
+map("n", "<leader>ts", function()
+    local ok, ts = pcall(require, "utils.terminal_style")
+    if ok then ts.select() else vim.cmd("TerminalStyle") end
+end, { desc = "Choose terminal & runner style (Center, Bottom, Right)" })
+map("n", "<leader>tS", function()
+    local ok, ts = pcall(require, "utils.terminal_style")
+    if ok then ts.select() else vim.cmd("TerminalStyle") end
+end, { desc = "Choose terminal & runner style (Center, Bottom, Right)" })
 map("n", "<leader>tf", cmd("TerminalProject"), { desc = "Open the main project shell" })
 map("n", "<leader>th", cmd("TerminalHorizontal"), { desc = "Open a bottom terminal panel" })
 map("n", "<leader>tv", cmd("TerminalVertical"), { desc = "Open a side terminal panel" })
@@ -104,6 +109,14 @@ end, { desc = "Toggle Brainstorm mode (Universal)" })
 map("n", "<leader>nt", cmd("Twilight"), { desc = "Dim unfocused text around the cursor" })
 map("n", "<leader>ns", "viw<esc>a~~<esc>hbi~~<esc>lel", { desc = "Strikeout the word under the cursor" })
 map("v", "<leader>ns", "c~~<C-r>\"~~<esc>", { desc = "Strikeout the selection" })
+map("n", "<leader>nh", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.notifier then snacks.notifier.show_history() end
+end, { desc = "Notification history" })
+map("n", "<leader>nd", function()
+    local ok, snacks = pcall(require, "snacks")
+    if ok and snacks.notifier then snacks.notifier.hide() end
+end, { desc = "Dismiss all notifications" })
 
 -- Buffers
 map("n", "<leader>bb", function()
@@ -314,6 +327,10 @@ map("n", "<leader>un", cmd("ThemeNext"), { desc = "Switch to the next theme" })
 map("n", "<leader>up", cmd("ThemePrev"), { desc = "Switch to the previous theme" })
 map("n", "<leader>uy", cmd("ThemeTransparencyToggle"), { desc = "Turn transparency on or off" })
 map("n", "<leader>uS", cmd("StatusStyle"), { desc = "Choose statusline & header color style" })
+map("n", "<leader>uT", function()
+    local ok, ts = pcall(require, "utils.terminal_style")
+    if ok then ts.select() else vim.cmd("TerminalStyle") end
+end, { desc = "Choose terminal & code runner style (Center, Bottom, Right)" })
 
 map("n", "<leader>ud", function()
     local enabled = vim.diagnostic.is_enabled()
