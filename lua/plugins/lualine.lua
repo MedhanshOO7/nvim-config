@@ -238,6 +238,29 @@ return {
             }
         end
 
+        local mode_icons = {
+            ["NORMAL"]    = "󰮯 ",
+            ["INSERT"]    = "󰏫 ",
+            ["VISUAL"]    = "󰒉 ",
+            ["V-LINE"]    = "󰒉 ",
+            ["V-BLOCK"]   = "󰒉 ",
+            ["SELECT"]    = "󰒉 ",
+            ["S-LINE"]    = "󰒉 ",
+            ["S-BLOCK"]   = "󰒉 ",
+            ["REPLACE"]   = "󰛔 ",
+            ["V-REPLACE"] = "󰛔 ",
+            ["COMMAND"]   = "󰘳 ",
+            ["EX"]        = "󰘳 ",
+            ["MORE"]      = "󰘳 ",
+            ["CONFIRM"]   = "󰘳 ",
+            ["TERMINAL"]  = "󰆍 ",
+        }
+
+        local function format_mode(str)
+            local icon = mode_icons[str] or "󰮯 "
+            return icon .. str
+        end
+
         local function apply()
             local p = get_theme_palette()
             local style = vim.g.lualine_color_style or "frosted"
@@ -259,6 +282,7 @@ return {
                         {
                             "mode",
                             color = function() return { fg = get_mode_color(), bg = "NONE", gui = "bold" } end,
+                            fmt = format_mode,
                             padding = { left = 1, right = 1 },
                         },
                     },
@@ -337,6 +361,7 @@ return {
                                 local bg = blend(m_color, p.normal_bg, 0.40)
                                 return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
                             end,
+                            fmt = format_mode,
                             padding = { left = 1, right = 1 },
                         },
                     },
@@ -414,6 +439,7 @@ return {
                                 local bg = blend(m_color, p.normal_bg, 0.35)
                                 return { fg = m_color, bg = bg, gui = "bold" }
                             end,
+                            fmt = format_mode,
                             padding = { left = 1, right = 1 },
                         },
                     },
@@ -501,6 +527,7 @@ return {
                                 local bg = blend(m_color, p.normal_bg, 0.60)
                                 return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
                             end,
+                            fmt = format_mode,
                             padding = { left = 1, right = 1 },
                         },
                     },
