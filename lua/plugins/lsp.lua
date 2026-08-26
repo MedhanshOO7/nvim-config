@@ -24,11 +24,6 @@ return {
         end
 
         local function smart_rename()
-            if vim.fn.exists(":IncRename") == 2 then
-                vim.cmd("IncRename " .. vim.fn.expand("<cword>"))
-                return
-            end
-
             vim.lsp.buf.rename()
         end
 
@@ -110,9 +105,16 @@ return {
             },
         })
 
-
-
-
+        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+            border = float_border,
+            max_width = math.floor(vim.o.columns * 0.45),
+            max_height = math.floor(vim.o.lines * 0.30),
+        })
+        vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+            border = float_border,
+            max_width = math.floor(vim.o.columns * 0.45),
+            max_height = math.floor(vim.o.lines * 0.18),
+        })
 
         local servers_ok, servers = pcall(require, "lsp.servers")
         if not servers_ok then

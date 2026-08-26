@@ -140,7 +140,7 @@ return {
                 preview = false,
                 layout = {
                     position = "left",
-                    width = 30,
+                    width = 24, -- Dynamic 24-column default
                 },
             },
         },
@@ -188,13 +188,31 @@ return {
         },
         input = {
             enabled = true,
+            icon = " ",
+            icon_hl = "SnacksInputIcon",
+            icon_pos = "left",
+            prompt_pos = "title",
+            expand = true,
             win = {
-                style = "rounded",
+                style = "input",
+                border = "rounded",
+                backdrop = 60,
+                position = "float",
             },
         },
         lazygit = { enabled = true },
         notifier = {
-            enabled = false, -- noice.nvim handles vim.notify()
+            enabled = true,
+            timeout = 3000,
+            width = { min = 35, max = 0.40 },
+            height = { min = 1, max = 0.60 },
+            margin = { top = 1, right = 1, bottom = 0 },
+            padding = true,
+            gap = 1,
+            sort = { "level", "added" },
+            level = vim.log.levels.TRACE,
+            style = "fancy",
+            top_down = true, -- top-to-bottom on the right side
         },
         picker = {
             enabled = true,
@@ -218,7 +236,7 @@ return {
                         preview = false,
                         layout = {
                             position = "left",
-                            width = 0.30,
+                            width = 24, -- 24 columns compact default
                         },
                     },
                     win = {
@@ -235,6 +253,20 @@ return {
                                 ["r"] = "explorer_rename",
                                 ["c"] = "explorer_copy",
                                 ["m"] = "explorer_move",
+                                -- Dynamic interactive width resizing inside explorer
+                                ["+"] = function() vim.cmd("vertical resize +4") end,
+                                ["-"] = function() vim.cmd("vertical resize -4") end,
+                                [">"] = function() vim.cmd("vertical resize +4") end,
+                                ["<"] = function() vim.cmd("vertical resize -4") end,
+                                ["w"] = function()
+                                    local cur_w = vim.api.nvim_win_get_width(0)
+                                    local next_w = 24
+                                    if cur_w <= 26 then next_w = 34
+                                    elseif cur_w <= 36 then next_w = 46
+                                    else next_w = 24 end
+                                    vim.cmd("vertical resize " .. next_w)
+                                    vim.notify("Explorer Width: " .. next_w .. " columns", vim.log.levels.INFO)
+                                end,
                             },
                         },
                     },

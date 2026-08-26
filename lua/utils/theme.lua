@@ -297,8 +297,8 @@ local function apply_editor_chrome(transparent)
 
         -- ── Floating windows ──────────────────────────────────────────────────
         NormalFloat = { fg = normal_fg, bg = float_bg },
-        FloatBorder = { fg = float_border, bg = float_bg },
-        FloatTitle = { fg = accent, bg = float_bg, bold = true },
+        FloatBorder = { fg = float_border, bg = "NONE" },
+        FloatTitle = { fg = accent, bg = "NONE", bold = true },
         WinSeparator = { fg = soft_edge, bg = transparent and "NONE" or normal_bg },
 
         -- ── Bufferline / tabline ──────────────────────────────────────────────
@@ -376,11 +376,16 @@ local function apply_editor_chrome(transparent)
         NoiceCmdlineIcon = { fg = accent },
         NoiceCmdlineIconSearch = { fg = warning },
         NoiceCmdlinePopup = { fg = normal_fg, bg = float_bg },
-        NoiceCmdlinePopupBorder = { fg = float_border, bg = float_bg },
+        NoiceCmdlinePopupBorder = { fg = float_border, bg = "NONE" },
+        NoiceCmdlinePopupTitle = { fg = accent, bg = "NONE", bold = true },
         NoicePopup = { fg = normal_fg, bg = float_bg },
-        NoicePopupBorder = { fg = float_border, bg = float_bg },
+        NoicePopupBorder = { fg = float_border, bg = "NONE" },
         NoiceConfirm = { fg = normal_fg, bg = float_bg },
-        NoiceConfirmBorder = { fg = float_border, bg = float_bg },
+        NoiceConfirmBorder = { fg = float_border, bg = "NONE" },
+        NoicePopupmenu = { fg = normal_fg, bg = float_bg },
+        NoicePopupmenuBorder = { fg = float_border, bg = "NONE" },
+        NoicePopupmenuSelected = { fg = normal_fg, bg = blend(accent, normal_bg, 0.20), bold = true },
+        NoicePopupmenuMatch = { fg = accent, bold = true },
 
         -- ── Which-key ─────────────────────────────────────────────────────────
         WhichKey = { fg = accent },
@@ -511,6 +516,44 @@ local function apply_editor_chrome(transparent)
         DropBarMenuNormalFloat = { fg = normal_fg, bg = float_bg },
         DropBarMenuFloatBorder = { fg = float_border, bg = float_bg },
         DropBarMenuHoverEntry = { bg = blend(accent, normal_bg, 0.18), bold = true },
+
+        -- ── Snacks Notifier (Frosted Glass Toasts) ───────────────────────────
+        SnacksNotifierInfo = { fg = normal_fg, bg = blend(accent, normal_bg, 0.16) },
+        SnacksNotifierWarn = { fg = normal_fg, bg = blend(warning, normal_bg, 0.16) },
+        SnacksNotifierError = { fg = normal_fg, bg = blend(danger, normal_bg, 0.18) },
+        SnacksNotifierDebug = { fg = normal_fg, bg = blend(accent_alt, normal_bg, 0.14) },
+        SnacksNotifierTrace = { fg = normal_fg, bg = blend(comment, normal_bg, 0.14) },
+
+        SnacksNotifierBorderInfo = { fg = accent, bg = blend(accent, normal_bg, 0.16) },
+        SnacksNotifierBorderWarn = { fg = warning, bg = blend(warning, normal_bg, 0.16) },
+        SnacksNotifierBorderError = { fg = danger, bg = blend(danger, normal_bg, 0.18) },
+        SnacksNotifierBorderDebug = { fg = accent_alt, bg = blend(accent_alt, normal_bg, 0.14) },
+        SnacksNotifierBorderTrace = { fg = comment, bg = blend(comment, normal_bg, 0.14) },
+
+        SnacksNotifierTitleInfo = { fg = accent, bg = blend(accent, normal_bg, 0.16), bold = true },
+        SnacksNotifierTitleWarn = { fg = warning, bg = blend(warning, normal_bg, 0.16), bold = true },
+        SnacksNotifierTitleError = { fg = danger, bg = blend(danger, normal_bg, 0.18), bold = true },
+        SnacksNotifierTitleDebug = { fg = accent_alt, bg = blend(accent_alt, normal_bg, 0.14), bold = true },
+        SnacksNotifierTitleTrace = { fg = comment, bg = blend(comment, normal_bg, 0.14), bold = true },
+
+        SnacksNotifierIconInfo = { fg = accent, bg = blend(accent, normal_bg, 0.16) },
+        SnacksNotifierIconWarn = { fg = warning, bg = blend(warning, normal_bg, 0.16) },
+        SnacksNotifierIconError = { fg = danger, bg = blend(danger, normal_bg, 0.18) },
+        SnacksNotifierIconDebug = { fg = accent_alt, bg = blend(accent_alt, normal_bg, 0.14) },
+        SnacksNotifierIconTrace = { fg = comment, bg = blend(comment, normal_bg, 0.14) },
+
+        SnacksNotifierFooterInfo = { fg = comment, bg = blend(accent, normal_bg, 0.16) },
+        SnacksNotifierFooterWarn = { fg = comment, bg = blend(warning, normal_bg, 0.16) },
+        SnacksNotifierFooterError = { fg = comment, bg = blend(danger, normal_bg, 0.18) },
+
+        SnacksNotifierHistory = { fg = normal_fg, bg = float_bg },
+
+        -- ── Snacks Input (Floating Input Dialogs) ────────────────────────────
+        SnacksInputNormal = { fg = normal_fg, bg = float_bg },
+        SnacksInputBorder = { fg = float_border, bg = "NONE" },
+        SnacksInputTitle = { fg = accent, bg = "NONE", bold = true },
+        SnacksInputPrompt = { fg = accent_alt, bold = true },
+        SnacksInputIcon = { fg = accent },
 
         -- ── Completion item kinds ─────────────────────────────────────────────
         CmpItemKindFunction = { fg = accent },
