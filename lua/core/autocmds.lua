@@ -239,12 +239,18 @@ vim.api.nvim_create_user_command("WinSize", function()
     vim.notify(msg, vim.log.levels.INFO, { title = "Window Size" })
 end, { desc = "Show current window dimensions" })
 
-vim.api.nvim_create_user_command("ExplorerSize", function()
+vim.api.nvim_create_user_command("ExplorerSize", function(opts)
+    local target_w = tonumber(opts.args)
     -- Look for explorer window
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_get_buf(win)
         local ft = vim.bo[buf].filetype
         if ft == "snacks_explorer" or ft:match("explorer") then
+            if target_w and target_w >= 10 then
+                vim.api.nvim_win_set_width(win, target_w)
+                vim.notify(string.format("📁 File Explorer resized to %d columns", target_w), vim.log.levels.INFO)
+                return
+            end
             local w = vim.api.nvim_win_get_width(win)
             local h = vim.api.nvim_win_get_height(win)
             local total_w = vim.o.columns
@@ -254,8 +260,12 @@ vim.api.nvim_create_user_command("ExplorerSize", function()
             return
         end
     end
-    -- If not open or focused elsewhere, check current
+    -- If not open or focused elsewhere, check current window
     local w = vim.api.nvim_win_get_width(0)
-    local msg = string.format("Current Window Width: %d columns", w)
-    vim.notify(msg, vim.log.levels.INFO, { title = "Window Size" })
-end, { desc = "Show explorer window dimensions" })
+    if target_w and target_w >= 10 then
+        vim.cmd("vertical resize " .. target_w)
+        vim.notify(string.format("Current window resized to %d columns", target_w), vim.log.levels.INFO)
+    else
+        vim.notify(string.format("Current Window Width: %d columns", w), vim.log.levels.INFO)
+    end
+end, { nargs = "?", desc = "Show or set explorer / window width (e.g. :ExplorerSize 24)" })
