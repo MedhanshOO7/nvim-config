@@ -195,3 +195,27 @@ vim.api.nvim_create_autocmd("StdinReadPost", {
         vim.keymap.set("n", "K", "<C-u>", opts)
     end,
 })
+
+-- ── Instant Heavy File Accelerator ───────────────────────────
+-- Strips heavy processing before a large file is loaded into memory
+local bigfile_fast_group = vim.api.nvim_create_augroup("BigFileFastOpen", { clear = true })
+vim.api.nvim_create_autocmd("BufReadPre", {
+    group = bigfile_fast_group,
+    callback = function(event)
+        local file = vim.api.nvim_buf_get_name(event.buf)
+        if file == "" then return end
+        local ok, stats = pcall(vim.uv.fs_stat, file)
+        if ok and stats and stats.size > 1024 * 1024 then -- > 1 MB
+            vim.b[event.buf].large_file = true
+            vim.b[event.buf].bigfile = true
+            vim.opt_local.swapfile = false
+            vim.opt_local.undofile = false
+            vim.opt_local.foldmethod = "manual"
+            vim.opt_local.foldexpr = "0"
+            vim.opt_local.synmaxcol = 300
+            vim.opt_local.cursorline = false
+            vim.opt_local.relativenumber = false
+            vim.opt_local.wrap = false
+        end
+    end,
+})

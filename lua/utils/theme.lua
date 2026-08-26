@@ -756,26 +756,107 @@ function M.toggle_transparency()
 end
 
 function M.select()
-    vim.ui.select({ "Dark Themes", "Light Themes" }, {
-        prompt = "Select Category",
-    }, function(category)
-        if not category then return end
+    local ok, snacks = pcall(require, "snacks")
+    local initial_theme = vim.g.preferred_theme or M.default_theme
+    local confirmed = false
+    local preview_timer = vim.uv.new_timer()
 
-        local theme_list = category == "Dark Themes" and M.dark_themes or M.light_themes
-        
-        vim.ui.select(theme_list, {
-            prompt = "Choose " .. category:lower(),
-            format_item = function(item)
-                if item == M.default_theme then
-                    return item .. " (default)"
-                end
-                return item
-            end,
-        }, function(choice)
-            if choice then
-                M.apply(choice)
+    local items = {}
+    for _, t in ipairs(M.dark_themes) do
+        local is_def = (t == M.default_theme)
+        table.insert(items, {
+            text = t,
+            category = "Dark",
+            is_default = is_def,
+            theme = t,
+        })
+    end
+    for _, t in ipairs(M.light_themes) do
+        local is_def = (t == M.default_theme)
+        table.insert(items, {
+            text = t,
+            category = "Light",
+            is_default = is_def,
+            theme = t,
+        })
+    end
+
+    local function preview_theme(name)
+        if not name then return end
+        if preview_timer then preview_timer:stop() end
+        -- 35ms debounce makes rapid j/k scrolling silky smooth without any UI lag
+        preview_timer:start(35, 0, vim.schedule_wrap(function()
+            if not confirmed and name then
+                apply_theme(name, vim.g.preferred_transparent == true)
+                pcall(function() require("incline").refresh() end)
+                pcall(function()
+                    vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
+                end)
             end
-        end)
+        end))
+    end
+
+    if ok and snacks.picker then
+        snacks.picker.pick({
+            title = " Colorscheme (Live Preview) ",
+            items = items,
+            format = function(item, picker)
+                local ret = {}
+                if item.category == "Dark" then
+                    table.insert(ret, { "󰖔 ", "Directory" })
+                else
+                    table.insert(ret, { "󰖙 ", "DiagnosticWarn" })
+                end
+                table.insert(ret, { string.format("%-22s", item.text), item.is_default and "Function" or "Normal" })
+                table.insert(ret, { " [" .. item.category .. "]", "Comment" })
+                if item.is_default then
+                    table.insert(ret, { " (default)", "Special" })
+                end
+                return ret
+            end,
+            layout = {
+                preset = "select",
+                preview = false, -- Single panel (NO side preview box!)
+                width = 0.58,    -- Clean 58-60% width
+                min_width = 45,
+                height = 0.60,
+            },
+            on_change = function(picker, item)
+                if item and item.theme then
+                    preview_theme(item.theme)
+                end
+            end,
+            confirm = function(picker, item)
+                confirmed = true
+                if preview_timer then preview_timer:stop() end
+                picker:close()
+                if item and item.theme then
+                    vim.schedule(function()
+                        M.apply(item.theme)
+                    end)
+                end
+            end,
+            on_close = function()
+                if preview_timer then preview_timer:stop() end
+                if not confirmed then
+                    pcall(M.apply, initial_theme)
+                end
+            end,
+        })
+        return
+    end
+
+    vim.ui.select(items, {
+        prompt = "Select Colorscheme",
+        format_item = function(item)
+            local icon = item.category == "Dark" and "󰖔 " or "󰖙 "
+            local def_str = item.is_default and " (default)" or ""
+            return string.format("%s %-22s [%s]%s", icon, item.text, item.category, def_str)
+        end,
+    }, function(choice)
+        if choice and choice.theme then
+            M.apply(choice.theme)
+        end
     end)
 end
 

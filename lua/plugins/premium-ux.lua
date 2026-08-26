@@ -26,7 +26,7 @@ return {
     },
     {
         "b0o/incline.nvim",
-        event = "VeryLazy",
+        event = { "BufReadPost", "BufNewFile", "VeryLazy" },
         config = function()
             local devicons = require("nvim-web-devicons")
 
@@ -125,8 +125,19 @@ return {
                     local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
                     local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
 
-                    local pill_bg = props.focused and blend(accent, normal_bg, 0.60)
-                        or blend(normal_fg, normal_bg, 0.15)
+                    local style = vim.g.lualine_color_style or "nvchad"
+                    local mode = vim.fn.mode()
+                    local mode_accent = accent
+                    if mode:match("^[iI]") then
+                        mode_accent = green
+                    elseif mode:match("^[vV\22]") then
+                        mode_accent = hl_hex("Statement", "fg", "#cba6f7")
+                    elseif mode:match("^[rR]") then
+                        mode_accent = red
+                    elseif mode:match("^[cC]") then
+                        mode_accent = yellow
+                    end
+
                     local function contrast_fg(bg_color)
                         local r, g, b = hex_to_rgb(bg_color)
                         local lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
@@ -136,7 +147,23 @@ return {
                             return normal_fg ~= "NONE" and normal_fg or "#cdd6f4"
                         end
                     end
-                    local pill_text_fg = props.focused and contrast_fg(pill_bg) or comment
+
+                    local pill_bg
+                    local pill_text_fg
+
+                    if style == "evil" or style == "3" then
+                        pill_bg = blend(normal_fg, normal_bg, 0.10)
+                        pill_text_fg = props.focused and mode_accent or comment
+                    elseif style == "lazyvim" or style == "2" then
+                        pill_bg = blend(normal_fg, normal_bg, 0.12)
+                        pill_text_fg = props.focused and normal_fg or comment
+                    elseif style == "frosted" or style == "4" then
+                        pill_bg = blend(accent, normal_bg, 0.22)
+                        pill_text_fg = props.focused and accent or comment
+                    else -- "nvchad" (Default)
+                        pill_bg = blend(normal_fg, normal_bg, 0.12)
+                        pill_text_fg = props.focused and normal_fg or comment
+                    end
 
                     local parts = {}
 
@@ -147,7 +174,7 @@ return {
                     if icon then
                         table.insert(parts, {
                             icon .. " ",
-                            guifg = pill_text_fg,
+                            guifg = (style == "frosted" and accent) or pill_text_fg,
                             guibg = pill_bg,
                         })
                     end
@@ -164,13 +191,13 @@ return {
                     local git = vim.b[buf].gitsigns_status_dict
                     if git then
                         if git.added and git.added > 0 then
-                            table.insert(parts, { " +" .. git.added, guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
+                            table.insert(parts, { " +" .. git.added, guifg = green, guibg = pill_bg, gui = "bold" })
                         end
                         if git.changed and git.changed > 0 then
-                            table.insert(parts, { " ~" .. git.changed, guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
+                            table.insert(parts, { " ~" .. git.changed, guifg = yellow, guibg = pill_bg, gui = "bold" })
                         end
                         if git.removed and git.removed > 0 then
-                            table.insert(parts, { " -" .. git.removed, guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
+                            table.insert(parts, { " -" .. git.removed, guifg = red, guibg = pill_bg, gui = "bold" })
                         end
                     end
 
@@ -181,7 +208,7 @@ return {
                     then
                         table.insert(parts, {
                             "  " .. diagnostics[vim.diagnostic.severity.ERROR],
-                            guifg = pill_text_fg,
+                            guifg = red,
                             guibg = pill_bg,
                             gui = "bold",
                         })
@@ -190,7 +217,7 @@ return {
                     then
                         table.insert(parts, {
                             "  " .. diagnostics[vim.diagnostic.severity.WARN],
-                            guifg = pill_text_fg,
+                            guifg = yellow,
                             guibg = pill_bg,
                             gui = "bold",
                         })
@@ -198,7 +225,7 @@ return {
 
                     -- Modified indicator
                     if modified then
-                        table.insert(parts, { " ●", guifg = pill_text_fg, guibg = pill_bg, gui = "bold" })
+                        table.insert(parts, { " ●", guifg = yellow, guibg = pill_bg, gui = "bold" })
                     end
 
                     -- Smooth right rounded pill cap
@@ -219,6 +246,15 @@ return {
                         },
                     },
                 },
+            })
+
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                group = vim.api.nvim_create_augroup("incline_colorscheme_refresh", { clear = true }),
+                callback = function()
+                    pcall(function()
+                        require("incline").refresh()
+                    end)
+                end,
             })
         end,
     },

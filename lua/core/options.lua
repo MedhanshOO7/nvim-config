@@ -20,8 +20,10 @@ opt.showtabline    = 2     -- keep the bufferline visible as a stable navigation
 if vim.fn.has("nvim-0.11") == 1 then
     opt.winborder      = "rounded" -- use a consistent premium border for native floats
 end
-opt.mousemoveevent     = true      -- enable mouse move events for interactive breadcrumbs and hover
-opt.guicursor          = "n-v-c-sm:block-Cursor/lCursor,i-ci-ve:ver25-InsertCursor/lCursor,r-cr-o:hor20-ReplaceCursor/lCursor"
+opt.synmaxcol      = 300   -- don't syntax highlight past column 300 (massive speedup on heavy/minified lines)
+opt.redrawtime     = 1500  -- limit syntax redraw time (prevents lag on complex regex)
+opt.mousemoveevent = true  -- enable mouse move events for interactive breadcrumbs and hover
+opt.guicursor      = "n-v-c-sm:block-Cursor/lCursor,i-ci-ve:ver25-InsertCursor/lCursor,r-cr-o:hor20-ReplaceCursor/lCursor"
 
 -- ── Indentation ─────────────────────────────────────────────
 opt.expandtab      = true -- convert tabs → spaces
@@ -149,5 +151,9 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = { "lua", "python", "sh", "bash", "zsh", "javascript", "typescript", "javascriptreact", "typescriptreact", "c", "cpp" },
     callback = function()
         vim.opt_local.colorcolumn = "100"
+        vim.opt_local.shiftwidth = 4
+        vim.opt_local.tabstop = 4
+        vim.opt_local.softtabstop = 4
+        vim.opt_local.expandtab = true
     end,
 })

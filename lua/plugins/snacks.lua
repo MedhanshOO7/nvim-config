@@ -28,7 +28,38 @@ return {
             duration = 20,
             fps = 100,
         },
-        bigfile = { enabled = true },
+        bigfile = {
+            enabled = true,
+            notify = true,
+            size = 1.0 * 1024 * 1024, -- 1 MB threshold
+            line_length = 1000, -- line length threshold for minified files
+            setup = function(ctx)
+                vim.b[ctx.buf].large_file = true
+                vim.b[ctx.buf].bigfile = true
+                vim.b[ctx.buf].minianimate_disable = true
+                vim.b[ctx.buf].miniindentscope_disable = true
+                pcall(vim.cmd, "NoMatchParen")
+                Snacks.util.wo(0, {
+                    foldmethod = "manual",
+                    statuscolumn = "",
+                    conceallevel = 0,
+                    relativenumber = false,
+                    cursorline = false,
+                    list = false,
+                })
+                vim.schedule(function()
+                    if vim.api.nvim_buf_is_valid(ctx.buf) then
+                        vim.bo[ctx.buf].syntax = ""
+                        vim.bo[ctx.buf].swapfile = false
+                        vim.bo[ctx.buf].undofile = false
+                        -- Detach all LSP clients from this large buffer
+                        for _, client in ipairs(vim.lsp.get_clients({ bufnr = ctx.buf })) do
+                            pcall(vim.lsp.buf_detach_client, ctx.buf, client.id)
+                        end
+                    end
+                end)
+            end,
+        },
         bufdelete = { enabled = true },
         dashboard = {
             enabled = true,

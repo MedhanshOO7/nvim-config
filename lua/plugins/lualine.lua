@@ -1,6 +1,8 @@
 return {
     "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
+    lazy = false,
+    priority = 900,
+    cmd = "StatusStyle",
     dependencies = {
         "nvim-tree/nvim-web-devicons",
     },
@@ -49,10 +51,38 @@ return {
             return "󰑋 REC @" .. reg
         end
 
-        local function copilot_status()
+        local function get_copilot_state()
             local ok, client = pcall(require, "copilot.client")
-            if not ok or client.is_disabled() then return "" end
-            return "󰚩 Ready"
+            if not ok then return "hidden" end
+            if client.is_disabled() then
+                return "disabled"
+            end
+            if client.startup_error then
+                return "issue"
+            end
+            local status_ok, status = pcall(require, "copilot.status")
+            if status_ok and status.data then
+                local s = string.lower(status.data.status or "")
+                if s == "error" or s == "warning" then
+                    return "issue"
+                end
+            end
+            if not client.get() then
+                return "disabled"
+            end
+            return "ready"
+        end
+
+        local function copilot_status()
+            local state = get_copilot_state()
+            if state == "ready" then
+                return "󰚩"
+            elseif state == "disabled" then
+                return ""
+            elseif state == "issue" then
+                return "󰚩 󰌾"
+            end
+            return ""
         end
 
         local function lsp_status()
@@ -123,58 +153,78 @@ return {
             end
         end
 
-        local function get_floating_theme()
+        local styles = {
+            { id = "nvchad", name = "1. NvChad Style (Solid Accent Ends, Clean Transparent Center)" },
+            { id = "lazyvim", name = "2. LazyVim Style (Fully Transparent, Minimal Icon Accents)" },
+            { id = "evil", name = "3. Evil Lualine / Doom (Studio Bar with Mode Pillar ▌)" },
+            { id = "frosted", name = "4. TokyoNight Frosted (Translucent Glass Pills & Glowing Icons)" },
+        }
+
+        local function get_mode_color()
+            local p = get_theme_palette()
+            local mode = vim.fn.mode()
+            if mode:match("^[iI]") then
+                return p.green
+            elseif mode:match("^[vV\22]") then
+                return p.purple
+            elseif mode:match("^[rR]") then
+                return p.red
+            elseif mode:match("^[cC]") then
+                return p.yellow
+            end
+            return p.blue
+        end
+
+        local function get_theme_spec()
             local p = get_theme_palette()
             local bg_dark = "NONE"
 
-            local norm_bg   = blend(p.blue, p.normal_bg, 0.60)
-            local ins_bg    = blend(p.green, p.normal_bg, 0.60)
-            local vis_bg    = blend(p.purple, p.normal_bg, 0.60)
-            local rep_bg    = blend(p.red, p.normal_bg, 0.60)
-            local cmd_bg    = blend(p.yellow, p.normal_bg, 0.60)
-            local pill_b_bg = blend(p.purple, p.normal_bg, 0.60)
-            local pill_y_bg = blend(p.cyan, p.normal_bg, 0.60)
-            local inact_bg  = blend(p.normal_fg, p.normal_bg, 0.15)
+            local norm_bg = blend(p.blue, p.normal_bg, 0.60)
+            local ins_bg  = blend(p.green, p.normal_bg, 0.60)
+            local vis_bg  = blend(p.purple, p.normal_bg, 0.60)
+            local rep_bg  = blend(p.red, p.normal_bg, 0.60)
+            local cmd_bg  = blend(p.yellow, p.normal_bg, 0.60)
+            local inact_bg = blend(p.normal_fg, p.normal_bg, 0.15)
 
             return {
                 normal = {
                     a = { fg = contrast_fg(norm_bg), bg = norm_bg, gui = "bold" },
-                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    b = { fg = p.normal_fg, bg = bg_dark },
                     c = { fg = p.normal_fg, bg = bg_dark },
                     x = { fg = p.normal_fg, bg = bg_dark },
-                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    y = { fg = p.normal_fg, bg = bg_dark },
                     z = { fg = contrast_fg(norm_bg), bg = norm_bg, gui = "bold" },
                 },
                 insert = {
                     a = { fg = contrast_fg(ins_bg), bg = ins_bg, gui = "bold" },
-                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    b = { fg = p.normal_fg, bg = bg_dark },
                     c = { fg = p.normal_fg, bg = bg_dark },
                     x = { fg = p.normal_fg, bg = bg_dark },
-                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    y = { fg = p.normal_fg, bg = bg_dark },
                     z = { fg = contrast_fg(ins_bg), bg = ins_bg, gui = "bold" },
                 },
                 visual = {
                     a = { fg = contrast_fg(vis_bg), bg = vis_bg, gui = "bold" },
-                    b = { fg = contrast_fg(norm_bg), bg = norm_bg, gui = "bold" },
+                    b = { fg = p.normal_fg, bg = bg_dark },
                     c = { fg = p.normal_fg, bg = bg_dark },
                     x = { fg = p.normal_fg, bg = bg_dark },
-                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    y = { fg = p.normal_fg, bg = bg_dark },
                     z = { fg = contrast_fg(vis_bg), bg = vis_bg, gui = "bold" },
                 },
                 replace = {
                     a = { fg = contrast_fg(rep_bg), bg = rep_bg, gui = "bold" },
-                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    b = { fg = p.normal_fg, bg = bg_dark },
                     c = { fg = p.normal_fg, bg = bg_dark },
                     x = { fg = p.normal_fg, bg = bg_dark },
-                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    y = { fg = p.normal_fg, bg = bg_dark },
                     z = { fg = contrast_fg(rep_bg), bg = rep_bg, gui = "bold" },
                 },
                 command = {
                     a = { fg = contrast_fg(cmd_bg), bg = cmd_bg, gui = "bold" },
-                    b = { fg = contrast_fg(pill_b_bg), bg = pill_b_bg, gui = "bold" },
+                    b = { fg = p.normal_fg, bg = bg_dark },
                     c = { fg = p.normal_fg, bg = bg_dark },
                     x = { fg = p.normal_fg, bg = bg_dark },
-                    y = { fg = contrast_fg(pill_y_bg), bg = pill_y_bg, gui = "bold" },
+                    y = { fg = p.normal_fg, bg = bg_dark },
                     z = { fg = contrast_fg(cmd_bg), bg = cmd_bg, gui = "bold" },
                 },
                 inactive = {
@@ -189,10 +239,337 @@ return {
         end
 
         local function apply()
-            local theme = get_floating_theme()
+            local p = get_theme_palette()
+            local style = vim.g.lualine_color_style or "nvchad"
+            local theme = get_theme_spec()
 
             vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
             vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
+
+            local sections = {}
+
+            if style == "evil" or style == "3" then
+                sections = {
+                    lualine_a = {
+                        {
+                            function() return "▌" end,
+                            color = function() return { fg = get_mode_color(), bg = "NONE" } end,
+                            padding = { left = 0, right = 0 },
+                        },
+                        {
+                            "mode",
+                            color = function() return { fg = get_mode_color(), bg = "NONE", gui = "bold" } end,
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_b = {
+                        {
+                            "branch",
+                            icon = "",
+                            color = { fg = p.purple, bg = "NONE", gui = "bold" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            "diff",
+                            symbols = { added = " ", modified = " ", removed = " " },
+                            color = { bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_c = {},
+                    lualine_x = {
+                        {
+                            macro_recording,
+                            color = { fg = p.red, bg = "NONE", gui = "bold" },
+                        },
+                        {
+                            "diagnostics",
+                            sources = { "nvim_diagnostic" },
+                            symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                            color = { bg = "NONE" },
+                        },
+                        {
+                            copilot_status,
+                            color = function()
+                                local state = get_copilot_state()
+                                local fg = p.teal
+                                if state == "disabled" then fg = p.comment
+                                elseif state == "issue" then fg = p.yellow end
+                                return { fg = fg, bg = "NONE", gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            lsp_status,
+                            color = { fg = p.cyan, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_y = {
+                        {
+                            "filetype",
+                            color = { fg = p.yellow, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_z = {
+                        {
+                            "location",
+                            icon = "",
+                            color = { fg = p.blue, bg = "NONE", gui = "bold" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            function() return "▐" end,
+                            color = function() return { fg = get_mode_color(), bg = "NONE" } end,
+                            padding = { left = 0, right = 0 },
+                        },
+                    },
+                }
+            elseif style == "lazyvim" or style == "2" then
+                sections = {
+                    lualine_a = {
+                        {
+                            "mode",
+                            separator = { left = "", right = "" },
+                            color = function()
+                                local m_color = get_mode_color()
+                                local bg = blend(m_color, p.normal_bg, 0.40)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_b = {
+                        {
+                            "branch",
+                            icon = "",
+                            color = { fg = p.comment, bg = "NONE", gui = "bold" },
+                        },
+                        {
+                            "diff",
+                            symbols = { added = " ", modified = " ", removed = " " },
+                            color = { bg = "NONE" },
+                        },
+                    },
+                    lualine_c = {},
+                    lualine_x = {
+                        {
+                            macro_recording,
+                            color = { fg = p.red, bg = "NONE", gui = "bold" },
+                        },
+                        {
+                            "diagnostics",
+                            sources = { "nvim_diagnostic" },
+                            symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                            color = { bg = "NONE" },
+                        },
+                        {
+                            copilot_status,
+                            color = function()
+                                local state = get_copilot_state()
+                                local fg = p.teal
+                                if state == "disabled" then fg = p.comment
+                                elseif state == "issue" then fg = p.yellow end
+                                return { fg = fg, bg = "NONE", gui = "bold" }
+                            end,
+                        },
+                        {
+                            lsp_status,
+                            color = { fg = p.comment, bg = "NONE" },
+                        },
+                    },
+                    lualine_y = {
+                        {
+                            "filetype",
+                            icon_only = false,
+                            color = { fg = p.comment, bg = "NONE" },
+                        },
+                    },
+                    lualine_z = {
+                        {
+                            "location",
+                            icon = "",
+                            separator = { left = " ", right = "" },
+                            color = function()
+                                local bg = blend(p.normal_fg, p.normal_bg, 0.15)
+                                return { fg = p.normal_fg, bg = bg, gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                }
+            elseif style == "frosted" or style == "4" then
+                local function frost(accent_color)
+                    local bg = blend(accent_color, p.normal_bg, 0.22)
+                    return { fg = accent_color, bg = bg, gui = "bold" }
+                end
+                sections = {
+                    lualine_a = {
+                        {
+                            "mode",
+                            separator = { left = "", right = "" },
+                            color = function()
+                                local m_color = get_mode_color()
+                                local bg = blend(m_color, p.normal_bg, 0.35)
+                                return { fg = m_color, bg = bg, gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_b = {
+                        {
+                            "branch",
+                            icon = "",
+                            color = function() return frost(p.green) end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            "diff",
+                            symbols = { added = " ", modified = " ", removed = " " },
+                            color = function() return frost(p.purple) end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_c = {},
+                    lualine_x = {
+                        {
+                            macro_recording,
+                            color = function() return frost(p.red) end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            copilot_status,
+                            color = function()
+                                local state = get_copilot_state()
+                                local fg = p.teal
+                                if state == "disabled" then fg = p.comment
+                                elseif state == "issue" then fg = p.yellow end
+                                return frost(fg)
+                            end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            "diagnostics",
+                            sources = { "nvim_diagnostic" },
+                            symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                            color = function() return frost(p.peach) end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            lsp_status,
+                            color = function() return frost(p.lavender) end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_y = {
+                        {
+                            "filetype",
+                            icon_only = false,
+                            color = function() return frost(p.cyan) end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_z = {
+                        {
+                            "location",
+                            icon = "",
+                            color = function()
+                                local m_color = get_mode_color()
+                                return frost(m_color)
+                            end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                }
+            else -- "nvchad" or "1" (Default)
+                sections = {
+                    lualine_a = {
+                        {
+                            "mode",
+                            separator = { left = "", right = "" },
+                            color = function()
+                                local m_color = get_mode_color()
+                                local bg = blend(m_color, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_b = {
+                        {
+                            "branch",
+                            icon = "",
+                            color = { fg = p.peach, bg = "NONE", gui = "bold" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            "diff",
+                            symbols = { added = " ", modified = " ", removed = " " },
+                            color = { bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_c = {},
+                    lualine_x = {
+                        {
+                            macro_recording,
+                            color = { fg = p.red, bg = "NONE", gui = "bold" },
+                        },
+                        {
+                            "diagnostics",
+                            sources = { "nvim_diagnostic" },
+                            symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                            color = { bg = "NONE" },
+                        },
+                        {
+                            copilot_status,
+                            color = function()
+                                local state = get_copilot_state()
+                                local fg = p.teal
+                                if state == "disabled" then fg = p.comment
+                                elseif state == "issue" then fg = p.yellow end
+                                return { fg = fg, bg = "NONE", gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            lsp_status,
+                            color = { fg = p.lavender, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_y = {
+                        {
+                            "filetype",
+                            icon_only = false,
+                            color = { fg = p.cyan, bg = "NONE", gui = "bold" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                    lualine_z = {
+                        {
+                            "location",
+                            icon = "",
+                            separator = { left = " ", right = "" },
+                            color = function()
+                                local m_color = get_mode_color()
+                                local bg = blend(m_color, p.normal_bg, 0.60)
+                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
+                            end,
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
+                }
+            end
 
             require("lualine").setup({
                 options = {
@@ -202,149 +579,14 @@ return {
                     component_separators = { left = "", right = "" },
                     always_divide_middle = true,
                     disabled_filetypes = {
-                        statusline = { "snacks_picker_input", "snacks_explorer", "noice", "nui", "notify", "prompt", "lazy", "mason" },
+                        statusline = { "snacks_explorer", "noice", "nui", "notify", "lazy", "mason" },
                     },
                 },
-                sections = {
-                    lualine_a = {
-                        {
-                            "mode",
-                            separator = { left = "", right = "" },
-                            padding = { left = 1, right = 1 },
-                            fmt = function(mode_name)
-                                local mode_map = {
-                                    ["NORMAL"] = "󰮯 NORMAL",
-                                    ["O-PENDING"] = "󰮯 OP",
-                                    ["INSERT"] = "󰏫 INSERT",
-                                    ["VISUAL"] = "󰈈 VISUAL",
-                                    ["V-LINE"] = "󰈈 V-LINE",
-                                    ["V-BLOCK"] = "󰈈 V-BLOCK",
-                                    ["SELECT"] = "󰒆 SELECT",
-                                    ["S-LINE"] = "󰒆 S-LINE",
-                                    ["S-BLOCK"] = "󰒆 S-BLOCK",
-                                    ["REPLACE"] = "󰅪 REPLACE",
-                                    ["V-REPLACE"] = "󰅪 V-REP",
-                                    ["COMMAND"] = "󰘳 COMMAND",
-                                    ["EX"] = "󰘳 EX",
-                                    ["MORE"] = "󰘳 MORE",
-                                    ["CONFIRM"] = "󰘳 CONFIRM",
-                                    ["SHELL"] = "󰚌 SHELL",
-                                    ["TERMINAL"] = "󰚌 TERM",
-                                }
-                                return mode_map[mode_name] or mode_name
-                            end,
-                        },
-                    },
-                    lualine_b = {
-                        {
-                            "branch",
-                            icon = "",
-                            color = function()
-                                local p = get_theme_palette()
-                                local git = vim.b.gitsigns_status_dict
-                                local is_clean = git and (git.added or 0) == 0 and (git.changed or 0) == 0 and (git.removed or 0) == 0
-                                local branch_accent = is_clean and p.green or p.peach
-                                local branch_bg = blend(branch_accent, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(branch_bg), bg = branch_bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                        {
-                            "diff",
-                            symbols = { added = " ", modified = " ", removed = " " },
-                            color = function()
-                                local p = get_theme_palette()
-                                local bg = blend(p.purple, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                    },
-                    lualine_c = {
-                        {
-                            "filename",
-                            file_status = true,
-                            path = 4,
-                            symbols = {
-                                modified = " ●",
-                                readonly = " 󰌾",
-                                unnamed = "[No Name]",
-                                newfile = "[New]",
-                            },
-                        },
-                    },
-                    lualine_x = {
-                        {
-                            macro_recording,
-                            color = function()
-                                local p = get_theme_palette()
-                                local bg = blend(p.red, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                        {
-                            copilot_status,
-                            color = function()
-                                local p = get_theme_palette()
-                                local bg = blend(p.teal, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                        {
-                            "diagnostics",
-                            sources = { "nvim_diagnostic" },
-                            symbols = { error = " ", warn = " ", info = " ", hint = " " },
-                            color = function()
-                                local p = get_theme_palette()
-                                local bg = blend(p.peach, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                        {
-                            lsp_status,
-                            color = function()
-                                local p = get_theme_palette()
-                                local bg = blend(p.lavender, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                    },
-                    lualine_y = {
-                        {
-                            "filetype",
-                            icon_only = false,
-                            color = function()
-                                local p = get_theme_palette()
-                                local bg = blend(p.cyan, p.normal_bg, 0.60)
-                                return { fg = contrast_fg(bg), bg = bg, gui = "bold" }
-                            end,
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                    },
-                    lualine_z = {
-                        {
-                            "location",
-                            icon = "",
-                            separator = { left = " ", right = "" },
-                            padding = { left = 1, right = 1 },
-                        },
-                    },
-                },
+                sections = sections,
                 inactive_sections = {
                     lualine_a = {},
                     lualine_b = {},
-                    lualine_c = { "filename" },
+                    lualine_c = {},
                     lualine_x = { "location" },
                     lualine_y = {},
                     lualine_z = {},
@@ -352,6 +594,69 @@ return {
                 extensions = { "trouble", "quickfix", "toggleterm", "lazy", "mason" },
             })
         end
+
+        local function set_statusline_style(style_id)
+            if not style_id or style_id == "" then
+                local opts = {}
+                for _, s in ipairs(styles) do
+                    table.insert(opts, s.name)
+                end
+                vim.ui.select(opts, { prompt = "Choose Statusline & Header Style:" }, function(choice)
+                    if choice then
+                        for _, s in ipairs(styles) do
+                            if choice == s.name then
+                                vim.g.lualine_color_style = s.id
+                                apply()
+                                pcall(function() require("incline").refresh() end)
+                                vim.notify("Statusline Style: " .. s.id:upper(), vim.log.levels.INFO, { title = "Statusline Style" })
+                                break
+                            end
+                        end
+                    end
+                end)
+                return
+            end
+
+            if style_id == "next" then
+                local cur = vim.g.lualine_color_style or "nvchad"
+                local next_idx = 1
+                for i, s in ipairs(styles) do
+                    if s.id == cur then
+                        next_idx = (i % #styles) + 1
+                        break
+                    end
+                end
+                vim.g.lualine_color_style = styles[next_idx].id
+                apply()
+                pcall(function() require("incline").refresh() end)
+                vim.notify("Statusline Style: " .. styles[next_idx].id:upper(), vim.log.levels.INFO, { title = "Statusline Style" })
+                return
+            end
+
+            for _, s in ipairs(styles) do
+                if style_id == s.id or style_id == tostring(s.id) or tostring(style_id) == s.id:sub(1, 1) then
+                    vim.g.lualine_color_style = s.id
+                    apply()
+                    pcall(function() require("incline").refresh() end)
+                    vim.notify("Statusline Style: " .. s.id:upper(), vim.log.levels.INFO, { title = "Statusline Style" })
+                    return
+                end
+            end
+
+            vim.g.lualine_color_style = style_id
+            apply()
+            pcall(function() require("incline").refresh() end)
+        end
+
+        vim.api.nvim_create_user_command("StatusStyle", function(opts)
+            set_statusline_style(opts.args)
+        end, {
+            nargs = "?",
+            complete = function()
+                return { "nvchad", "lazyvim", "evil", "frosted", "next" }
+            end,
+            desc = "Switch Statusline and Incline header style",
+        })
 
         apply()
 

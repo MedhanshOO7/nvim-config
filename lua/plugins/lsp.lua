@@ -169,6 +169,14 @@ return {
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("user_lsp_attach", { clear = true }),
             callback = function(event)
+                -- If this is a heavy file (> 1MB), detach LSP immediately to prevent UI lag
+                if vim.b[event.buf].large_file or vim.b[event.buf].bigfile then
+                    vim.schedule(function()
+                        pcall(vim.lsp.buf_detach_client, event.buf, event.data.client_id)
+                    end)
+                    return
+                end
+
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
 
                 local function map_lsp(mode, lhs, rhs, desc)

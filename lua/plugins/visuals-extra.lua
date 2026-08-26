@@ -21,8 +21,8 @@ return {
         event = "VeryLazy",
         opts = {
             keymaps = {
-                basic = true,
-                extra = true,
+                basic = false,
+                extra = false,
             },
             options = {
                 mode = "window",
@@ -68,9 +68,7 @@ return {
                     highlight = "IncSearch",
                 },
                 paste = {
-                    enabled = true,
-                    default_animation = "fade",
-                    highlight = "DiagnosticOk",
+                    enabled = false,
                 },
                 undo = {
                     enabled = true,

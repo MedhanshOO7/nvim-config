@@ -239,6 +239,7 @@ return {
             { "<leader>uw", desc = "Toggle text wrap", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>ux", desc = "Toggle Treesitter sticky header", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>uy", desc = "Toggle transparency", icon = { icon = "󰔎", color = "cyan" } },
+            { "<leader>uS", desc = "Statusline & Header style picker", icon = { icon = "󰔎", color = "cyan" } },
 
             -- Windows and sessions
             { "<leader>wc", desc = "Close window", icon = { icon = "󰅖", color = "red" } },
@@ -268,6 +269,8 @@ return {
             { "<M-a>", desc = "Toggle AI Autocomplete (Supermaven)", icon = { icon = "󰚩", color = "green" } },
             { "<M-n>", desc = "Cycle forward through yank history" },
             { "<M-p>", desc = "Cycle backward through yank history" },
+            { "[y", desc = "Cycle backward through yank history" },
+            { "]y", desc = "Cycle forward through yank history" },
             { "gd", desc = "LSP Definition" },
             { "gD", desc = "LSP Declaration" },
             { "gi", desc = "LSP Implementation" },

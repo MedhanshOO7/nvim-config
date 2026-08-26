@@ -17,7 +17,7 @@ return {
             "--completion-style=detailed",
             "--function-arg-placeholders=0",
             "--header-insertion=iwyu",
-            "--fallback-style={BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Never}",
+            "--fallback-style=WebKit",
             "--log=error",
             "--query-driver=/usr/bin/arm-none-eabi-*",
         },

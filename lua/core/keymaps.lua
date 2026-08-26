@@ -313,6 +313,7 @@ map("n", "<leader>ut", cmd("ThemePicker"), { desc = "Choose a theme" })
 map("n", "<leader>un", cmd("ThemeNext"), { desc = "Switch to the next theme" })
 map("n", "<leader>up", cmd("ThemePrev"), { desc = "Switch to the previous theme" })
 map("n", "<leader>uy", cmd("ThemeTransparencyToggle"), { desc = "Turn transparency on or off" })
+map("n", "<leader>uS", cmd("StatusStyle"), { desc = "Choose statusline & header color style" })
 
 map("n", "<leader>ud", function()
     local enabled = vim.diagnostic.is_enabled()

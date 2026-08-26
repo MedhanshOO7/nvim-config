@@ -41,7 +41,18 @@ return {
                     args = { "--indent-type", "Spaces", "--indent-width", "4", "-" },
                 },
                 clang_format = {
-                    prepend_args = { "--style={BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Never}" },
+                    prepend_args = function(self, ctx)
+                        local found = vim.fs.find({ ".clang-format", "_clang-format" }, {
+                            upward = true,
+                            path = ctx.dirname,
+                        })
+                        if #found > 0 then
+                            return { "--style=file" }
+                        end
+                        return {
+                            "--style={BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Never, AccessModifierOffset: -4}",
+                        }
+                    end,
                 },
                 shfmt = {
                     prepend_args = { "-i", "4", "-ci" },
@@ -49,6 +60,10 @@ return {
             },
             format_on_save = function(bufnr)
                 if not vim.g.autoformat_enabled or vim.b[bufnr].autoformat_enabled == false then
+                    return nil
+                end
+
+                if vim.b[bufnr].large_file or vim.b[bufnr].bigfile then
                     return nil
                 end
 
