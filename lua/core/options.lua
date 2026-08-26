@@ -14,7 +14,7 @@ opt.wrap           = false -- don't wrap long lines
 opt.virtualedit    = "block" -- free cursor in visual block mode
 opt.colorcolumn    = ""    -- no hard ruler by default
 opt.showmode       = false -- mode is shown in the statusline instead
-opt.cmdheight      = 1     -- command bar height
+opt.cmdheight      = 0     -- hide bottom command bar space (using floating spotlight cmdline)
 opt.laststatus     = 3     -- single statusline across all windows
 opt.showtabline    = 2     -- keep the bufferline visible as a stable navigation rail
 if vim.fn.has("nvim-0.11") == 1 then
