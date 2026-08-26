@@ -132,13 +132,10 @@ end
 -- When transparency is enabled, floating windows receive a subtle background
 -- to create a "frosted glass" look against the terminal's background.
 local function get_glass_bg(normal_bg, normal_fg, transparent)
-    if not transparent then
-        -- Default subtle blend for opaque mode
-        return blend(normal_fg, normal_bg, 0.06)
+    if transparent then
+        return "NONE"
     end
-    -- In transparent mode, we use a very dark, slightly opaque color
-    -- This works best if the terminal (Kitty) has blur enabled.
-    return blend("#000000", normal_bg, 0.4)
+    return blend(normal_fg, normal_bg, 0.06)
 end
 
 local function hl_hex(name, key, fallback)
@@ -232,6 +229,13 @@ local function set_transparent_highlights(enabled)
         "SnacksPickerBox",
         "InclineNormal",
         "InclineNormalNC",
+        "NoiceCmdlinePopup",
+        "NoiceCmdlinePopupBorder",
+        "NoicePopup",
+        "NoicePopupBorder",
+        "SnacksInputNormal",
+        "SnacksInputBorder",
+        "SnacksBackdrop",
     }
 
     for _, group in ipairs(groups) do
