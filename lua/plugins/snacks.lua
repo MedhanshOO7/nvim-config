@@ -215,7 +215,7 @@ return {
             gap = 1,
             sort = { "level", "added" },
             level = vim.log.levels.TRACE,
-            style = "fancy",
+            style = "minimal",
             top_down = true, -- top-to-bottom on the right side
         },
         picker = {
