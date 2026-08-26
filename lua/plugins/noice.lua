@@ -23,8 +23,7 @@ return {
                 enabled = false, -- snacks.notifier handles messages
             },
             popupmenu = {
-                enabled = true,
-                backend = "nui",
+                enabled = false, -- Disable Nui popupmenu container to prevent bottom split bleeding
             },
             notify = {
                 enabled = false, -- snacks.notifier handles all toast notifications
@@ -83,31 +82,6 @@ return {
                         sidescrolloff = 0,
                         cursorline = false,
                         foldenable = false,
-                    },
-                },
-                cmdline_popupmenu = {
-                    view = "popupmenu",
-                    zindex = 200,
-                    position = {
-                        row = "46%",
-                        col = "50%",
-                    },
-                    size = {
-                        width = 60,
-                        height = "auto",
-                        max_height = 12,
-                    },
-                    border = {
-                        style = "rounded",
-                        padding = { 0, 1 },
-                    },
-                    win_options = {
-                        winhighlight = {
-                            Normal = "NoicePopupmenu",
-                            FloatBorder = "NoicePopupmenuBorder",
-                            CursorLine = "NoicePopupmenuSelected",
-                            PmenuMatch = "NoicePopupmenuMatch",
-                        },
                     },
                 },
                 cmdline_input = {
