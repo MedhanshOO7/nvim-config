@@ -80,7 +80,28 @@ return {
                         },
                     },
                 },
+                notify = {
+                    position = {
+                        row = 2,
+                        col = 2, -- Top-left corner
+                    },
+                    border = {
+                        style = "rounded",
+                        padding = { 0, 1 },
+                    },
+                    win_options = {
+                        winblend = 0,
+                        winhighlight = {
+                            Normal = "NormalFloat",
+                            FloatBorder = "FloatBorder",
+                        },
+                    },
+                },
                 mini = {
+                    position = {
+                        row = 2,
+                        col = 2, -- Top-left corner
+                    },
                     win_options = {
                         winblend = 0,
                     },
