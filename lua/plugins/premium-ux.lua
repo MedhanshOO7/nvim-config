@@ -150,19 +150,42 @@ return {
 
                     local pill_bg
                     local pill_text_fg
+                    local pill_icon_fg
 
                     if style == "evil" or style == "3" then
-                        pill_bg = blend(normal_fg, normal_bg, 0.10)
+                        pill_bg = blend(mode_accent, normal_bg, props.focused and 0.18 or 0.08)
                         pill_text_fg = props.focused and mode_accent or comment
+                        pill_icon_fg = props.focused and mode_accent or comment
                     elseif style == "lazyvim" or style == "2" then
-                        pill_bg = blend(normal_fg, normal_bg, 0.12)
-                        pill_text_fg = props.focused and normal_fg or comment
+                        if props.focused then
+                            pill_bg = blend(mode_accent, normal_bg, 0.40)
+                            pill_text_fg = contrast_fg(pill_bg)
+                            pill_icon_fg = contrast_fg(pill_bg)
+                        else
+                            pill_bg = blend(normal_fg, normal_bg, 0.10)
+                            pill_text_fg = comment
+                            pill_icon_fg = comment
+                        end
                     elseif style == "frosted" or style == "4" then
-                        pill_bg = blend(accent, normal_bg, 0.22)
-                        pill_text_fg = props.focused and accent or comment
-                    else -- "nvchad" (Default)
-                        pill_bg = blend(normal_fg, normal_bg, 0.12)
-                        pill_text_fg = props.focused and normal_fg or comment
+                        if props.focused then
+                            pill_bg = blend(mode_accent, normal_bg, 0.35)
+                            pill_text_fg = mode_accent
+                            pill_icon_fg = mode_accent
+                        else
+                            pill_bg = blend(normal_fg, normal_bg, 0.10)
+                            pill_text_fg = comment
+                            pill_icon_fg = comment
+                        end
+                    else -- "nvchad" or "1" (Default)
+                        if props.focused then
+                            pill_bg = blend(mode_accent, normal_bg, 0.60)
+                            pill_text_fg = contrast_fg(pill_bg)
+                            pill_icon_fg = contrast_fg(pill_bg)
+                        else
+                            pill_bg = blend(normal_fg, normal_bg, 0.12)
+                            pill_text_fg = comment
+                            pill_icon_fg = comment
+                        end
                     end
 
                     local parts = {}
@@ -174,7 +197,7 @@ return {
                     if icon then
                         table.insert(parts, {
                             icon .. " ",
-                            guifg = (style == "frosted" and accent) or pill_text_fg,
+                            guifg = (style == "frosted" and mode_accent) or pill_icon_fg,
                             guibg = pill_bg,
                         })
                     end
@@ -248,8 +271,9 @@ return {
                 },
             })
 
-            vim.api.nvim_create_autocmd("ColorScheme", {
-                group = vim.api.nvim_create_augroup("incline_colorscheme_refresh", { clear = true }),
+            local incline_group = vim.api.nvim_create_augroup("incline_mode_and_theme_sync", { clear = true })
+            vim.api.nvim_create_autocmd({ "ColorScheme", "ModeChanged" }, {
+                group = incline_group,
                 callback = function()
                     pcall(function()
                         require("incline").refresh()
