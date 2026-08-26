@@ -437,8 +437,8 @@ local function apply_editor_chrome(transparent)
         AlphaFooter = { fg = comment },
 
         -- ── Window labels ────────────────────────────────────────────────────
-        InclineNormal = { fg = normal_fg, bg = blend(accent, normal_bg, 0.14) },
-        InclineNormalNC = { fg = comment, bg = blend(comment, normal_bg, 0.12) },
+        InclineNormal = { bg = "NONE" },
+        InclineNormalNC = { bg = "NONE" },
 
         -- ── Aerial ────────────────────────────────────────────────────────────
         AerialLine = { bg = blend(accent, normal_bg, 0.12) },

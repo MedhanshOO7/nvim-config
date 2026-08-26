@@ -125,7 +125,7 @@ return {
                     local yellow = hl_hex("DiagnosticWarn", "fg", "#f9e2af")
                     local red = hl_hex("DiagnosticError", "fg", "#f38ba8")
 
-                    local style = vim.g.lualine_color_style or "nvchad"
+                    local style = vim.g.lualine_color_style or "frosted"
                     local mode = vim.fn.mode()
                     local mode_accent = accent
                     if mode:match("^[iI]") then

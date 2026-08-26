@@ -240,7 +240,7 @@ return {
 
         local function apply()
             local p = get_theme_palette()
-            local style = vim.g.lualine_color_style or "nvchad"
+            local style = vim.g.lualine_color_style or "frosted"
             local theme = get_theme_spec()
 
             vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
@@ -618,7 +618,7 @@ return {
             end
 
             if style_id == "next" then
-                local cur = vim.g.lualine_color_style or "nvchad"
+                local cur = vim.g.lualine_color_style or "frosted"
                 local next_idx = 1
                 for i, s in ipairs(styles) do
                     if s.id == cur then
