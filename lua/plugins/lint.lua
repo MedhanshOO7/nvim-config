@@ -9,6 +9,10 @@ return {
             local mason_cmd = mason_bin .. "/" .. cmd
             if vim.fn.executable(mason_cmd) == 1 then
                 return mason_cmd
+            elseif vim.fn.executable(mason_cmd .. ".cmd") == 1 then
+                return mason_cmd .. ".cmd"
+            elseif vim.fn.executable(mason_cmd .. ".exe") == 1 then
+                return mason_cmd .. ".exe"
             end
 
             return cmd
