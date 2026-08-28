@@ -54,8 +54,45 @@ return {
                 lua = "nvim -l",
                 go = "go run",
             },
+<<<<<<< HEAD
         }
     end,
+||||||| parent of aced673 (feat(markdown): add report-tool integration, keymaps, runner, and snippets)
+            c = {
+                "cd $dir &&",
+                "gcc $fileName -o /tmp/$fileNameWithoutExt &&",
+                "/tmp/$fileNameWithoutExt",
+            },
+            cpp = {
+                "cd $dir &&",
+                "g++ -std=c++20 $fileName -o /tmp/$fileNameWithoutExt &&",
+                "/tmp/$fileNameWithoutExt",
+            },
+            sh = "bash",
+            zsh = "zsh",
+            lua = "nvim -l",
+            go = "go run",
+        },
+    },
+=======
+            c = {
+                "cd $dir &&",
+                "gcc $fileName -o /tmp/$fileNameWithoutExt &&",
+                "/tmp/$fileNameWithoutExt",
+            },
+            cpp = {
+                "cd $dir &&",
+                "g++ -std=c++20 $fileName -o /tmp/$fileNameWithoutExt &&",
+                "/tmp/$fileNameWithoutExt",
+            },
+            sh = "bash",
+            zsh = "zsh",
+            lua = "nvim -l",
+            go = "go run",
+            markdown = "report-tool $fileName",
+        },
+    },
+>>>>>>> aced673 (feat(markdown): add report-tool integration, keymaps, runner, and snippets)
     config = function(_, opts)
         require("code_runner").setup(opts)
     end,
