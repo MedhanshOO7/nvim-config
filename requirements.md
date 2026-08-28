@@ -125,16 +125,42 @@ python3 -m venv ~/.venvs/neovim
 
 ## macOS (Homebrew)
 
+> [!TIP]
+> For a full macOS guide with aesthetic Ghostty / Kitty / WezTerm / iTerm2 configurations, `Ctrl+G` quick-launch shortcuts, Apple Silicon notes, and troubleshooting common Option key / PATH issues, see the dedicated [macOS Setup Guide (macos.md)](macos.md).
+
+### 1. Install Xcode Command Line Tools (Compilers & SDKs)
+
 ```bash
-brew install neovim git ripgrep fd tree-sitter node python lazygit imagemagick make shfmt stylua
+xcode-select --install
 ```
 
-Create the Python host environment:
+### 2. Install System Packages & Nerd Font via Homebrew
+
+```bash
+brew install neovim git ripgrep fd tree-sitter node python@3.12 lazygit imagemagick make shfmt stylua
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+### 3. Create the Dedicated Python Host Environment
 
 ```bash
 python3 -m venv ~/.venvs/neovim
 ~/.venvs/neovim/bin/pip install --upgrade pip
 ~/.venvs/neovim/bin/pip install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
+```
+
+### 4. Clone and Setup the Configuration
+
+```bash
+# Backup existing config if present
+mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
+mv ~/.local/share/nvim ~/.local/share/nvim.bak 2>/dev/null
+
+# Clone this repo into macOS Neovim config directory
+git clone https://github.com/codebyneeraj/nvim-config.git ~/.config/nvim
+
+# Launch Neovim
+nvim
 ```
 
 ---
