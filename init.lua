@@ -1,7 +1,17 @@
-local local_bin = vim.fn.expand("~/.local/bin")
-if vim.fn.isdirectory(local_bin) == 1 and not string.find(vim.env.PATH or "", local_bin, 1, true) then
-    local path_sep = vim.fn.has("win32") == 1 and ";" or ":"
-    vim.env.PATH = local_bin .. path_sep .. (vim.env.PATH or "")
+local path_sep = vim.fn.has("win32") == 1 and ";" or ":"
+local extra_paths = {
+    "/opt/homebrew/bin",
+    "/opt/homebrew/sbin",
+    "/usr/local/bin",
+    "/usr/local/sbin",
+    vim.fn.expand("~/.cargo/bin"),
+    vim.fn.expand("~/.local/bin"),
+}
+
+for _, p in ipairs(extra_paths) do
+    if vim.fn.isdirectory(p) == 1 and not string.find(vim.env.PATH or "", p, 1, true) then
+        vim.env.PATH = p .. path_sep .. (vim.env.PATH or "")
+    end
 end
 
 vim.g.mapleader = " "
@@ -19,6 +29,7 @@ end
 vim.g.autoformat_enabled = false
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
 local python_path = vim.fn.expand("~/.venvs/neovim/bin/python")
 if vim.fn.executable(python_path) ~= 1 then
     python_path = vim.fn.expand("~/.venvs/neovim/Scripts/python.exe")

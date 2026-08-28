@@ -17,6 +17,7 @@ Built to understand the editor, not just use it. Engineered for embedded hardwar
 - [Project Structure](#project-structure)
 - [Requirements](#requirements)
 - [Installation](#installation)
+  - [🍎 macOS Setup Guide (macos.md)](macos.md)
   - [🪟 Windows Setup Guide (windows.md)](windows.md)
 - [Aesthetics](#aesthetics)
 - [Plugins](#plugins)
@@ -164,8 +165,11 @@ sudo dnf install -y \
 #### macOS (Homebrew)
 
 ```bash
-brew install neovim git ripgrep fd node python make imagemagick
+xcode-select --install
+brew install neovim git ripgrep fd tree-sitter node python@3.12 lazygit imagemagick make shfmt stylua
+brew install --cask font-jetbrains-mono-nerd-font
 ```
+*(See [macos.md](macos.md) for full Ghostty, Kitty, WezTerm, iTerm2 configs, Apple Silicon notes, and `Ctrl+G` setup)*
 
 #### Windows (winget)
 
@@ -213,19 +217,45 @@ Install these only if you need their specific workflows:
 
 ### Recommended Terminal
 
-- **Linux / macOS**: **Kitty** or **WezTerm** — native support for the Kitty Graphics Protocol used by `snacks.image` and `molten-nvim` for floating in-terminal image rendering.
+- **macOS**: **Ghostty**, **Kitty**, or **WezTerm** — native support for the Kitty Graphics Protocol used by `snacks.image` and `molten-nvim` for floating in-terminal image rendering.
+- **Linux**: **Kitty** or **WezTerm**.
 - **Windows**: **WezTerm** or **Windows Terminal**.
 
 ---
 
 ## Installation
 
-### Linux / macOS
+### Linux
 
 1. Back up your existing Neovim configuration:
     ```bash
     mv ~/.config/nvim ~/.config/nvim.bak
     mv ~/.local/share/nvim ~/.local/share/nvim.bak
+    ```
+2. Clone this repository:
+    ```bash
+    git clone https://github.com/codebyneeraj/nvim-config.git ~/.config/nvim
+    ```
+3. Create the dedicated Python virtual environment:
+    ```bash
+    python3 -m venv ~/.venvs/neovim
+    ~/.venvs/neovim/bin/pip install --upgrade pip
+    ~/.venvs/neovim/bin/pip install pynvim jupytext jupyter_client ipykernel nbformat cairosvg pnglatex plotly pyperclip
+    ```
+4. Launch Neovim:
+    ```bash
+    nvim
+    ```
+
+### macOS
+
+> [!TIP]
+> For a full macOS guide with aesthetic Ghostty / Kitty / WezTerm / iTerm2 configs, `Ctrl+G` quick-launch shortcuts, Apple Silicon notes, and troubleshooting common Option key / PATH issues, see the dedicated [🍎 macOS Setup Guide (macos.md)](macos.md).
+
+1. Back up your existing Neovim configuration:
+    ```bash
+    mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
+    mv ~/.local/share/nvim ~/.local/share/nvim.bak 2>/dev/null
     ```
 2. Clone this repository:
     ```bash

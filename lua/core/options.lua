@@ -90,6 +90,8 @@ opt.fillchars:append({
 -- ── Misc ────────────────────────────────────────────────────
 if vim.fn.executable("zen-browser") == 1 then
     vim.env.BROWSER = "zen-browser"
+elseif vim.fn.executable("zen") == 1 then
+    vim.env.BROWSER = "zen"
 end
 opt.mouse          = "a"  -- enable mouse in all modes
 opt.breakindent    = true -- wrapped lines preserve indentation

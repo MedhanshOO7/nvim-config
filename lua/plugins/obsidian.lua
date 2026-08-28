@@ -9,15 +9,27 @@ return {
         "nvim-telescope/telescope.nvim",
         "nvim-treesitter/nvim-treesitter",
     },
-    opts = {
-        workspaces = {
-            {
-                name = "personal",
-                path = "~/Documents/Obsidian Vault",
+    init = function()
+        local vault_path = vim.fn.expand("~/Documents/Obsidian Vault")
+        if vim.fn.isdirectory(vault_path) == 0 then
+            pcall(vim.fn.mkdir, vault_path, "p")
+        end
+    end,
+    opts = function()
+        local vault_path = vim.fn.expand("~/Documents/Obsidian Vault")
+        if vim.fn.isdirectory(vault_path) == 0 then
+            pcall(vim.fn.mkdir, vault_path, "p")
+        end
+
+        return {
+            workspaces = {
+                {
+                    name = "personal",
+                    path = vault_path,
+                },
             },
-        },
-        notes_subdir = "notes",
-        log_level = vim.log.levels.INFO,
+            notes_subdir = "notes",
+            log_level = vim.log.levels.INFO,
 
         daily_notes = {
             folder = "daily_notes",
@@ -122,5 +134,6 @@ return {
                 return string.format("![%s](%s)", path.name, path)
             end,
         },
-    },
+    }
+end,
 }

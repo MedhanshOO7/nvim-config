@@ -19,7 +19,7 @@ return {
             "--header-insertion=iwyu",
             "--fallback-style=WebKit",
             "--log=error",
-            "--query-driver=**/*arm-none-eabi*,/usr/bin/arm-none-eabi-*,/usr/bin/*gcc*,/usr/bin/*g++*",
+            "--query-driver=**/*arm-none-eabi*,/usr/bin/arm-none-eabi-*,/usr/bin/*gcc*,/usr/bin/*g++*,/usr/bin/clang*,/opt/homebrew/bin/*,/usr/local/bin/*,/Library/Developer/CommandLineTools/usr/bin/*",
         },
         init_options = {
             clangdFileStatus = false,

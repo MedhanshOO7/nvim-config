@@ -283,11 +283,34 @@ return {
             vim.g.mkdp_page_title = "「${name}」"
 
             vim.cmd([[
+                function! OpenMarkdownBrowser(url)
+                    let l:is_mac = has('mac') || has('macunix') || system('uname') =~? '^darwin'
+                    let l:is_win = has('win32') || has('win64')
+
+                    if executable('zen-browser')
+                        silent execute '!zen-browser ' . shellescape(a:url) . ' &'
+                    elseif executable('zen')
+                        silent execute '!zen ' . shellescape(a:url) . ' &'
+                    elseif l:is_mac
+                        if isdirectory('/Applications/Zen Browser.app')
+                            silent execute '!open -a "Zen Browser" ' . shellescape(a:url) . ' &'
+                        elseif isdirectory('/Applications/Zen.app')
+                            silent execute '!open -a "Zen" ' . shellescape(a:url) . ' &'
+                        else
+                            silent execute '!open ' . shellescape(a:url) . ' &'
+                        endif
+                    elseif l:is_win
+                        silent execute '!cmd.exe /c start "" ' . shellescape(a:url)
+                    elseif executable('xdg-open')
+                        silent execute '!xdg-open ' . shellescape(a:url) . ' &'
+                    endif
+                endfunction
+
                 function! OpenZenBrowser(url)
-                    silent execute '!zen-browser ' . shellescape(a:url) . ' &'
+                    call OpenMarkdownBrowser(a:url)
                 endfunction
             ]])
-            vim.g.mkdp_browserfunc = "OpenZenBrowser"
+            vim.g.mkdp_browserfunc = "OpenMarkdownBrowser"
         end,
         keys = {
             {
@@ -295,14 +318,14 @@ return {
                 function()
                     vim.fn["mkdp#util#toggle_preview"]()
                 end,
-                desc = "Markdown Browser Preview (Zen Browser)",
+                desc = "Markdown Browser Preview",
             },
             {
                 "<leader>mp",
                 function()
                     vim.fn["mkdp#util#toggle_preview"]()
                 end,
-                desc = "Markdown Browser Preview (Zen Browser)",
+                desc = "Markdown Browser Preview",
             },
         },
     },
