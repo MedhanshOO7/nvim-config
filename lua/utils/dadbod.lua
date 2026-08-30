@@ -171,11 +171,15 @@ function M.run_sql(mode)
         vim.bo[output_bufnr].filetype = "dbout"
         pcall(vim.api.nvim_buf_set_name, output_bufnr, "[SQL Output]")
 
-        vim.keymap.set("n", "q", function()
+        local function close_output()
             if output_winid and vim.api.nvim_win_is_valid(output_winid) then
-                vim.api.nvim_win_close(output_winid, true)
+                if #vim.api.nvim_tabpage_list_wins(0) > 1 then
+                    pcall(vim.api.nvim_win_close, output_winid, true)
+                end
             end
-        end, { buffer = output_bufnr, silent = true })
+        end
+        vim.keymap.set("n", "q", close_output, { buffer = output_bufnr, silent = true })
+        vim.keymap.set("n", "<Esc>", close_output, { buffer = output_bufnr, silent = true })
     end
 
     local header = {
