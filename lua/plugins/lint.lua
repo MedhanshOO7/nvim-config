@@ -1,6 +1,6 @@
 return {
     "mfussenegger/nvim-lint",
-    event = { "BufReadPost", "BufWritePost", "InsertLeave" },
+    event = { "BufReadPost", "BufWritePost" },
     config = function()
         local lint = require("lint")
         local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
@@ -60,7 +60,7 @@ return {
 
         local lint_group = vim.api.nvim_create_augroup("user_nvim_lint", { clear = true })
 
-        vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
             group = lint_group,
             callback = function()
                 pcall(lint.try_lint)
