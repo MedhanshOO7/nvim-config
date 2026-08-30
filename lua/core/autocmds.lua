@@ -1,5 +1,3 @@
-local group = vim.api.nvim_create_augroup("ZenModeAuto", { clear = true })
-
 -- ── Reset Terminal Colors on Exit ────────────────────────────
 -- Fixes Kitty/Wezterm background color bleeding when closing Neovim
 vim.api.nvim_create_autocmd("VimLeave", {
@@ -12,19 +10,19 @@ vim.api.nvim_create_autocmd("VimLeave", {
 })
 
 -- ── Quick Dismiss Windows (q & Esc) ───────────────────────────
-vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "TermOpen" }, {
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
     group = vim.api.nvim_create_augroup("QuickDismissWindows", { clear = true }),
     pattern = "*",
     callback = function(event)
         local bt = vim.bo[event.buf].buftype
         local ft = vim.bo[event.buf].filetype or ""
 
-        -- Do not hijack keys in interactive explorer / DB buffers
-        if ft == "dbui" or ft == "dbout" or ft == "dadbod" or ft == "oil" or ft:match("dbui") then
+        -- Do not hijack keys in interactive explorer / DB buffers / terminal buffers
+        if ft == "dbui" or ft == "dbout" or ft == "dadbod" or ft == "oil" or ft:match("dbui") or bt == "terminal" then
             return
         end
 
-        if bt == "terminal" or bt == "nofile" or bt == "quickfix" or ft:match("overseer") or ft:match("Overseer") or ft == "qf" or ft == "help" or ft == "notify" then
+        if bt == "nofile" or bt == "quickfix" or ft:match("overseer") or ft:match("Overseer") or ft == "qf" or ft == "help" or ft == "notify" then
             local function close_win()
                 if #vim.api.nvim_tabpage_list_wins(0) > 1 then
                     pcall(vim.cmd, "close")
@@ -34,25 +32,6 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "TermOpen" }, {
             end
             pcall(vim.keymap.set, "n", "q", close_win, { buffer = event.buf, silent = true, desc = "Close window" })
             pcall(vim.keymap.set, "n", "<Esc>", close_win, { buffer = event.buf, silent = true, desc = "Close window" })
-        end
-    end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    group = group,
-    pattern = { "markdown", "text" },
-    callback = function()
-        -- Check if we are inside a code project by looking for .git or package.json
-        local in_project = vim.fn.finddir(".git", ".;") ~= "" or vim.fn.findfile("package.json", ".;") ~= "" or vim.fn.findfile("Cargo.toml", ".;") ~= ""
-        
-        if not in_project then
-            -- Use schedule to avoid issues with window initialization
-            vim.schedule(function()
-                local ok, snacks = pcall(require, "snacks")
-                if ok and snacks.zen then
-                    snacks.zen()
-                end
-            end)
         end
     end,
 })
