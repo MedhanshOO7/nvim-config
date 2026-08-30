@@ -4,6 +4,7 @@ return {
     enabled = true,
     opts = {
         notification = {
+            override_vim_notify = false,
             window = {
                 winblend = 0,
             },
