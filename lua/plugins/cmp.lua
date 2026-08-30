@@ -128,14 +128,14 @@ return {
 
                         for _, item in ipairs(items) do
                             local doc = (item.documentation or ""):lower()
-                            if doc:find("table column") or doc:find("column") then
+                            if doc:find("alias") then
+                                if alias_idx then item.kind = alias_idx end
+                            elseif doc:find("column") then
                                 if col_idx then item.kind = col_idx end
                             elseif doc:find("table") then
                                 if table_idx then item.kind = table_idx end
                             elseif doc:find("schema") or doc:find("database") then
                                 if db_idx then item.kind = db_idx end
-                            elseif doc:find("alias") then
-                                if alias_idx then item.kind = alias_idx end
                             end
                         end
                         return items
