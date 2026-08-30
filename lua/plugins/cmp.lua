@@ -66,6 +66,12 @@ return {
                 Event = "󱐋",
                 Operator = "󰆕",
                 TypeParameter = "󰅲",
+                -- Database kinds
+                Table = "󰓫",
+                Column = "󰜢",
+                Database = "󰆼",
+                Schema = "",
+                Alias = "󰡱",
             },
         },
         sources = {
@@ -94,7 +100,46 @@ return {
                 dadbod = {
                     name = "Dadbod",
                     module = "vim_dadbod_completion.blink",
-                    score_offset = 80,
+                    score_offset = 85,
+                    transform_items = function(_, items)
+                        local CompletionItemKind = vim.lsp.protocol.CompletionItemKind
+                        local custom_kinds = { "Table", "Column", "Database", "Alias" }
+                        for _, name in ipairs(custom_kinds) do
+                            local found = false
+                            for _, v in ipairs(CompletionItemKind) do
+                                if v == name then found = true break end
+                            end
+                            if not found then
+                                CompletionItemKind[#CompletionItemKind + 1] = name
+                            end
+                        end
+
+                        local function get_kind_idx(name)
+                            for idx, v in ipairs(CompletionItemKind) do
+                                if v == name then return idx end
+                            end
+                            return nil
+                        end
+
+                        local table_idx = get_kind_idx("Table")
+                        local col_idx = get_kind_idx("Column")
+                        local db_idx = get_kind_idx("Database")
+                        local alias_idx = get_kind_idx("Alias")
+
+                        for _, item in ipairs(items) do
+                            local doc = (item.documentation or ""):lower()
+                            if doc:find("table column") or doc:find("column") then
+                                if col_idx then item.kind = col_idx end
+                            elseif doc:find("table") then
+                                if table_idx then item.kind = table_idx end
+                            elseif doc:find("schema") or doc:find("database") then
+                                if db_idx then item.kind = db_idx end
+                            elseif doc:find("alias") then
+                                if alias_idx then item.kind = alias_idx end
+                            end
+                        end
+                        return items
+                    end,
                 },
             },
             per_filetype = {
