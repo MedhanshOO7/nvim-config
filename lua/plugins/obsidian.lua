@@ -5,8 +5,6 @@ return {
     ft = "markdown",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "hrsh7th/nvim-cmp",
-        "nvim-telescope/telescope.nvim",
         "nvim-treesitter/nvim-treesitter",
     },
     init = function()
@@ -40,7 +38,7 @@ return {
         },
 
         completion = {
-            nvim_cmp = true,
+            nvim_cmp = false,
             min_chars = 2,
         },
 
