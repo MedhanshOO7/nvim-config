@@ -111,14 +111,6 @@ opt.diffopt:append("linematch:60") -- better inline diff alignment for larger hu
 opt.winminheight    = 1             -- keep window splits from collapsing to 0 height
 opt.winminwidth     = 5             -- keep split resizing from collapsing useful context
 
--- Keep netrw available as a fallback with familiar directory listings.
-vim.g.netrw_liststyle = 3
-vim.g.netrw_winsize = 25
-vim.g.netrw_banner = 0
-vim.g.netrw_sort_sequence = "[\\/]$,*,\\.o$,\\.obj$,\\.pyc$,\\.class$"
-vim.g.netrw_fastbrowse = 2
-vim.g.netrw_keepdir = 0
-
 local language_group = vim.api.nvim_create_augroup("language_defaults", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {
