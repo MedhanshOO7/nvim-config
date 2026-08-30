@@ -150,7 +150,6 @@ return {
                     "jsonls",
                     "lua_ls",
                     "marksman",
-                    "pylsp",
                     "qmlls",
                     "tailwindcss",
                     "vtsls",
@@ -167,11 +166,7 @@ return {
             
             -- Use modern Neovim native API
             vim.lsp.config(server, merged_config)
-
-            local cmd_name = (merged_config.cmd and type(merged_config.cmd) == "table" and merged_config.cmd[1]) or (server .. "-language-server")
-            if vim.fn.executable(cmd_name) == 1 or vim.fn.executable(server) == 1 then
-                vim.lsp.enable(server)
-            end
+            vim.lsp.enable(server)
         end
 
         vim.api.nvim_create_autocmd("LspAttach", {
