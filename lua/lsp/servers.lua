@@ -107,10 +107,6 @@ return {
                 },
                 workspace = {
                     checkThirdParty = false,
-                    library = vim.list_extend(vim.api.nvim_get_runtime_file("", true), {
-                        vim.fn.stdpath("config"),
-                        vim.fn.stdpath("data") .. "/lazy",
-                    }),
                 },
                 telemetry = { enable = false },
             },
@@ -129,30 +125,6 @@ return {
         },
     },
     marksman = {},
-    pylsp = {
-        settings = {
-            pylsp = {
-                plugins = {
-                    autopep8 = { enabled = false },
-                    mccabe = { enabled = false },
-                    pycodestyle = { enabled = false },
-                    pyflakes = { enabled = true },
-                    yapf = { enabled = false },
-                    pylsp_mypy = { enabled = false },
-                    pylint = { enabled = false },
-                    rope_autoimport = { enabled = true },
-                    jedi_completion = {
-                        fuzzy = true,
-                        include_params = true,
-                    },
-                    jedi_hover = { enabled = true },
-                    jedi_references = { enabled = true },
-                    jedi_signature_help = { enabled = true },
-                    preload = { enabled = true },
-                },
-            },
-        },
-    },
     qmlls = {},
     vtsls = {
         settings = {
