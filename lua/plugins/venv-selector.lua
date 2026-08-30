@@ -2,7 +2,6 @@ return {
     "linux-cultist/venv-selector.nvim",
     dependencies = {
         "neovim/nvim-lspconfig",
-        "nvim-telescope/telescope.nvim",
         "mfussenegger/nvim-dap-python",
     },
     branch = "regexp",
@@ -32,7 +31,7 @@ return {
                         vim.env.PATH = bin_dir .. sep .. vim.env.PATH
                         vim.notify("Auto-activated venv: " .. venv_path, vim.log.levels.INFO, { title = "Python" })
                         -- Restart LSPs to pick up the new environment
-                        vim.cmd("LspRestart pylsp ruff")
+                        pcall(vim.cmd, "LspRestart basedpyright")
                     end
                 end
             end,
