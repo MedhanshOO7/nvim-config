@@ -39,7 +39,6 @@ return {
                 "shellcheck",
                 "shfmt",
                 "sql-formatter",
-                "sqls",
                 "stylua",
             },
         },

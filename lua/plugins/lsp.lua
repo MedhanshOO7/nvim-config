@@ -152,7 +152,6 @@ return {
                     "marksman",
                     "pylsp",
                     "qmlls",
-                    "sqls",
                     "tailwindcss",
                     "vtsls",
                     "yamlls",

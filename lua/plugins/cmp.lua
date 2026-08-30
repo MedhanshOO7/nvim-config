@@ -98,9 +98,9 @@ return {
                 },
             },
             per_filetype = {
-                sql = { "dadbod", "buffer" },
-                mysql = { "dadbod", "buffer" },
-                plsql = { "dadbod", "buffer" },
+                sql = { "dadbod", "buffer", "snippets" },
+                mysql = { "dadbod", "buffer", "snippets" },
+                plsql = { "dadbod", "buffer", "snippets" },
             },
         },
         completion = {

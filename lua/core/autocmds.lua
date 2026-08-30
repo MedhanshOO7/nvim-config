@@ -18,6 +18,12 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter", "TermOpen" }, {
     callback = function(event)
         local bt = vim.bo[event.buf].buftype
         local ft = vim.bo[event.buf].filetype or ""
+
+        -- Do not hijack keys in interactive explorer / DB buffers
+        if ft == "dbui" or ft == "dbout" or ft == "dadbod" or ft == "oil" or ft:match("dbui") then
+            return
+        end
+
         if bt == "terminal" or bt == "nofile" or bt == "quickfix" or ft:match("overseer") or ft:match("Overseer") or ft == "qf" or ft == "help" or ft == "notify" then
             local function close_win()
                 if #vim.api.nvim_tabpage_list_wins(0) > 1 then

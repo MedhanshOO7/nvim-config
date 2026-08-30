@@ -154,9 +154,6 @@ return {
         },
     },
     qmlls = {},
-    sqls = {
-        filetypes = { "sql", "mysql" },
-    },
     vtsls = {
         settings = {
             typescript = {

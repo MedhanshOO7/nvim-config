@@ -81,8 +81,12 @@ return {
             { "<leader>do", desc = "Step over", icon = { icon = "󰆸", color = "blue" } },
             { "<leader>dO", desc = "Step out", icon = { icon = "󰆷", color = "blue" } },
             { "<leader>dr", desc = "Toggle REPL", icon = { icon = "", color = "yellow" } },
-            { "<leader>dt", desc = "Terminate", icon = { icon = "", color = "red" } },
-            { "<leader>du", desc = "Toggle UI", icon = { icon = "󰔎", color = "purple" } },
+            -- Database (Dadbod)
+            { "<leader>Ds", desc = "Select database for buffer", icon = { icon = "󰆼", color = "yellow" } },
+            { "<leader>DS", desc = "View table schema & columns", icon = { icon = "󰓫", color = "cyan" } },
+            { "<leader>Db", desc = "Toggle Database UI", icon = { icon = "󰆼", color = "yellow" } },
+            { "<leader>Df", desc = "Find DB buffer", icon = { icon = "", color = "blue" } },
+            { "<leader>Dl", desc = "Last DB query info", icon = { icon = "", color = "orange" } },
 
             -- Find
             { "<leader>f/", desc = "Search in current buffer", icon = { icon = "", color = "blue" } },

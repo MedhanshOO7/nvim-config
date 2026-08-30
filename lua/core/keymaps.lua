@@ -73,9 +73,15 @@ map({ "n", "i", "t" }, "<C-`>", function()
 end, { desc = "Toggle active terminal" })
 map("i", "<C-Left>", "<C-o>b", { desc = "Jump backward one word" })
 map("i", "<C-Right>", "<C-o>w", { desc = "Jump forward one word" })
-map("n", "<leader>rr", function()
-    pcall(vim.cmd, "RunCode")
-end, { desc = "Run: Code / file in active terminal layout" })
+map({ "n", "v" }, "<leader>rr", function()
+    local ft = vim.bo.filetype
+    if ft == "sql" or ft == "mysql" or ft == "plsql" then
+        local mode = vim.api.nvim_get_mode().mode
+        require("utils.dadbod").run_sql(mode)
+    else
+        pcall(vim.cmd, "RunCode")
+    end
+end, { desc = "Run: Code / SQL Query" })
 map("n", "<leader>to", function()
     local ok, ts = pcall(require, "utils.terminal_style")
     if ok then ts.toggle() else vim.cmd("ToggleTerm") end
