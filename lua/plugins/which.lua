@@ -56,6 +56,11 @@ return {
             { "<leader>Cs", desc = "Copilot: Status", icon = { icon = "󰚩", color = "green" } },
             { "<leader>Cx", desc = "Copilot: Toggle engine", icon = { icon = "󰚩", color = "green" } },
 
+            -- Core Shortcuts
+            { "<leader>e", desc = "Toggle file explorer", icon = { icon = "󰉋", color = "yellow" } },
+            { "<leader>p", desc = "Command palette", icon = { icon = "", color = "purple" } },
+            { "<leader>q", desc = "Quit window", icon = { icon = "󰅖", color = "red" } },
+
             -- Buffers
             { "<leader>bb", desc = "Browse open buffers", icon = { icon = "󰓩", color = "cyan" } },
             { "<leader>bd", desc = "Delete current buffer", icon = { icon = "󰆴", color = "red" } },
@@ -99,6 +104,7 @@ return {
             { "<leader>fO", desc = "Open Oil file browser", icon = { icon = "󰉋", color = "yellow" } },
             { "<leader>fp", desc = "Git files", icon = { icon = "", color = "purple" } },
             { "<leader>fr", desc = "Recent files", icon = { icon = "", color = "orange" } },
+            { "<leader>fs", desc = "Save file", icon = { icon = "󰆓", color = "green" } },
             { "<leader>fS", desc = "LSP document symbols", icon = { icon = "󰅩", color = "blue" } },
             { "<leader>ft", desc = "Search TODOs", icon = { icon = "", color = "green" } },
             { "<leader>fw", desc = "LSP workspace symbols", icon = { icon = "󰚗", color = "blue" } },
