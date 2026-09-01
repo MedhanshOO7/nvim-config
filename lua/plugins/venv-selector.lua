@@ -58,5 +58,46 @@ return {
                 vim.notify("Failed to create virtual environment", vim.log.levels.ERROR)
             end
         end, desc = "Python: Make VirtualEnv" },
+        { "<leader>Pi", function()
+            local pkg = vim.fn.input("Install Python package: ")
+            if pkg == "" then return end
+            local pip_cmd = "pip install"
+            if vim.fn.executable("uv") == 1 then
+                pip_cmd = "uv pip install"
+            elseif vim.env.VIRTUAL_ENV and vim.fn.executable(vim.env.VIRTUAL_ENV .. "/bin/pip") == 1 then
+                pip_cmd = vim.env.VIRTUAL_ENV .. "/bin/pip install"
+            end
+            local full_cmd = pip_cmd .. " " .. pkg
+            vim.notify("Installing: " .. pkg .. " ...", vim.log.levels.INFO, { title = "Python" })
+            vim.fn.jobstart(full_cmd, {
+                on_exit = function(_, code)
+                    if code == 0 then
+                        vim.notify("Successfully installed: " .. pkg .. " ", vim.log.levels.INFO, { title = "Python" })
+                        pcall(vim.cmd, "LspRestart basedpyright")
+                    else
+                        vim.notify("Failed to install: " .. pkg .. " ", vim.log.levels.ERROR, { title = "Python" })
+                    end
+                end,
+            })
+        end, desc = "Python: Install package" },
+        { "<leader>PR", function()
+            local req_file = vim.fn.findfile("requirements.txt", ".;")
+            if req_file == "" then
+                vim.notify("No requirements.txt found in project root", vim.log.levels.WARN, { title = "Python" })
+                return
+            end
+            local cmd = (vim.fn.executable("uv") == 1 and "uv pip install -r " or "pip install -r ") .. req_file
+            vim.notify("Installing dependencies from " .. req_file .. " ...", vim.log.levels.INFO, { title = "Python" })
+            vim.fn.jobstart(cmd, {
+                on_exit = function(_, code)
+                    if code == 0 then
+                        vim.notify("Successfully installed requirements! ", vim.log.levels.INFO, { title = "Python" })
+                        pcall(vim.cmd, "LspRestart basedpyright")
+                    else
+                        vim.notify("Failed to install requirements ", vim.log.levels.ERROR, { title = "Python" })
+                    end
+                end,
+            })
+        end, desc = "Python: Install requirements.txt" },
     },
 }

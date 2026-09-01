@@ -216,6 +216,8 @@ return {
             { "<leader>Pv", desc = "Select VirtualEnv", icon = { icon = "", color = "yellow" } },
             { "<leader>Pc", desc = "Select Cached VirtualEnv", icon = { icon = "", color = "yellow" } },
             { "<leader>Pm", desc = "Make / Create VirtualEnv", icon = { icon = "", color = "green" } },
+            { "<leader>Pi", desc = "Install package", icon = { icon = "󰏖", color = "cyan" } },
+            { "<leader>PR", desc = "Install requirements.txt", icon = { icon = "󰈔", color = "blue" } },
 
             -- Testing (Neotest)
             { "<leader>Tr", desc = "Run nearest test", icon = { icon = "", color = "green" } },
