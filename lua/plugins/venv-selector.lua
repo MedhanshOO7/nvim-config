@@ -99,5 +99,8 @@ return {
                 end,
             })
         end, desc = "Python: Install requirements.txt" },
+        { "<leader>Pr", function()
+            vim.cmd("RunFile")
+        end, desc = "Python: Run current file" },
     },
 }

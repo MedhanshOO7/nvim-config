@@ -9,14 +9,33 @@ return {
     },
     opts = function()
         local is_win = vim.fn.has("win32") == 1
-        local python_cmd = (vim.fn.executable("python3") == 1 and "python3 -u") or "python -u"
 
         return {
             mode = "toggleterm",
             focus = true,
             startinsert = true,
             filetype = {
-                python = python_cmd,
+                python = function()
+                    local py_bin = is_win and "python" or "python3"
+                    local venv_bin = is_win and "Scripts/python.exe" or "bin/python"
+
+                    if vim.env.VIRTUAL_ENV then
+                        local venv_python = vim.env.VIRTUAL_ENV .. "/" .. venv_bin
+                        if vim.fn.executable(venv_python) == 1 then
+                            py_bin = venv_python
+                        end
+                    else
+                        local local_venv = vim.fn.findfile(".venv/" .. venv_bin, ".;")
+                        if local_venv == "" then
+                            local_venv = vim.fn.findfile("venv/" .. venv_bin, ".;")
+                        end
+                        if local_venv ~= "" and vim.fn.executable(local_venv) == 1 then
+                            py_bin = vim.fn.fnamemodify(local_venv, ":p")
+                        end
+                    end
+
+                    return string.format("%s -u", vim.fn.shellescape(py_bin))
+                end,
                 typescript = "deno run --allow-all",
                 javascript = "node",
                 rust = is_win and {

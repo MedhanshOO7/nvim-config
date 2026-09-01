@@ -218,6 +218,7 @@ return {
             { "<leader>Pm", desc = "Make / Create VirtualEnv", icon = { icon = "", color = "green" } },
             { "<leader>Pi", desc = "Install package", icon = { icon = "󰏖", color = "cyan" } },
             { "<leader>PR", desc = "Install requirements.txt", icon = { icon = "󰈔", color = "blue" } },
+            { "<leader>Pr", desc = "Run current file", icon = { icon = "", color = "green" } },
 
             -- Testing (Neotest)
             { "<leader>Tr", desc = "Run nearest test", icon = { icon = "", color = "green" } },
