@@ -45,30 +45,43 @@ return {
         { "<leader>Pc", "<cmd>VenvSelectCached<cr>", desc = "Python: Select Cached VirtualEnv" },
         { "<leader>Pm", function()
             local file = vim.api.nvim_buf_get_name(0)
-            local file_dir = file ~= "" and vim.fs.dirname(file) or vim.fn.getcwd()
+            local file_dir = (file ~= "" and vim.fs.dirname(file)) or vim.fn.getcwd()
             local proj_dir = vim.fs.root(file_dir, { "pyproject.toml", "requirements.txt", "Pipfile", ".git" }) or file_dir
+            proj_dir = vim.fs.normalize(proj_dir)
 
-            local venv_name = vim.fn.input(string.format("Create venv in %s (default: .venv): ", vim.fn.fnamemodify(proj_dir, ":~")), ".venv")
-            if venv_name == "" then venv_name = ".venv" end
+            vim.ui.input({
+                prompt = string.format("Create venv in %s: ", vim.fn.fnamemodify(proj_dir, ":~")),
+                default = ".venv",
+            }, function(venv_name)
+                if not venv_name or venv_name == "" then
+                    return
+                end
 
-            local venv_full_path = proj_dir .. "/" .. venv_name
-            local cmd = ""
-            if vim.fn.executable("uv") == 1 then
-                cmd = string.format("uv venv %s", vim.fn.shellescape(venv_full_path))
-            else
-                cmd = string.format("python3 -m venv %s", vim.fn.shellescape(venv_full_path))
-            end
+                local venv_full_path = proj_dir .. "/" .. venv_name
+                vim.notify("Creating virtual environment at " .. vim.fn.fnamemodify(venv_full_path, ":~") .. " ...", vim.log.levels.INFO, { title = "Python" })
 
-            vim.notify("Creating venv in: " .. proj_dir, vim.log.levels.INFO, { title = "Python" })
-            vim.fn.system(cmd)
-            if vim.v.shell_error == 0 then
-                vim.env.VIRTUAL_ENV = venv_full_path
-                vim.env.PATH = venv_full_path .. "/bin:" .. vim.env.PATH
-                vim.notify("Virtual environment created & activated: " .. venv_full_path .. " ", vim.log.levels.INFO, { title = "Python" })
-                pcall(vim.cmd, "LspRestart basedpyright")
-            else
-                vim.notify("Failed to create virtual environment", vim.log.levels.ERROR, { title = "Python" })
-            end
+                local cmd
+                if vim.fn.executable("uv") == 1 then
+                    cmd = string.format("uv venv %s 2>&1", vim.fn.shellescape(venv_full_path))
+                else
+                    cmd = string.format("python3 -m venv %s 2>&1", vim.fn.shellescape(venv_full_path))
+                end
+
+                local out = vim.fn.system(cmd)
+                if vim.v.shell_error ~= 0 and vim.fn.executable("python3") == 1 then
+                    cmd = string.format("python3 -m venv %s 2>&1", vim.fn.shellescape(venv_full_path))
+                    out = vim.fn.system(cmd)
+                end
+
+                if vim.v.shell_error == 0 and vim.fn.isdirectory(venv_full_path) == 1 then
+                    vim.env.VIRTUAL_ENV = venv_full_path
+                    vim.env.PATH = venv_full_path .. "/bin:" .. vim.env.PATH
+                    vim.notify("Virtual environment created & activated: " .. vim.fn.fnamemodify(venv_full_path, ":~") .. " ", vim.log.levels.INFO, { title = "Python" })
+                    pcall(vim.cmd, "LspRestart basedpyright")
+                else
+                    vim.notify("Failed to create virtual environment:\n" .. vim.trim(out), vim.log.levels.ERROR, { title = "Python" })
+                end
+            end)
         end, desc = "Python: Make VirtualEnv" },
         { "<leader>Pi", function()
             local pkg = vim.fn.input("Install Python package: ")
