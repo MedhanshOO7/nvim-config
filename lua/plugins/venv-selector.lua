@@ -40,5 +40,23 @@ return {
     keys = {
         { "<leader>Pv", "<cmd>VenvSelect<cr>", desc = "Python: Select VirtualEnv" },
         { "<leader>Pc", "<cmd>VenvSelectCached<cr>", desc = "Python: Select Cached VirtualEnv" },
+        { "<leader>Pm", function()
+            local venv_name = vim.fn.input("Venv Name (default: .venv): ")
+            if venv_name == "" then venv_name = ".venv" end
+            local cmd = ""
+            if vim.fn.executable("uv") == 1 then
+                cmd = "uv venv " .. venv_name
+            else
+                cmd = "python3 -m venv " .. venv_name
+            end
+            vim.notify("Creating venv with: " .. cmd, vim.log.levels.INFO)
+            vim.fn.system(cmd)
+            if vim.v.shell_error == 0 then
+                vim.notify("Virtual environment '" .. venv_name .. "' created successfully!", vim.log.levels.INFO)
+                vim.cmd("VenvSelect")
+            else
+                vim.notify("Failed to create virtual environment", vim.log.levels.ERROR)
+            end
+        end, desc = "Python: Make VirtualEnv" },
     },
 }

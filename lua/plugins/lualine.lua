@@ -109,6 +109,18 @@ return {
             return " " .. table.concat(names, ", ")
         end
 
+        local function python_venv()
+            if vim.bo.filetype ~= "python" then
+                return ""
+            end
+            local venv = vim.env.VIRTUAL_ENV
+            if venv then
+                local venv_name = vim.fn.fnamemodify(venv, ":t")
+                return " " .. venv_name
+            end
+            return " system"
+        end
+
         local function hl_hex(name, key, default)
             local ok, val = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
             if ok and val and val[key] then
@@ -341,6 +353,11 @@ return {
                     },
                     lualine_y = {
                         {
+                            python_venv,
+                            color = { fg = p.green, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
                             "filetype",
                             color = { fg = p.yellow, bg = "NONE" },
                             padding = { left = 1, right = 1 },
@@ -415,6 +432,11 @@ return {
                         },
                     },
                     lualine_y = {
+                        {
+                            python_venv,
+                            color = { fg = p.green, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
                         {
                             "filetype",
                             icon_only = false,
@@ -506,6 +528,11 @@ return {
                     },
                     lualine_y = {
                         {
+                            python_venv,
+                            color = { fg = p.green, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
                             "filetype",
                             icon_only = false,
                             color = function() return frost(p.cyan) end,
@@ -585,6 +612,11 @@ return {
                         },
                     },
                     lualine_y = {
+                        {
+                            python_venv,
+                            color = { fg = p.green, bg = "NONE" },
+                            padding = { left = 1, right = 1 },
+                        },
                         {
                             "filetype",
                             icon_only = false,
