@@ -120,6 +120,12 @@ return {
                     useLibraryCodeForTypes = true,
                     diagnosticMode = "openFilesOnly",
                     typeCheckingMode = "standard",
+                    autoImportCompletions = true,
+                    inlayHints = {
+                        variableTypes = true,
+                        functionReturnTypes = true,
+                        callArgumentNames = true,
+                    },
                 },
             },
         },

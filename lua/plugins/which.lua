@@ -206,6 +206,20 @@ return {
             { "<leader>oy", desc = "Yesterday's daily note", icon = { icon = "󰸗", color = "purple" } },
             { "<leader>ch", desc = "Toggle checkbox (Obsidian)", icon = { icon = "󰄲", color = "green" } },
 
+            -- Python
+            { "<leader>Pv", desc = "Select VirtualEnv", icon = { icon = "", color = "yellow" } },
+            { "<leader>Pc", desc = "Select Cached VirtualEnv", icon = { icon = "", color = "yellow" } },
+            { "<leader>Pm", desc = "Make / Create VirtualEnv", icon = { icon = "", color = "green" } },
+
+            -- Testing (Neotest)
+            { "<leader>Tr", desc = "Run nearest test", icon = { icon = "", color = "green" } },
+            { "<leader>Tf", desc = "Run test file", icon = { icon = "", color = "green" } },
+            { "<leader>Ts", desc = "Toggle test summary", icon = { icon = "", color = "yellow" } },
+            { "<leader>To", desc = "Open test output", icon = { icon = "󰅩", color = "blue" } },
+            { "<leader>Tp", desc = "Toggle test output panel", icon = { icon = "", color = "red" } },
+            { "<leader>Td", desc = "Debug nearest test", icon = { icon = "󰃤", color = "red" } },
+            { "<leader>TS", desc = "Stop running tests", icon = { icon = "󰅖", color = "red" } },
+
             -- Search and jump
             { "<leader>sr", desc = "Search and replace", mode = { "n", "x" }, icon = { icon = "󰛔", color = "yellow" } },
             { "<leader>sB", desc = "Search in current file", icon = { icon = "", color = "blue" } },
