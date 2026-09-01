@@ -117,7 +117,9 @@ return {
             local root = config.root_dir or vim.fn.getcwd()
             local venv = vim.env.VIRTUAL_ENV
             if not venv or venv == "" then
-                local found = vim.fs.find({ ".venv", "venv" }, { upward = true, path = root })[1]
+                local file_path = vim.api.nvim_buf_get_name(0)
+                local start_dir = (file_path ~= "" and vim.fs.dirname(file_path)) or root
+                local found = vim.fs.find({ ".venv", "venv" }, { upward = true, path = start_dir })[1]
                 if found then
                     venv = vim.fn.fnamemodify(found, ":p"):gsub("/$", "")
                 end
