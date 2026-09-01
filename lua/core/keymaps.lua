@@ -78,13 +78,15 @@ map("i", "<C-Left>", "<C-o>b", { desc = "Jump backward one word" })
 map("i", "<C-Right>", "<C-o>w", { desc = "Jump forward one word" })
 map({ "n", "v" }, "<leader>rr", function()
     local ft = vim.bo.filetype
+    local mode = vim.api.nvim_get_mode().mode
     if ft == "sql" or ft == "mysql" or ft == "plsql" then
-        local mode = vim.api.nvim_get_mode().mode
         require("utils.dadbod").run_sql(mode)
+    elseif mode == "n" then
+        pcall(vim.cmd, "RunFile")
     else
         pcall(vim.cmd, "RunCode")
     end
-end, { desc = "Run: Code / SQL Query" })
+end, { desc = "Run: Current file / selection" })
 map("n", "<leader>to", function()
     local ok, ts = pcall(require, "utils.terminal_style")
     if ok then ts.toggle() else vim.cmd("ToggleTerm") end

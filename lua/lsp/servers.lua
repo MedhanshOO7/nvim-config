@@ -113,7 +113,33 @@ return {
         },
     },
     basedpyright = {
+        before_init = function(_, config)
+            local root = config.root_dir or vim.fn.getcwd()
+            local venv = vim.env.VIRTUAL_ENV
+            if not venv or venv == "" then
+                local found = vim.fs.find({ ".venv", "venv" }, { upward = true, path = root })[1]
+                if found then
+                    venv = vim.fn.fnamemodify(found, ":p"):gsub("/$", "")
+                end
+            end
+            if venv and venv ~= "" then
+                local python_bin = venv .. "/bin/python"
+                if vim.fn.executable(python_bin) == 1 then
+                    config.settings = config.settings or {}
+                    config.settings.python = config.settings.python or {}
+                    config.settings.python.pythonPath = python_bin
+
+                    local site_packages = vim.fn.glob(venv .. "/lib/python*/site-packages", false, true)
+                    if #site_packages > 0 then
+                        config.settings.basedpyright = config.settings.basedpyright or {}
+                        config.settings.basedpyright.analysis = config.settings.basedpyright.analysis or {}
+                        config.settings.basedpyright.analysis.extraPaths = site_packages
+                    end
+                end
+            end
+        end,
         settings = {
+            python = {},
             basedpyright = {
                 analysis = {
                     autoSearchPaths = true,
