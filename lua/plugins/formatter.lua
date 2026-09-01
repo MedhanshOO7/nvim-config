@@ -42,11 +42,15 @@ return {
                 },
                 clang_format = {
                     prepend_args = function(self, ctx)
-                        local found = vim.fs.find({ ".clang-format", "_clang-format" }, {
-                            upward = true,
-                            path = ctx.dirname,
-                        })
-                        if #found > 0 then
+                        local bufnr = vim.api.nvim_get_current_buf()
+                        if vim.b[bufnr]._clang_format_root == nil then
+                            local found = vim.fs.find({ ".clang-format", "_clang-format" }, {
+                                upward = true,
+                                path = ctx.dirname,
+                            })
+                            vim.b[bufnr]._clang_format_root = #found > 0
+                        end
+                        if vim.b[bufnr]._clang_format_root then
                             return { "--style=file" }
                         end
                         return {

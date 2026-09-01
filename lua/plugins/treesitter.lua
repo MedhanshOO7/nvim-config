@@ -13,9 +13,7 @@ return {
                     enable = true,
                     additional_vim_regex_highlighting = false,
                     disable = function(lang, buf)
-                        local max_filesize = 500 * 1024 -- 500 KB
-                        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-                        if ok and stats and stats.size > max_filesize then
+                        if vim.b[buf] and (vim.b[buf].large_file or vim.b[buf].bigfile) then
                             return true
                         end
                         return vim.api.nvim_buf_line_count(buf) > 5000
@@ -24,9 +22,7 @@ return {
                 indent = {
                     enable = true,
                     disable = function(lang, buf)
-                        local max_filesize = 500 * 1024
-                        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-                        if ok and stats and stats.size > max_filesize then
+                        if vim.b[buf] and (vim.b[buf].large_file or vim.b[buf].bigfile) then
                             return true
                         end
                         return vim.api.nvim_buf_line_count(buf) > 5000

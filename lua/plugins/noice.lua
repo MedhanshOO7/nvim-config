@@ -43,7 +43,7 @@ return {
                 signature = {
                     enabled = true,
                     auto_open = {
-                        enabled = true,
+                        enabled = false,
                         trigger = true,
                         luasnip = true,
                         throttle = 50,

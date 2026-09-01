@@ -51,23 +51,30 @@ return {
             return "󰑋 REC @" .. reg
         end
 
+        local copilot_c, copilot_s
         local function get_copilot_state()
-            local ok, client = pcall(require, "copilot.client")
-            if not ok then return "hidden" end
-            if client.is_disabled() then
+            if not copilot_c then
+                local ok, client = pcall(require, "copilot.client")
+                if not ok then return "hidden" end
+                copilot_c = client
+            end
+            if copilot_c.is_disabled() then
                 return "disabled"
             end
-            if client.startup_error then
+            if copilot_c.startup_error then
                 return "issue"
             end
-            local status_ok, status = pcall(require, "copilot.status")
-            if status_ok and status.data then
-                local s = string.lower(status.data.status or "")
+            if not copilot_s then
+                local status_ok, status = pcall(require, "copilot.status")
+                if status_ok then copilot_s = status end
+            end
+            if copilot_s and copilot_s.data then
+                local s = string.lower(copilot_s.data.status or "")
                 if s == "error" or s == "warning" then
                     return "issue"
                 end
             end
-            if not client.get() then
+            if not copilot_c.get() then
                 return "disabled"
             end
             return "ready"
@@ -111,7 +118,9 @@ return {
         end
 
         -- Dynamically extracts all palette colors from whichever theme is active
+        local cached_palette = nil
         local function get_theme_palette()
+            if cached_palette then return cached_palette end
             local normal_bg = hl_hex("Normal", "bg", hl_hex("NormalFloat", "bg", "#1e1e2e"))
             local normal_fg = hl_hex("Normal", "fg", hl_hex("NormalFloat", "fg", "#cdd6f4"))
             local comment   = hl_hex("Comment", "fg", "#6c7086")
@@ -126,7 +135,7 @@ return {
             local lavender  = hl_hex("Identifier", "fg", hl_hex("PreProc", "fg", "#b4befe"))
             local peach     = hl_hex("DiagnosticWarn", "fg", hl_hex("Number", "fg", "#fab387"))
 
-            return {
+            cached_palette = {
                 normal_bg = normal_bg,
                 normal_fg = normal_fg,
                 comment   = comment,
@@ -140,6 +149,7 @@ return {
                 lavender  = lavender,
                 peach     = peach,
             }
+            return cached_palette
         end
 
         local function contrast_fg(bg_color)
@@ -690,7 +700,10 @@ return {
         vim.api.nvim_create_autocmd("ColorScheme", {
             group = lualine_group,
             pattern = "*",
-            callback = apply,
+            callback = function()
+                cached_palette = nil
+                apply()
+            end,
         })
     end,
 }
