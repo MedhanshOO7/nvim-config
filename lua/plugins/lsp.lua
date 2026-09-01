@@ -133,7 +133,44 @@ return {
         pcall(require, "lspconfig")
 
         -- Global LSP commands and keybinds
+        vim.api.nvim_create_user_command("LspRestart", function(opts)
+            local target = opts.args ~= "" and opts.args or nil
+            local clients = vim.lsp.get_clients()
+            local restarted = {}
 
+            for _, client in ipairs(clients) do
+                if not target or client.name == target then
+                    table.insert(restarted, client.name)
+                    local server_name = client.name
+                    client:stop()
+                    vim.lsp.enable(server_name, false)
+                    vim.defer_fn(function()
+                        vim.lsp.enable(server_name, true)
+                        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                            if vim.api.nvim_buf_is_loaded(buf) then
+                                vim.api.nvim_exec_autocmds("FileType", { buffer = buf, modeline = false })
+                            end
+                        end
+                    end, 300)
+                end
+            end
+
+            if #restarted > 0 then
+                vim.notify("Restarting LSP: " .. table.concat(restarted, ", "), vim.log.levels.INFO, { title = "LSP" })
+            else
+                vim.notify("No active LSP clients found to restart", vim.log.levels.WARN, { title = "LSP" })
+            end
+        end, {
+            nargs = "?",
+            desc = "Restart active language servers",
+            complete = function()
+                local names = {}
+                for _, c in ipairs(vim.lsp.get_clients()) do
+                    table.insert(names, c.name)
+                end
+                return names
+            end,
+        })
 
         vim.keymap.set("n", "<leader>lR", "<cmd>LspRestart<cr>", { desc = "Restart language servers" })
 
