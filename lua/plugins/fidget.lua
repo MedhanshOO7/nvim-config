@@ -10,6 +10,8 @@ return {
             },
         },
         progress = {
+            suppress_on_insert = true,
+            ignore = { "basedpyright" },
             display = {
                 done_ttl = 2,
             },
