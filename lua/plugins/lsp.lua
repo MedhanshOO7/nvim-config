@@ -5,8 +5,6 @@ return {
         "saghen/blink.cmp",
         "folke/lazydev.nvim",
         "b0o/schemastore.nvim",
-        { "mason-org/mason.nvim", cond = function() return vim.fn.has("nvim-0.11") == 0 end },
-        { "mason-org/mason-lspconfig.nvim", cond = function() return vim.fn.has("nvim-0.11") == 0 end },
     },
     config = function()
         vim.schedule(function()

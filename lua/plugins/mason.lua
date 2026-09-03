@@ -19,7 +19,10 @@ return {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         event = "VeryLazy",
         dependencies = {
-            "mason-org/mason.nvim",
+            {
+                "mason-org/mason.nvim",
+                opts = {},
+            },
         },
         opts = {
             ensure_installed = {
