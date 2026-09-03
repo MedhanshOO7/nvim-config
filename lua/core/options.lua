@@ -72,9 +72,9 @@ opt.clipboard      = "unnamedplus" -- sync with system clipboard
 opt.shada          = "!,'100,<0,s10,h" -- don't save registers across sessions
 opt.spell          = false -- disable spellcheck by default
 
--- ── Folding (Treesitter-ready) ───────────────────────────────
-opt.foldmethod     = "expr"
-opt.foldexpr       = "v:lua.vim.treesitter.foldexpr()"
+-- ── Folding (Managed lazily by nvim-ufo) ────────────────────
+opt.foldmethod     = "manual"
+opt.foldexpr       = ""
 opt.foldenable     = true
 opt.foldlevel      = 99 -- keep folds open by default
 opt.foldlevelstart = 99

@@ -71,9 +71,28 @@ require("core.options")
 require("core.autocmds")
 require("core.lazy")
 require("utils.theme").setup()
-require("utils.updater").setup()
-require("utils.report_tool").setup()
 require("core.keymaps")
+
+-- Lazy-loaded utility commands (zero startup cost)
+vim.api.nvim_create_user_command("ConfigUpdate", function()
+    require("utils.updater").update()
+end, { desc = "Pull latest configuration changes from Git repository" })
+
+vim.api.nvim_create_user_command("NvimUpdate", function()
+    require("utils.updater").update()
+end, { desc = "Pull latest configuration changes from Git repository" })
+
+vim.api.nvim_create_user_command("ReportBuild", function()
+    require("utils.report_tool").build({ pdf = true })
+end, { desc = "Build practical report from current markdown file" })
+
+vim.api.nvim_create_user_command("ReportPreview", function()
+    require("utils.report_tool").build({ pdf = true, open_pdf = true })
+end, { desc = "Build practical report and open PDF preview" })
+
+vim.api.nvim_create_user_command("ReportInit", function()
+    require("utils.report_tool").init_template()
+end, { desc = "Scaffold a new practical report template" })
 
 -- Fix "Unknown filetype" warnings for LSP and Noice
 vim.filetype.add({

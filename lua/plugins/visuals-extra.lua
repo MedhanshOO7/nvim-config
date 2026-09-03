@@ -26,9 +26,9 @@ return {
             },
             options = {
                 mode = "window",
-                delay = 5,
+                delay = 6,
                 max_delta = {
-                    time = 200,
+                    time = 150,
                 },
                 step_size = {
                     vertical = 1,
