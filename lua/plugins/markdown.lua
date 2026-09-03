@@ -108,13 +108,6 @@ return {
             callback = set_highlights,
         })
     end,
-    config = function(_, opts)
-        require("render-markdown").setup(opts)
-        require("render-markdown.core.manager").init()
-        if vim.bo.filetype == "markdown" then
-            require("render-markdown.core.manager").attach(vim.api.nvim_get_current_buf())
-        end
-    end,
 
     opts = {
         render_modes = false,
