@@ -110,7 +110,7 @@ return {
     end,
 
     opts = {
-        render_modes = false,
+        render_modes = { "n", "c" },
 
         heading = {
             sign = false,
