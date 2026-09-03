@@ -6,7 +6,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "nvim-tree/nvim-web-devicons",
     },
-    event = "VeryLazy",
+    ft = "markdown",
     init = function()
         local function resolve_group(groups)
             for _, group in ipairs(groups) do
