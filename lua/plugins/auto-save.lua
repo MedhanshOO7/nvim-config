@@ -1,6 +1,6 @@
 return {
     "okuuva/auto-save.nvim",
-    event = "BufReadPost",
+    event = "VeryLazy",
     config = function()
         local autosave = require("auto-save")
 

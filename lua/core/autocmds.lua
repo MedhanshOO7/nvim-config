@@ -9,6 +9,18 @@ vim.api.nvim_create_autocmd("VimLeave", {
     end,
 })
 
+vim.api.nvim_create_autocmd("User", {
+    pattern = "VeryLazy",
+    once = true,
+    callback = function()
+        if vim.fn.executable("zen-browser") == 1 then
+            vim.env.BROWSER = "zen-browser"
+        elseif vim.fn.executable("zen") == 1 then
+            vim.env.BROWSER = "zen"
+        end
+    end,
+})
+
 -- ── Quick Dismiss Windows (q & Esc) ───────────────────────────
 vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
     group = vim.api.nvim_create_augroup("QuickDismissWindows", { clear = true }),

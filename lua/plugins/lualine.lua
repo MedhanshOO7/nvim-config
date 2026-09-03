@@ -1,7 +1,6 @@
 return {
     "nvim-lualine/lualine.nvim",
-    lazy = false,
-    priority = 900,
+    event = "VeryLazy",
     cmd = "StatusStyle",
     dependencies = {
         "nvim-tree/nvim-web-devicons",

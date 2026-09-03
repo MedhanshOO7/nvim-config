@@ -118,7 +118,7 @@ return {
     -- Displays glanceable diagnostic errors, git changes, and search matches on the right rail.
     {
         "lewis6991/satellite.nvim",
-        event = "BufReadPost",
+        event = "VeryLazy",
         opts = {
             current_only = true,
             winblend = 50,
@@ -167,7 +167,7 @@ return {
     -- Uses Treesitter to color-code matching parentheses, brackets, and braces with vibrant saturated colors.
     {
         "HiPhish/rainbow-delimiters.nvim",
-        event = "BufReadPost",
+        event = "VeryLazy",
         config = function()
             local function apply_rainbow_colors()
                 vim.api.nvim_set_hl(0, "RainbowDelimiterRed", { fg = "#f38ba8", bold = true })

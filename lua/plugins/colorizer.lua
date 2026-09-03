@@ -26,7 +26,7 @@ return {
         user_default_options = {
             RGB = true,
             RRGGBB = true,
-            names = true,
+            names = false,
             RRGGBBAA = true,
             AARRGGBB = true,
             rgb_fn = true,
@@ -37,7 +37,7 @@ return {
             tailwind = true,
             sass = { enable = true, parsers = { css = true } },
             virtualtext = "󰝤 ",
-            always_update = true,
+            always_update = false,
         },
     },
 }
