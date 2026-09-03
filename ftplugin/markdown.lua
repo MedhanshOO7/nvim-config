@@ -4,12 +4,8 @@ vim.opt_local.textwidth = 0
 vim.opt_local.wrap = true
 vim.opt_local.linebreak = true
 vim.opt_local.breakindent = true
-vim.schedule(function()
-    if vim.api.nvim_buf_is_valid(0) and vim.bo.filetype == "markdown" then
-        vim.opt_local.spell = true
-        vim.opt_local.spelllang = { "en" }
-    end
-end)
+vim.opt_local.spell = true
+vim.opt_local.spelllang = { "en" }
 vim.opt_local.conceallevel = 2
 vim.opt_local.number = true
 vim.opt_local.relativenumber = true
