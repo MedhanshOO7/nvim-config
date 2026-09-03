@@ -5,10 +5,11 @@ return {
         "saghen/blink.cmp",
         "folke/lazydev.nvim",
         "b0o/schemastore.nvim",
-        "mason-org/mason.nvim",
-        "mason-org/mason-lspconfig.nvim",
+        { "mason-org/mason.nvim", cond = function() return vim.fn.has("nvim-0.11") == 0 end },
+        { "mason-org/mason-lspconfig.nvim", cond = function() return vim.fn.has("nvim-0.11") == 0 end },
     },
     config = function()
+        vim.schedule(function()
         local function cmd(command)
             return "<cmd>" .. command .. "<CR>"
         end
@@ -129,8 +130,10 @@ return {
             servers = {}
         end
 
-        -- Ensure lspconfig is loaded so it registers default configs with vim.lsp.config
-        pcall(require, "lspconfig")
+        -- Neovim 0.10 needs lspconfig's setup API; 0.11 loads native configs directly.
+        if vim.fn.has("nvim-0.11") == 0 then
+            pcall(require, "lspconfig")
+        end
 
         -- Global LSP commands and keybinds
         vim.api.nvim_create_user_command("LspRestart", function(opts)
@@ -179,7 +182,7 @@ return {
         vim.keymap.set("n", "<leader>lR", "<cmd>LspRestart<cr>", { desc = "Restart language servers" })
 
         local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-        if mason_lspconfig_ok then
+        if mason_lspconfig_ok and vim.fn.has("nvim-0.11") == 0 then
             mason_lspconfig.setup({
                 ensure_installed = {
                     "basedpyright",
@@ -287,5 +290,6 @@ return {
                 pcall(vim.lsp.buf.clear_references)
             end,
         })
+        end)
     end,
 }
