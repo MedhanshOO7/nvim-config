@@ -1,6 +1,6 @@
 return {
     "mfussenegger/nvim-lint",
-    event = { "BufReadPost", "BufWritePost" },
+    event = "BufWritePost",
     config = function()
         local lint = require("lint")
         local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"

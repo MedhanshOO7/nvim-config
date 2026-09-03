@@ -25,6 +25,7 @@ return {
     -- Professional testing framework integrated into the editor.
     {
         "nvim-neotest/neotest",
+        event = "VeryLazy",
         dependencies = {
             "nvim-neotest/nvim-nio",
             "nvim-lua/plenary.nvim",

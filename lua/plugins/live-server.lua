@@ -1,5 +1,6 @@
 return {
     "barrett-ruth/live-server.nvim",
+    ft = "html",
     cmd = { "LiveServerStart", "LiveServerStop", "LiveServerToggle" },
     config = function()
         local args = {

@@ -78,7 +78,7 @@ return {
                     "vue",
                     "yaml",
                 },
-                auto_install = true,
+                auto_install = false,
                 textobjects = {
                     select = {
                         enable = true,
@@ -115,4 +115,3 @@ return {
         enabled = false,
     },
 }
-

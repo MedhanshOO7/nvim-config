@@ -6,7 +6,6 @@ return {
     },
     branch = "regexp",
     ft = "python",
-    event = { "BufReadPost", "BufNewFile" },
     opts = {
         settings = {
             options = {

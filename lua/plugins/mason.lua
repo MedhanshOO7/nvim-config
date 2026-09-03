@@ -1,7 +1,7 @@
 return {
     {
         "mason-org/mason.nvim",
-        lazy = false,
+        event = "VeryLazy",
         opts = {
             ui = {
                 border = "rounded",

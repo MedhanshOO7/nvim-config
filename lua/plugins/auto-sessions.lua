@@ -1,6 +1,6 @@
 return {
     "rmagatti/auto-session",
-    lazy = false,
+    event = "VimLeavePre",
     keys = {
         { "<leader>wr", "<cmd>SessionRestore<cr>", desc = "Restore session for cwd" },
         { "<leader>ws", "<cmd>SessionSave<cr>", desc = "Save session for cwd" },

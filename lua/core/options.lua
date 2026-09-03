@@ -65,7 +65,7 @@ opt.inccommand     = "split"                   -- preview substitutions live
 opt.smoothscroll   = false                     -- disabled in favor of snacks.scroll
 vim.g.ft_man_open_mode = "vert"                -- open man pages in a vertical split
 vim.g.man_hardwrap     = 0                     -- soft-wrap man pages to window width
-opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+opt.sessionoptions = "curdir,folds,help,tabpages,winsize,winpos,localoptions"
 
 -- ── Clipboard ───────────────────────────────────────────────
 opt.clipboard      = "unnamedplus" -- sync with system clipboard

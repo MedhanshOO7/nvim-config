@@ -121,6 +121,7 @@ end
 return {
     {
         "3rd/image.nvim",
+        ft = { "markdown", "norg" },
         enabled = image_enabled,
         opts = function()
             return {
@@ -144,7 +145,7 @@ return {
     {
         "benlubas/molten-nvim",
         build = ":UpdateRemotePlugins",
-        event = { "BufReadPost", "BufNewFile" },
+        ft = { "python", "jupyter" },
         cmd = {
             "MoltenInit",
             "MoltenEvaluateOperator",

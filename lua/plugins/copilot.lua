@@ -2,7 +2,7 @@ return {
     {
         "zbirenbaum/copilot.lua",
         cmd = "Copilot",
-        event = { "BufReadPre", "BufNewFile" },
+        event = "VeryLazy",
         opts = {
             panel = {
                 enabled = true,
@@ -35,7 +35,7 @@ return {
             filetypes = {
                 ["*"] = true,
                 yaml = false,
-                markdown = true,
+                markdown = false,
                 help = false,
                 gitcommit = true,
                 gitrebase = true,
@@ -316,9 +316,9 @@ Cover:
             },
             tools = "copilot",
             trusted_tools = { "file", "glob", "grep", "gitdiff", "buffer" },
-            sticky = { "@copilot", "#buffer:listed" },
+            sticky = { "@copilot" },
             show_folds = false,
-            auto_insert_mode = true,
+            auto_insert_mode = false,
             insert_at_end = true,
             window = {
                 layout = "vertical",

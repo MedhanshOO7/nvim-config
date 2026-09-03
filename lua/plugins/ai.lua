@@ -2,6 +2,7 @@ return {
     -- Inline Autocomplete (GitHub Copilot alternative)
     {
         "supermaven-inc/supermaven-nvim",
+        event = "InsertEnter",
         keys = {
             { "<M-a>", "<cmd>SupermavenToggle<cr>", desc = "Toggle AI Autocomplete (Supermaven)" },
         },

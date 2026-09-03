@@ -17,6 +17,7 @@ return {
     -- 3. Refactoring.nvim (Code Transformations)
     {
         "ThePrimeagen/refactoring.nvim",
+        event = "VeryLazy",
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",

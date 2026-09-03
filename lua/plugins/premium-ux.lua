@@ -1,7 +1,7 @@
 return {
     {
         "RRethy/vim-illuminate",
-        event = { "BufReadPost", "BufNewFile" },
+        event = "LspAttach",
         config = function()
             require("illuminate").configure({
                 delay = 150,

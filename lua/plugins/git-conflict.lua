@@ -1,7 +1,7 @@
 return {
     "akinsho/git-conflict.nvim",
     version = "*",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "VeryLazy",
     opts = {
         default_mappings = true,
         default_commands = true,
