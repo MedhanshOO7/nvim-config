@@ -21,16 +21,6 @@ vim.api.nvim_create_autocmd("User", {
     end,
 })
 
--- Let Treesitter own Markdown highlighting before Vim's legacy regex syntax runs.
-vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
-    group = vim.api.nvim_create_augroup("MarkdownTreesitterHighlight", { clear = true }),
-    pattern = { "*.md", "*.markdown", "*.mdown", "*.mkdn" },
-    callback = function(event)
-        vim.b[event.buf].ts_highlight = true
-        vim.b[event.buf].current_syntax = "markdown"
-    end,
-})
-
 -- ── Quick Dismiss Windows (q & Esc) ───────────────────────────
 vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
     group = vim.api.nvim_create_augroup("QuickDismissWindows", { clear = true }),

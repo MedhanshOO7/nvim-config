@@ -4,7 +4,6 @@ vim.opt_local.textwidth = 0
 vim.opt_local.wrap = true
 vim.opt_local.linebreak = true
 vim.opt_local.breakindent = true
-vim.cmd("syntax off")
 vim.schedule(function()
     if vim.api.nvim_buf_is_valid(0) and vim.bo.filetype == "markdown" then
         vim.opt_local.spell = true
