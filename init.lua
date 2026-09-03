@@ -53,12 +53,8 @@ vim.g.user_disable_lazy_cache = not ensure_dir(cache_dir)
 vim.g.user_state_writable = ensure_dir(state_dir)
 vim.g.user_undo_writable = ensure_dir(state_dir .. "/undo")
 
-if vim.loader and vim.g.user_disable_lazy_cache then
-    if vim.loader.disable then
-        vim.loader.disable()
-    elseif vim.loader.enable then
-        vim.loader.enable(false) -- Neovim 0.10 compat
-    end
+if vim.loader then
+    vim.loader.enable()
 end
 
 if not vim.g.user_state_writable then
@@ -104,4 +100,3 @@ vim.filetype.add({
         ["gitlab%-ci%.ya?ml"] = "yaml.gitlab",
     },
 })
-

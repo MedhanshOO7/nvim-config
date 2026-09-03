@@ -1,6 +1,6 @@
 return {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
         "saghen/blink.cmp",
         "folke/lazydev.nvim",
@@ -143,9 +143,13 @@ return {
                     table.insert(restarted, client.name)
                     local server_name = client.name
                     client:stop()
-                    vim.lsp.enable(server_name, false)
+                    if vim.fn.has("nvim-0.11") == 1 then
+                        vim.lsp.enable(server_name, false)
+                    end
                     vim.defer_fn(function()
-                        vim.lsp.enable(server_name, true)
+                        if vim.fn.has("nvim-0.11") == 1 then
+                            vim.lsp.enable(server_name, true)
+                        end
                         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
                             if vim.api.nvim_buf_is_loaded(buf) then
                                 vim.api.nvim_exec_autocmds("FileType", { buffer = buf, modeline = false })
@@ -192,19 +196,27 @@ return {
                     "vtsls",
                     "yamlls",
                 },
-                automatic_installation = true,
+                automatic_installation = false,
                 automatic_enable = false,
             })
         end
 
-        for server, server_config in pairs(servers) do
-            local merged_config = vim.tbl_deep_extend("force", {
-                capabilities = capabilities,
-            }, server_config)
-            
-            -- Use modern Neovim native API
-            vim.lsp.config(server, merged_config)
-            vim.lsp.enable(server)
+        if vim.fn.has("nvim-0.11") == 1 then
+            for server, server_config in pairs(servers) do
+                local merged_config = vim.tbl_deep_extend("force", {
+                    capabilities = capabilities,
+                }, server_config)
+                vim.lsp.config(server, merged_config)
+                vim.lsp.enable(server)
+            end
+        else
+            local lspconfig = require("lspconfig")
+            for server, server_config in pairs(servers) do
+                local merged = vim.tbl_deep_extend("force", { capabilities = capabilities }, server_config)
+                if lspconfig[server] then
+                    lspconfig[server].setup(merged)
+                end
+            end
         end
 
         vim.api.nvim_create_autocmd("LspAttach", {
