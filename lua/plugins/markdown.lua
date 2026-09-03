@@ -6,7 +6,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "nvim-tree/nvim-web-devicons",
     },
-    ft = { "markdown", "markdown.mdx", "quarto", "rmd", "sql" },
+    ft = "markdown",
     init = function()
         local function resolve_group(groups)
             for _, group in ipairs(groups) do
@@ -78,48 +78,6 @@ return {
                 vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { link = "ColorColumn" })
             end
 
-            vim.g.markdown_fenced_languages = {
-                "js=javascript",
-                "javascript",
-                "ts=typescript",
-                "typescript",
-                "tsx=typescript",
-                "jsx=javascript",
-                "py=python",
-                "python",
-                "sh=bash",
-                "bash",
-                "zsh=bash",
-                "rb=ruby",
-                "ruby",
-                "rs=rust",
-                "rust",
-                "golang=go",
-                "go",
-                "yml=yaml",
-                "yaml",
-                "json",
-                "jsonc",
-                "toml",
-                "html",
-                "css",
-                "c",
-                "cpp",
-                "c++=cpp",
-                "sql",
-                "mysql=sql",
-                "postgres=sql",
-                "postgresql=sql",
-                "psql=sql",
-                "sqlite=sql",
-                "dockerfile",
-                "docker=dockerfile",
-                "cmake",
-                "diff",
-                "vim",
-                "lua",
-            }
-
             vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { link = "DiagnosticOk" })
             vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { link = "DiagnosticHint" })
 
@@ -152,7 +110,7 @@ return {
     end,
 
     opts = {
-        render_modes = true,
+        render_modes = false,
 
         heading = {
             sign = false,
@@ -244,7 +202,7 @@ return {
     },
     {
         "ice345/markdown-table-wrap.nvim",
-        ft = { "markdown", "markdown.mdx", "quarto", "rmd", "sql" },
+        ft = "markdown",
         keys = {
             { "<leader>mTi", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Inline View" },
             { "<leader>mTr", "<cmd>MarkdownTableToggleReader<cr>", desc = "Toggle Markdown Table Reader" },

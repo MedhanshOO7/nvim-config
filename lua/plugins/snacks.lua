@@ -24,7 +24,7 @@ return {
     lazy = false,
     opts = {
         animate = {
-            enabled = true,
+            enabled = false,
             duration = 20,
             fps = 100,
         },
@@ -283,7 +283,7 @@ return {
         scratch = { enabled = true },
         scroll = { enabled = false }, -- cinnamon.nvim handles smooth scrolling
         statuscolumn = { enabled = true },
-        words = { enabled = false },
+        words = { enabled = true },
         zen = { enabled = true },
     },
     init = function()

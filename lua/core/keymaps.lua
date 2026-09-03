@@ -49,7 +49,6 @@ vim.api.nvim_create_user_command("KeymapsHelp", keymap_help, {
 })
 
 -- Files
-map("n", "<leader>e", toggle_explorer, { desc = "Open or close the file sidebar" })
 map("n", "<leader>fe", function()
     local ok, snacks = pcall(require, "snacks")
     if ok and snacks.explorer then snacks.explorer() else vim.cmd("Oil") end
