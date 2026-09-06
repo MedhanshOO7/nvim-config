@@ -64,13 +64,6 @@ return {
         dashboard = {
             enabled = true,
             preset = {
-                header = [[
-   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
-   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
-   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
-   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
-   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
-   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
                 keys = {
                     { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
                     { icon = "󰈔 ", key = "n", desc = "New Empty Buffer", action = ":ene | startinsert" },
@@ -346,7 +339,6 @@ return {
         { "<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit (VS Code-style panel)" },
         { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
         { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Open Git Permalink in Browser" },
-        { "<leader>z", function() Snacks.zen() end, desc = "Toggle Zen Mode" },
         { "<leader>uz", function() Snacks.zen() end, desc = "Toggle Zen Mode" },
         { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
         { "<leader>S", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },

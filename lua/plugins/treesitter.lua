@@ -78,7 +78,7 @@ return {
                     "vue",
                     "yaml",
                 },
-                auto_install = false,
+                auto_install = true, -- auto-download parser when a new filetype is opened
                 textobjects = {
                     select = {
                         enable = true,

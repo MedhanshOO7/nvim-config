@@ -1,9 +1,5 @@
-local function detect_image_backend()
-    -- User explicitly uses Kitty, force backend
-    return "kitty"
-end
-
-local image_backend = detect_image_backend()
+-- Kitty graphics protocol is the configured image backend
+local image_backend = "kitty"
 local image_enabled = image_backend ~= "none"
 
 local function jupytext_bin()

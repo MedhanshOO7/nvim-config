@@ -7,7 +7,6 @@ return {
         "b0o/schemastore.nvim",
     },
     config = function()
-        vim.schedule(function()
         local function cmd(command)
             return "<cmd>" .. command .. "<CR>"
         end
@@ -152,8 +151,11 @@ return {
                             vim.lsp.enable(server_name, true)
                         end
                         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                            if vim.api.nvim_buf_is_loaded(buf) then
-                                vim.api.nvim_exec_autocmds("FileType", { buffer = buf, modeline = false })
+                            if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype ~= "" then
+                                pcall(vim.api.nvim_exec_autocmds, "FileType", {
+                                    buffer = buf,
+                                    modeline = false,
+                                })
                             end
                         end
                     end, 300)
@@ -248,30 +250,30 @@ return {
                         source = "if_many",
                     }))
                 end, "Explain the problem on this line")
-                map_lsp("n", "<leader>ld", function()
-                    vim.diagnostic.open_float(bordered({
-                        scope = "cursor",
-                        source = "if_many",
-                    }))
-                end, "Explain the problem on this line")
+                map_lsp("n", "<leader>ld", vim.lsp.buf.definition, "Jump to where this symbol is defined")
                 map_lsp("n", "<leader>lD", vim.lsp.buf.declaration, "Jump to where this symbol is declared")
                 map_lsp("n", "<leader>li", vim.lsp.buf.implementation, "Jump to the implementation")
-                map_lsp("n", "<leader>lo", function() require("snacks").picker.lsp_symbols() end, "Search symbols in this file")
-                map_lsp("n", "<leader>ls", function() require("snacks").picker.lsp_workspace_symbols() end, "Search workspace symbols")
+                map_lsp("n", "<leader>lo", function()
+                    require("snacks").picker.lsp_symbols()
+                end, "Search symbols in this file")
+                map_lsp("n", "<leader>ls", function()
+                    require("snacks").picker.lsp_workspace_symbols()
+                end, "Search workspace symbols")
                 map_lsp("n", "<leader>lt", vim.lsp.buf.type_definition, "Jump to the type definition")
                 map_lsp("n", "gd", vim.lsp.buf.definition, "Jump to where this symbol is defined")
                 map_lsp("n", "gD", vim.lsp.buf.declaration, "Jump to where this symbol is declared")
                 map_lsp("n", "gr", vim.lsp.buf.references, "Show every place this symbol is used")
                 map_lsp("n", "gi", vim.lsp.buf.implementation, "Jump to the implementation")
                 map_lsp("n", "K", vim.lsp.buf.hover, "Show documentation for the symbol under the cursor")
-                map_lsp("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, "Go to the previous diagnostic")
-                map_lsp("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, "Go to the next diagnostic")
+                map_lsp("n", "[d", function()
+                    vim.diagnostic.jump({ count = -1, float = true })
+                end, "Go to the previous diagnostic")
+                map_lsp("n", "]d", function()
+                    vim.diagnostic.jump({ count = 1, float = true })
+                end, "Go to the next diagnostic")
                 map_lsp("n", "<leader>lk", vim.lsp.buf.signature_help, "Show function signature help")
                 map_lsp("n", "<leader>rn", smart_rename, "Rename this symbol everywhere")
                 map_lsp({ "n", "v" }, "<leader>ca", smart_code_action, "Show suggested code fixes and actions")
-
-
-
 
                 if client and client:supports_method("textDocument/inlayHint") and vim.lsp.inlay_hint then
                     vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
@@ -288,6 +290,5 @@ return {
                 pcall(vim.lsp.buf.clear_references)
             end,
         })
-        end)
     end,
 }

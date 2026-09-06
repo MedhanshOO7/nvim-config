@@ -17,8 +17,8 @@ return {
         require("venv-selector").setup(opts)
 
         -- Automatically activate .venv (uv/standard style) like VS Code
-        vim.api.nvim_create_autocmd({ "FileType", "BufReadPost" }, {
-            pattern = { "python", "*.py" },
+        vim.api.nvim_create_autocmd("BufReadPost", {
+            pattern = "*.py",
             callback = function(event)
                 local file = vim.api.nvim_buf_get_name(event.buf)
                 local start_dir = (file ~= "" and vim.fs.dirname(file)) or vim.fn.getcwd()

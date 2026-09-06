@@ -2,6 +2,8 @@ return {
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
+        -- Load after Snacks so that Snacks can claim vim.ui.input / vim.ui.select first
+        "folke/snacks.nvim",
         "MunifTanjim/nui.nvim",
     },
     config = function()
@@ -20,7 +22,7 @@ return {
                 },
             },
             messages = {
-                enabled = false, -- snacks.notifier handles messages
+                enabled = true, -- snacks.notifier handles messages
             },
             popupmenu = {
                 enabled = false, -- Disable Nui popupmenu container to prevent bottom split bleeding
@@ -35,10 +37,6 @@ return {
                 hover = {
                     enabled = true,
                     view = nil,
-                    opts = {
-                        max_width = math.max(40, math.floor(vim.o.columns * 0.45)),
-                        max_height = math.max(6, math.floor(vim.o.lines * 0.30)),
-                    },
                 },
                 signature = {
                     enabled = true,

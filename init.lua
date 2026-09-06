@@ -14,6 +14,16 @@ for _, p in ipairs(extra_paths) do
     end
 end
 
+-- ── XDG Runtime Dir safety ─────────────────────────────────────────
+-- Prevents "Failed to start server: operation not permitted" spam in nvim.log
+-- when $XDG_RUNTIME_DIR is unwritable (containers, restricted environments).
+if vim.fn.has("unix") == 1 then
+    local xdg_rt = vim.env.XDG_RUNTIME_DIR
+    if not xdg_rt or vim.fn.isdirectory(xdg_rt) ~= 1 or vim.fn.filewritable(xdg_rt) ~= 2 then
+        vim.env.XDG_RUNTIME_DIR = vim.fn.stdpath("run") or "/tmp"
+    end
+end
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
