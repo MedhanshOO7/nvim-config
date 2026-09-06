@@ -1,266 +1,334 @@
 return {
-    "folke/noice.nvim",
-    event = "VeryLazy",
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
 
-    dependencies = {
-        "MunifTanjim/nui.nvim",
-        "folke/snacks.nvim",
-    },
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
+        },
 
-    config = function()
-        require("noice").setup({
-            -- ============================================================
-            -- Command Line
-            -- ============================================================
-            cmdline = {
-                enabled = true,
-                view = "cmdline_popup",
+        config = function()
+            ----------------------------------------------------------------------
+            -- nvim-notify
+            --
+            -- IMPORTANT:
+            -- Noice remains the notification manager.
+            -- nvim-notify is only the renderer used by Noice's `notify` view.
+            ----------------------------------------------------------------------
 
-                format = {
-                    cmdline = {
-                        icon = " ",
-                        hl_group = "Function",
-                    },
+            local notify = require("notify")
 
-                    search_down = {
-                        icon = "  ",
-                        hl_group = "DiagnosticWarn",
-                    },
+notify.setup({
+    timeout = 3000,
+    minimum_width = 35,
+    max_width = function() return math.floor(vim.o.columns * 0.40) end,
+    max_height = function() return math.floor(vim.o.lines * 0.60) end,
 
-                    search_up = {
-                        icon = "  ",
-                        hl_group = "DiagnosticWarn",
-                    },
+    render = "default",  -- was "wrapped-compact"
 
-                    filter = {
-                        icon = "$ ",
-                        hl_group = "DiagnosticInfo",
-                    },
+    top_down = true,
+    background_colour = "#000000",
 
-                    lua = {
-                        icon = " ",
-                        hl_group = "Special",
-                    },
+    on_open = function(win)
+        vim.api.nvim_set_option_value("wrap", true, { win = win })
+        vim.api.nvim_set_option_value("linebreak", true, { win = win })
+        vim.api.nvim_set_option_value("showbreak", "", { win = win })
+    end,
+})
 
-                    help = {
-                        icon = "󰋖 ",
-                        hl_group = "DiagnosticHint",
-                    },
+            ----------------------------------------------------------------------
+            -- Noice
+            ----------------------------------------------------------------------
 
-                    input = {
-                        icon = "󰥻 ",
-                        hl_group = "Title",
-                    },
-                },
-            },
+            require("noice").setup({
+                ------------------------------------------------------------------
+                -- Command line
+                ------------------------------------------------------------------
 
-            -- ============================================================
-            -- Messages / Command Output
-            -- ============================================================
-            messages = {
-                enabled = true,
-
-                -- Normal messages become floating notifications.
-                view = "notify",
-
-                -- Errors / warnings use the same notification system.
-                view_error = "notify",
-                view_warn = "notify",
-
-                -- Keep message history accessible through Noice.
-                view_history = "messages",
-            },
-
-            -- ============================================================
-            -- Notifications
-            -- ============================================================
-            notify = {
-                enabled = true,
-
-                view = "notify",
-
-                -- Keep notifications compact.
-                merge = true,
-            },
-
-            -- ============================================================
-            -- Popup Menu
-            -- ============================================================
-            popupmenu = {
-                enabled = false,
-            },
-
-            -- ============================================================
-            -- LSP
-            -- ============================================================
-            lsp = {
-                progress = {
+                cmdline = {
                     enabled = true,
-                },
+                    view = "cmdline_popup",
 
-                hover = {
-                    enabled = true,
-                    view = nil,
-                },
+                    format = {
+                        cmdline = {
+                            icon = " ",
+                            hl_group = "Function",
+                        },
 
-                signature = {
-                    enabled = true,
+                        search_down = {
+                            icon = "  ",
+                            hl_group = "DiagnosticWarn",
+                        },
 
-                    auto_open = {
-                        enabled = false,
-                        trigger = true,
-                        luasnip = true,
-                        throttle = 50,
-                    },
+                        search_up = {
+                            icon = "  ",
+                            hl_group = "DiagnosticWarn",
+                        },
 
-                    view = nil,
+                        filter = {
+                            icon = "$ ",
+                            hl_group = "DiagnosticInfo",
+                        },
 
-                    opts = {
-                        max_width = math.max(40, math.floor(vim.o.columns * 0.45)),
+                        lua = {
+                            icon = " ",
+                            hl_group = "Special",
+                        },
 
-                        max_height = math.max(4, math.floor(vim.o.lines * 0.18)),
-                    },
-                },
+                        help = {
+                            icon = "󰋖 ",
+                            hl_group = "DiagnosticHint",
+                        },
 
-                message = {
-                    enabled = true,
-                },
-            },
-
-            -- ============================================================
-            -- Views
-            -- ============================================================
-            views = {
-                -- --------------------------------------------------------
-                -- Main command line
-                -- --------------------------------------------------------
-                cmdline_popup = {
-                    position = {
-                        row = "40%",
-                        col = "50%",
-                    },
-
-                    size = {
-                        min_width = 60,
-                        width = "auto",
-                        max_width = math.floor(vim.o.columns * 0.75),
-                        height = "auto",
-                    },
-
-                    border = {
-                        style = "rounded",
-                        padding = { 0, 1 },
-                    },
-
-                    win_options = {
-                        winhighlight = table.concat({
-                            "Normal:NoiceCmdlinePopup",
-                            "FloatBorder:NoiceCmdlinePopupBorder",
-                            "FloatTitle:NoiceCmdlinePopupTitle",
-                        }, ","),
-
-                        wrap = true,
-                        linebreak = true,
-                        sidescrolloff = 0,
-                        cursorline = false,
-                        foldenable = false,
+                        input = {
+                            icon = "󰥻 ",
+                            hl_group = "Title",
+                        },
                     },
                 },
 
-                -- --------------------------------------------------------
+
+                ------------------------------------------------------------------
                 -- Messages
-                -- --------------------------------------------------------
+                ------------------------------------------------------------------
+
                 messages = {
-                    position = {
-                        row = "20%",
-                        col = "50%",
-                    },
+                    enabled = true,
 
-                    size = {
-                        min_width = 60,
-                        width = "auto",
-                        max_width = math.floor(vim.o.columns * 0.75),
-                        height = "auto",
-                    },
+                    -- Normal command/message output
+                    view = "notify",
 
-                    border = {
-                        style = "rounded",
-                        padding = { 0, 1 },
-                    },
+                    -- Errors and warnings should use the same notification UI.
+                    view_error = "notify",
+                    view_warn = "notify",
 
-                    win_options = {
-                        wrap = true,
-                        linebreak = true,
-                        sidescrolloff = 0,
-                        cursorline = false,
-                        foldenable = false,
+                    -- Keep complete history accessible through :Noice.
+                    view_history = "messages",
 
-                        winhighlight = table.concat({
-                            "Normal:NoicePopup",
-                            "FloatBorder:NoicePopupBorder",
-                            "FloatTitle:NoicePopupTitle",
-                        }, ","),
-                    },
+                    -- Search counts are better kept as virtual text.
+                    view_search = "virtualtext",
                 },
-            },
 
-            -- ============================================================
-            -- Presets
-            -- ============================================================
-            presets = {
-                -- Centered search instead of bottom command-line search.
-                bottom_search = false,
 
-                -- We use our own command-line styling.
-                command_palette = false,
+                ------------------------------------------------------------------
+                -- Popup menu
+                --
+                -- Keep disabled because your setup isn't using Noice's
+                -- completion popup.
+                ------------------------------------------------------------------
 
-                -- Long output should remain readable.
-                long_message_to_split = true,
+                popupmenu = {
+                    enabled = false,
+                },
 
-                inc_rename = false,
 
-                -- LSP documentation gets a border.
-                lsp_doc_border = true,
-            },
+                ------------------------------------------------------------------
+                -- vim.notify()
+                --
+                -- This is the important part.
+                --
+                -- Plugins calling vim.notify() are intercepted by Noice and
+                -- routed through the same notification pipeline.
+                ------------------------------------------------------------------
 
-            -- ============================================================
-            -- Routes
-            -- ============================================================
-            routes = {
-                -- Ignore noisy messages that don't provide useful
-                -- information to the user.
-                {
-                    filter = {
-                        event = "msg_show",
+                notify = {
+                    enabled = true,
+                    view = "notify",
+                },
 
-                        any = {
-                            {
-                                find = "Terminal did not respond to DSR request",
-                            },
 
-                            {
-                                find = "E1568",
-                            },
+                ------------------------------------------------------------------
+                -- LSP
+                ------------------------------------------------------------------
 
-                            {
-                                find = "is_stopped is deprecated",
-                            },
+                lsp = {
+                    progress = {
+                        enabled = true,
+                        view = "mini",
 
-                            {
-                                find = "client.request is deprecated",
-                            },
+                        -- Don't update the UI excessively.
+                        throttle = 1000 / 30,
+                    },
 
-                            {
-                                find = "written",
-                            },
+                    hover = {
+                        enabled = true,
+                        view = nil,
+                    },
+
+                    signature = {
+                        enabled = true,
+
+                        auto_open = {
+                            enabled = false,
+                            trigger = true,
+                            luasnip = true,
+                            throttle = 50,
+                        },
+
+                        view = nil,
+
+                        opts = {
+                            max_width = math.max(
+                                40,
+                                math.floor(vim.o.columns * 0.45)
+                            ),
+
+                            max_height = math.max(
+                                4,
+                                math.floor(vim.o.lines * 0.18)
+                            ),
                         },
                     },
 
-                    opts = {
-                        skip = true,
+                    message = {
+                        enabled = true,
+                        view = "notify",
                     },
                 },
-            },
-        })
-    end,
+
+
+                ------------------------------------------------------------------
+                -- Custom views
+                ------------------------------------------------------------------
+
+                views = {
+                    ----------------------------------------------------------------
+                    -- Your command-line popup
+                    ----------------------------------------------------------------
+
+                    cmdline_popup = {
+                        position = {
+                            row = "40%",
+                            col = "50%",
+                        },
+
+                        size = {
+                            width = "auto",
+                            min_width = 40,
+                            max_width = 80,
+                            height = "auto",
+                        },
+
+                        border = {
+                            style = "rounded",
+                            padding = { 0, 1 },
+                        },
+
+                        win_options = {
+                            winblend = 0,
+
+                            winhighlight = table.concat({
+                                "Normal:NormalFloat",
+                                "FloatBorder:FloatBorder",
+                                "FloatTitle:FloatTitle",
+                            }, ","),
+
+                            wrap = true,
+                            linebreak = true,
+                        },
+                    },
+
+                    ----------------------------------------------------------------
+                    -- Input windows use the same visual style.
+                    ----------------------------------------------------------------
+
+                    cmdline_input = {
+                        view = "cmdline_popup",
+
+                        border = {
+                            style = "rounded",
+                            padding = { 0, 1 },
+                        },
+                    },
+                },
+
+
+                ------------------------------------------------------------------
+                -- Presets
+                ------------------------------------------------------------------
+
+                presets = {
+                    -- We don't want the classic bottom search UI.
+                    bottom_search = false,
+
+                    -- Keep command line independent from popup completion.
+                    command_palette = false,
+
+                    -- Don't automatically throw long messages into a split.
+                    --
+                    -- This is important because we want our notification
+                    -- renderer to handle normal long notifications.
+                    long_message_to_split = false,
+
+                    inc_rename = false,
+
+                    -- Rounded LSP documentation borders.
+                    lsp_doc_border = true,
+                },
+
+
+                ------------------------------------------------------------------
+                -- Routes
+                ------------------------------------------------------------------
+
+                routes = {
+                    ----------------------------------------------------------------
+                    -- Ignore noisy terminal DSR warning.
+                    ----------------------------------------------------------------
+
+                    {
+                        filter = {
+                            event = "msg_show",
+
+                            any = {
+                                {
+                                    find = "Terminal did not respond to DSR request",
+                                },
+
+                                {
+                                    find = "E1568",
+                                },
+
+                                {
+                                    find = "is_stopped is deprecated",
+                                },
+
+                                {
+                                    find = "client.request is deprecated",
+                                },
+
+                                {
+                                    find = "written",
+                                },
+                            },
+                        },
+
+                        opts = {
+                            skip = true,
+                        },
+                    },
+
+                    ----------------------------------------------------------------
+                    -- Long command output:
+                    --
+                    -- Don't let extremely large output become a gigantic
+                    -- notification.
+                    --
+                    -- Noice's own documentation explicitly supports routing
+                    -- messages based on min_height.
+                    ----------------------------------------------------------------
+
+                    {
+                        filter = {
+                            event = "msg_show",
+                            min_height = 15,
+                        },
+
+                        view = "split",
+                    },
+                },
+            })
+        end,
+    },
 }
