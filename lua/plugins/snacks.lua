@@ -199,7 +199,7 @@ return {
         },
         lazygit = { enabled = true },
         notifier = {
-            enabled = true,
+            enabled = false,
             timeout = 3000,
             width = { min = 35, max = 0.40 },
             height = { min = 1, max = 0.60 },
