@@ -1,6 +1,5 @@
 return {
     "gbprod/yanky.nvim",
-    event = "VeryLazy",
     opts = {
         ring = {
             history_length = 100,

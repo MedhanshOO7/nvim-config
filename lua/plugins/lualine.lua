@@ -17,7 +17,9 @@ return {
 
         local function hex_to_rgb(hex)
             hex = to_hex(hex)
-            if type(hex) ~= "string" then hex = "#1e1e2e" end
+            if type(hex) ~= "string" then
+                hex = "#1e1e2e"
+            end
             hex = hex:gsub("#", "")
             if hex == "" or hex:lower() == "none" then
                 hex = "1e1e2e"
@@ -46,15 +48,25 @@ return {
 
         local function macro_recording()
             local reg = vim.fn.reg_recording()
-            if reg == "" then return "" end
+            if reg == "" then
+                return ""
+            end
             return "󰑋 REC @" .. reg
         end
 
         local copilot_c, copilot_s
+
         local function get_copilot_state()
+            -- Don't load Copilot just because lualine wants its status.
+            if not package.loaded["copilot.client"] then
+                return "hidden"
+            end
+
             if not copilot_c then
                 local ok, client = pcall(require, "copilot.client")
-                if not ok then return "hidden" end
+                if not ok then
+                    return "hidden"
+                end
                 copilot_c = client
             end
             if copilot_c.is_disabled() then
@@ -65,7 +77,9 @@ return {
             end
             if not copilot_s then
                 local status_ok, status = pcall(require, "copilot.status")
-                if status_ok then copilot_s = status end
+                if status_ok then
+                    copilot_s = status
+                end
             end
             if copilot_s and copilot_s.data then
                 local s = string.lower(copilot_s.data.status or "")
@@ -131,34 +145,36 @@ return {
         -- Dynamically extracts all palette colors from whichever theme is active
         local cached_palette = nil
         local function get_theme_palette()
-            if cached_palette then return cached_palette end
+            if cached_palette then
+                return cached_palette
+            end
             local normal_bg = hl_hex("Normal", "bg", hl_hex("NormalFloat", "bg", "#1e1e2e"))
             local normal_fg = hl_hex("Normal", "fg", hl_hex("NormalFloat", "fg", "#cdd6f4"))
-            local comment   = hl_hex("Comment", "fg", "#6c7086")
+            local comment = hl_hex("Comment", "fg", "#6c7086")
 
-            local blue      = hl_hex("Function", "fg", hl_hex("Directory", "fg", "#89b4fa"))
-            local green     = hl_hex("String", "fg", hl_hex("DiagnosticOk", "fg", "#a6e3a1"))
-            local yellow    = hl_hex("DiagnosticWarn", "fg", hl_hex("Constant", "fg", "#f9e2af"))
-            local purple    = hl_hex("Statement", "fg", hl_hex("Keyword", "fg", "#cba6f7"))
-            local red       = hl_hex("DiagnosticError", "fg", hl_hex("Error", "fg", "#f38ba8"))
-            local cyan      = hl_hex("Type", "fg", hl_hex("Special", "fg", "#89dceb"))
-            local teal      = hl_hex("SpecialChar", "fg", hl_hex("Special", "fg", "#94e2d5"))
-            local lavender  = hl_hex("Identifier", "fg", hl_hex("PreProc", "fg", "#b4befe"))
-            local peach     = hl_hex("DiagnosticWarn", "fg", hl_hex("Number", "fg", "#fab387"))
+            local blue = hl_hex("Function", "fg", hl_hex("Directory", "fg", "#89b4fa"))
+            local green = hl_hex("String", "fg", hl_hex("DiagnosticOk", "fg", "#a6e3a1"))
+            local yellow = hl_hex("DiagnosticWarn", "fg", hl_hex("Constant", "fg", "#f9e2af"))
+            local purple = hl_hex("Statement", "fg", hl_hex("Keyword", "fg", "#cba6f7"))
+            local red = hl_hex("DiagnosticError", "fg", hl_hex("Error", "fg", "#f38ba8"))
+            local cyan = hl_hex("Type", "fg", hl_hex("Special", "fg", "#89dceb"))
+            local teal = hl_hex("SpecialChar", "fg", hl_hex("Special", "fg", "#94e2d5"))
+            local lavender = hl_hex("Identifier", "fg", hl_hex("PreProc", "fg", "#b4befe"))
+            local peach = hl_hex("DiagnosticWarn", "fg", hl_hex("Number", "fg", "#fab387"))
 
             cached_palette = {
                 normal_bg = normal_bg,
                 normal_fg = normal_fg,
-                comment   = comment,
-                blue      = blue,
-                green     = green,
-                yellow    = yellow,
-                purple    = purple,
-                red       = red,
-                cyan      = cyan,
-                teal      = teal,
-                lavender  = lavender,
-                peach     = peach,
+                comment = comment,
+                blue = blue,
+                green = green,
+                yellow = yellow,
+                purple = purple,
+                red = red,
+                cyan = cyan,
+                teal = teal,
+                lavender = lavender,
+                peach = peach,
             }
             return cached_palette
         end
@@ -201,10 +217,10 @@ return {
             local bg_dark = "NONE"
 
             local norm_bg = blend(p.blue, p.normal_bg, 0.60)
-            local ins_bg  = blend(p.green, p.normal_bg, 0.60)
-            local vis_bg  = blend(p.purple, p.normal_bg, 0.60)
-            local rep_bg  = blend(p.red, p.normal_bg, 0.60)
-            local cmd_bg  = blend(p.yellow, p.normal_bg, 0.60)
+            local ins_bg = blend(p.green, p.normal_bg, 0.60)
+            local vis_bg = blend(p.purple, p.normal_bg, 0.60)
+            local rep_bg = blend(p.red, p.normal_bg, 0.60)
+            local cmd_bg = blend(p.yellow, p.normal_bg, 0.60)
             local inact_bg = blend(p.normal_fg, p.normal_bg, 0.15)
 
             return {
@@ -260,21 +276,21 @@ return {
         end
 
         local mode_icons = {
-            ["NORMAL"]    = "󰮯 ",
-            ["INSERT"]    = "󰏫 ",
-            ["VISUAL"]    = "󰒉 ",
-            ["V-LINE"]    = "󰒉 ",
-            ["V-BLOCK"]   = "󰒉 ",
-            ["SELECT"]    = "󰒉 ",
-            ["S-LINE"]    = "󰒉 ",
-            ["S-BLOCK"]   = "󰒉 ",
-            ["REPLACE"]   = "󰛔 ",
+            ["NORMAL"] = "󰮯 ",
+            ["INSERT"] = "󰏫 ",
+            ["VISUAL"] = "󰒉 ",
+            ["V-LINE"] = "󰒉 ",
+            ["V-BLOCK"] = "󰒉 ",
+            ["SELECT"] = "󰒉 ",
+            ["S-LINE"] = "󰒉 ",
+            ["S-BLOCK"] = "󰒉 ",
+            ["REPLACE"] = "󰛔 ",
             ["V-REPLACE"] = "󰛔 ",
-            ["COMMAND"]   = "󰘳 ",
-            ["EX"]        = "󰘳 ",
-            ["MORE"]      = "󰘳 ",
-            ["CONFIRM"]   = "󰘳 ",
-            ["TERMINAL"]  = "󰆍 ",
+            ["COMMAND"] = "󰘳 ",
+            ["EX"] = "󰘳 ",
+            ["MORE"] = "󰘳 ",
+            ["CONFIRM"] = "󰘳 ",
+            ["TERMINAL"] = "󰆍 ",
         }
 
         local function format_mode(str)
@@ -296,13 +312,19 @@ return {
                 sections = {
                     lualine_a = {
                         {
-                            function() return "▌" end,
-                            color = function() return { fg = get_mode_color(), bg = "NONE" } end,
+                            function()
+                                return "▌"
+                            end,
+                            color = function()
+                                return { fg = get_mode_color(), bg = "NONE" }
+                            end,
                             padding = { left = 0, right = 0 },
                         },
                         {
                             "mode",
-                            color = function() return { fg = get_mode_color(), bg = "NONE", gui = "bold" } end,
+                            color = function()
+                                return { fg = get_mode_color(), bg = "NONE", gui = "bold" }
+                            end,
                             fmt = format_mode,
                             padding = { left = 1, right = 1 },
                         },
@@ -338,8 +360,11 @@ return {
                             color = function()
                                 local state = get_copilot_state()
                                 local fg = p.teal
-                                if state == "disabled" then fg = p.comment
-                                elseif state == "issue" then fg = p.yellow end
+                                if state == "disabled" then
+                                    fg = p.comment
+                                elseif state == "issue" then
+                                    fg = p.yellow
+                                end
                                 return { fg = fg, bg = "NONE", gui = "bold" }
                             end,
                             padding = { left = 1, right = 1 },
@@ -370,8 +395,12 @@ return {
                             padding = { left = 1, right = 1 },
                         },
                         {
-                            function() return "▐" end,
-                            color = function() return { fg = get_mode_color(), bg = "NONE" } end,
+                            function()
+                                return "▐"
+                            end,
+                            color = function()
+                                return { fg = get_mode_color(), bg = "NONE" }
+                            end,
                             padding = { left = 0, right = 0 },
                         },
                     },
@@ -420,8 +449,11 @@ return {
                             color = function()
                                 local state = get_copilot_state()
                                 local fg = p.teal
-                                if state == "disabled" then fg = p.comment
-                                elseif state == "issue" then fg = p.yellow end
+                                if state == "disabled" then
+                                    fg = p.comment
+                                elseif state == "issue" then
+                                    fg = p.yellow
+                                end
                                 return { fg = fg, bg = "NONE", gui = "bold" }
                             end,
                         },
@@ -478,14 +510,18 @@ return {
                         {
                             "branch",
                             icon = "",
-                            color = function() return frost(p.green) end,
+                            color = function()
+                                return frost(p.green)
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
-                            color = function() return frost(p.purple) end,
+                            color = function()
+                                return frost(p.purple)
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -494,7 +530,9 @@ return {
                     lualine_x = {
                         {
                             macro_recording,
-                            color = function() return frost(p.red) end,
+                            color = function()
+                                return frost(p.red)
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -503,8 +541,11 @@ return {
                             color = function()
                                 local state = get_copilot_state()
                                 local fg = p.teal
-                                if state == "disabled" then fg = p.comment
-                                elseif state == "issue" then fg = p.yellow end
+                                if state == "disabled" then
+                                    fg = p.comment
+                                elseif state == "issue" then
+                                    fg = p.yellow
+                                end
                                 return frost(fg)
                             end,
                             separator = { left = " ", right = "" },
@@ -514,13 +555,17 @@ return {
                             "diagnostics",
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
-                            color = function() return frost(p.peach) end,
+                            color = function()
+                                return frost(p.peach)
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
                         {
                             lsp_status,
-                            color = function() return frost(p.lavender) end,
+                            color = function()
+                                return frost(p.lavender)
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -534,7 +579,9 @@ return {
                         {
                             "filetype",
                             icon_only = false,
-                            color = function() return frost(p.cyan) end,
+                            color = function()
+                                return frost(p.cyan)
+                            end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
                         },
@@ -598,8 +645,11 @@ return {
                             color = function()
                                 local state = get_copilot_state()
                                 local fg = p.teal
-                                if state == "disabled" then fg = p.comment
-                                elseif state == "issue" then fg = p.yellow end
+                                if state == "disabled" then
+                                    fg = p.comment
+                                elseif state == "issue" then
+                                    fg = p.yellow
+                                end
                                 return { fg = fg, bg = "NONE", gui = "bold" }
                             end,
                             padding = { left = 1, right = 1 },
@@ -675,8 +725,14 @@ return {
                             if choice == s.name then
                                 vim.g.lualine_color_style = s.id
                                 apply()
-                                pcall(function() require("incline").refresh() end)
-                                vim.notify("Statusline Style: " .. s.id:upper(), vim.log.levels.INFO, { title = "Statusline Style" })
+                                pcall(function()
+                                    require("incline").refresh()
+                                end)
+                                vim.notify(
+                                    "Statusline Style: " .. s.id:upper(),
+                                    vim.log.levels.INFO,
+                                    { title = "Statusline Style" }
+                                )
                                 break
                             end
                         end
@@ -696,8 +752,14 @@ return {
                 end
                 vim.g.lualine_color_style = styles[next_idx].id
                 apply()
-                pcall(function() require("incline").refresh() end)
-                vim.notify("Statusline Style: " .. styles[next_idx].id:upper(), vim.log.levels.INFO, { title = "Statusline Style" })
+                pcall(function()
+                    require("incline").refresh()
+                end)
+                vim.notify(
+                    "Statusline Style: " .. styles[next_idx].id:upper(),
+                    vim.log.levels.INFO,
+                    { title = "Statusline Style" }
+                )
                 return
             end
 
@@ -705,15 +767,23 @@ return {
                 if style_id == s.id or style_id == tostring(s.id) or tostring(style_id) == s.id:sub(1, 1) then
                     vim.g.lualine_color_style = s.id
                     apply()
-                    pcall(function() require("incline").refresh() end)
-                    vim.notify("Statusline Style: " .. s.id:upper(), vim.log.levels.INFO, { title = "Statusline Style" })
+                    pcall(function()
+                        require("incline").refresh()
+                    end)
+                    vim.notify(
+                        "Statusline Style: " .. s.id:upper(),
+                        vim.log.levels.INFO,
+                        { title = "Statusline Style" }
+                    )
                     return
                 end
             end
 
             vim.g.lualine_color_style = style_id
             apply()
-            pcall(function() require("incline").refresh() end)
+            pcall(function()
+                require("incline").refresh()
+            end)
         end
 
         vim.api.nvim_create_user_command("StatusStyle", function(opts)
