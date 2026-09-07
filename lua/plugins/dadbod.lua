@@ -1,7 +1,7 @@
 return {
     {
         "tpope/vim-dadbod",
-        cmd = { "DB", "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer", "DBSelect", "DBSchema" },
+        cmd = { "DB" },
         ft = { "sql", "mysql", "plsql" },
         keys = {
             {
@@ -23,7 +23,6 @@ return {
             vim.api.nvim_create_user_command("DBSelect", function()
                 require("utils.dadbod").select_database()
             end, { desc = "Select MariaDB Database for current buffer" })
-
             vim.api.nvim_create_user_command("DBSchema", function()
                 require("utils.dadbod").view_table_schema()
             end, { desc = "View schema and columns for tables" })
@@ -33,6 +32,22 @@ return {
         "kristijanhusak/vim-dadbod-completion",
         dependencies = { "tpope/vim-dadbod" },
         ft = { "sql", "mysql", "plsql" },
+        config = function()
+            -- nvim-cmp users: this wires the source automatically.
+            -- blink.cmp users: delete this whole config() block and instead add
+            -- "vim-dadbod-completion" to the `sources.default` list in your
+            -- blink.cmp opts (blink has its own dadbod integration, no autocmd needed).
+            local ok, cmp = pcall(require, "cmp")
+            if not ok then
+                return
+            end
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "sql", "mysql", "plsql" },
+                callback = function()
+                    cmp.setup.buffer({ sources = { { name = "vim-dadbod-completion" } } })
+                end,
+            })
+        end,
     },
     {
         "kristijanhusak/vim-dadbod-ui",
@@ -48,6 +63,7 @@ return {
         },
         keys = {
             { "<leader>Db", "<cmd>DBUIToggle<cr>", desc = "Toggle Dadbod UI (Database Browser)" },
+            { "<leader>Dc", "<cmd>DBUIAddConnection<cr>", desc = "Add DB Connection" },
             { "<leader>Df", "<cmd>DBUIFindBuffer<cr>", desc = "Find DB Buffer" },
             { "<leader>Dr", "<cmd>DBUIRenameBuffer<cr>", desc = "Rename DB Buffer" },
             { "<leader>Dl", "<cmd>DBUILastQueryInfo<cr>", desc = "Last DB Query Info" },
@@ -57,18 +73,28 @@ return {
             vim.g.db_ui_show_database_icon = 1
             vim.g.db_ui_force_echo_notifications = 1
             vim.g.db_ui_winwidth = 35
-            vim.g.db_ui_auto_execute_table_helpers = 1
+            vim.g.db_ui_auto_execute_table_helpers = true
             vim.g.db_ui_save_location = vim.fn.stdpath("data") .. "/db_ui"
 
-            vim.g.dbs = {
-                { name = "ccet_committees", url = "mariadb://root@127.0.0.1:3306/ccet_committees" },
-                { name = "campus_placement", url = "mariadb://root@127.0.0.1:3306/campus_placement" },
-                { name = "banking_dbms", url = "mariadb://root@127.0.0.1:3306/banking_dbms" },
-                { name = "ccet", url = "mariadb://root@127.0.0.1:3306/ccet" },
-                { name = "cities", url = "mariadb://root@127.0.0.1:3306/cities" },
-                { name = "university_6th", url = "mariadb://root@127.0.0.1:3306/university_6th" },
-                { name = "computational_data", url = "mariadb://root@127.0.0.1:3306/computational_data" },
+            local user = os.getenv("MARIADB_USER") or "root"
+            local pass = os.getenv("MARIADB_PASSWORD")
+            local auth = pass and (user .. ":" .. pass) or user
+            local host = "127.0.0.1:3306"
+
+            local dbs = {
+                "ccet_committees",
+                "campus_placement",
+                "banking_dbms",
+                "ccet",
+                "cities",
+                "university_6th",
+                "computational_data",
             }
+
+            vim.g.dbs = {}
+            for _, name in ipairs(dbs) do
+                table.insert(vim.g.dbs, { name = name, url = ("mariadb://%s@%s/%s"):format(auth, host, name) })
+            end
         end,
     },
 }
