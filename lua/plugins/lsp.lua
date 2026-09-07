@@ -182,7 +182,7 @@ return {
         vim.keymap.set("n", "<leader>lR", "<cmd>LspRestart<cr>", { desc = "Restart language servers" })
 
         local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-        if mason_lspconfig_ok and vim.fn.has("nvim-0.11") == 0 then
+        if mason_lspconfig_ok then
             mason_lspconfig.setup({
                 ensure_installed = {
                     "basedpyright",
@@ -276,7 +276,6 @@ return {
                 map_lsp({ "n", "v" }, "<leader>ca", smart_code_action, "Show suggested code fixes and actions")
 
                 if client and client:supports_method("textDocument/inlayHint") and vim.lsp.inlay_hint then
-                    vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
                     map_lsp("n", "<leader>lI", function()
                         toggle_inlay_hints(event.buf)
                     end, "Turn inlay hints on or off")
