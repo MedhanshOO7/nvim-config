@@ -59,7 +59,7 @@ return {
                     "markdown",
                     "markdown_inline",
                     "mermaid",
-                    "norg",
+                    -- "norg",
                     "python",
                     "qml",
                     "query",
@@ -78,7 +78,7 @@ return {
                     "vue",
                     "yaml",
                 },
-                auto_install = true, -- auto-download parser when a new filetype is opened
+                auto_install = false, -- auto-download parser when a new filetype is opened
                 textobjects = {
                     select = {
                         enable = true,

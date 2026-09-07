@@ -5,9 +5,10 @@ return {
     keys = {
         { "-", "<cmd>Oil<cr>", desc = "Open parent directory in Oil" },
         { "<leader>fO", "<cmd>Oil<cr>", desc = "Open Oil file browser" },
+        { "<leader>fe", "<cmd>Oil<cr>", desc = "Open Oil file browser" },
     },
     opts = {
-        default_file_explorer = false, 
+        default_file_explorer = false,
         columns = {
             "icon",
             "permissions",

@@ -99,8 +99,8 @@ opt.listchars      = {    -- … configured as:
 }
 -- formatoptions:remove at init-time is overridden by ftplugins;
 -- use a FileType autocmd instead (see language_defaults group below).
-opt.iskeyword:append("-")       -- treat hyphenated-words as one word
-opt.path:append("**")           -- let gf find project files in nested folders
+-- opt.iskeyword:append("-")       -- treat hyphenated-words as one word
+-- opt.path:append("**")           -- let gf find project files in nested folders
 opt.jumpoptions:append("view")  -- restore the previous viewport on jumplist travel
 opt.diffopt:append("linematch:60") -- better inline diff alignment for larger hunks
 opt.winminheight    = 1             -- keep window splits from collapsing to 0 height
