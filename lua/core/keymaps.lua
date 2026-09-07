@@ -4,25 +4,6 @@ local function cmd(command)
     return "<cmd>" .. command .. "<CR>"
 end
 
-local function toggle_explorer()
-    local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then
-        local pickers = snacks.picker.get({ source = "explorer" })
-        if #pickers > 0 then
-            pickers[1]:close()
-        else
-            snacks.explorer()
-        end
-    else
-        local oil_ok, oil = pcall(require, "oil")
-        if oil_ok and oil.open then
-            oil.open()
-        else
-            pcall(vim.cmd, "Explore")
-        end
-    end
-end
-
 local function keymap_help()
     local ok, snacks = pcall(require, "snacks")
     if ok and snacks.picker then
@@ -40,10 +21,6 @@ local function grug_far()
     return require("grug-far")
 end
 
-local function ufo()
-    return require("ufo")
-end
-
 vim.api.nvim_create_user_command("KeymapsHelp", keymap_help, {
     desc = "Browse custom keybindings with plain-English descriptions",
 })
@@ -51,7 +28,11 @@ vim.api.nvim_create_user_command("KeymapsHelp", keymap_help, {
 -- Files
 map("n", "<leader>fe", function()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.explorer then snacks.explorer() else vim.cmd("Oil") end
+    if ok and snacks.explorer then
+        snacks.explorer()
+    else
+        vim.cmd("Oil")
+    end
 end, { desc = "Open file explorer" })
 map("n", "<leader>fs", cmd("write"), { desc = "Save the current file" })
 map("n", "<leader>cf", function()
@@ -64,14 +45,22 @@ end, { desc = "Format the current file" })
 map("n", "<leader>uf", cmd("FormatToggle"), { desc = "Toggle auto-format on save" })
 map("n", "<leader>um", function()
     vim.bo.modifiable = not vim.bo.modifiable
-    vim.notify(vim.bo.modifiable and "Buffer is now MODIFIABLE (editing enabled)  " or "Buffer is now READ-ONLY (editing disabled)  ", vim.log.levels.INFO)
+    vim.notify(
+        vim.bo.modifiable and "Buffer is now MODIFIABLE (editing enabled)  "
+            or "Buffer is now READ-ONLY (editing disabled)  ",
+        vim.log.levels.INFO
+    )
 end, { desc = "Toggle buffer modifiable state (unlock editing)" })
 map("n", "<leader>q", cmd("quit"), { desc = "Quit the current window" })
 
 -- Terminals and writing
 map({ "n", "i", "t" }, "<C-`>", function()
     local ok, ts = pcall(require, "utils.terminal_style")
-    if ok then ts.toggle() else vim.cmd("ToggleTerm") end
+    if ok then
+        ts.toggle()
+    else
+        vim.cmd("ToggleTerm")
+    end
 end, { desc = "Toggle active terminal" })
 map("i", "<C-Left>", "<C-o>b", { desc = "Jump backward one word" })
 map("i", "<C-Right>", "<C-o>w", { desc = "Jump forward one word" })
@@ -88,16 +77,20 @@ map({ "n", "v" }, "<leader>rr", function()
 end, { desc = "Run: Current file / selection" })
 map("n", "<leader>to", function()
     local ok, ts = pcall(require, "utils.terminal_style")
-    if ok then ts.toggle() else vim.cmd("ToggleTerm") end
+    if ok then
+        ts.toggle()
+    else
+        vim.cmd("ToggleTerm")
+    end
 end, { desc = "Open or close the active terminal" })
 map("n", "<leader>ts", function()
     local ok, ts = pcall(require, "utils.terminal_style")
-    if ok then ts.select() else vim.cmd("TerminalStyle") end
+    if ok then
+        ts.select()
+    else
+        vim.cmd("TerminalStyle")
+    end
 end, { desc = "Choose terminal position (Center, Bottom, Right)" })
-map("n", "<leader>tS", function()
-    local ok, ts = pcall(require, "utils.terminal_style")
-    if ok then ts.select() else vim.cmd("TerminalStyle") end
-end, { desc = "Choose terminal & runner style (Center, Bottom, Right)" })
 map("n", "<leader>tf", cmd("TerminalProject"), { desc = "Open the main project shell" })
 map("n", "<leader>th", cmd("TerminalHorizontal"), { desc = "Open a bottom terminal panel" })
 map("n", "<leader>tv", cmd("TerminalVertical"), { desc = "Open a side terminal panel" })
@@ -118,15 +111,13 @@ map("n", "<leader>zb", function()
 end, { desc = "Toggle Brainstorm mode (Universal)" })
 map("n", "<leader>nt", cmd("Twilight"), { desc = "Dim unfocused text around the cursor" })
 map("n", "<leader>ns", "viw<esc>a~~<esc>hbi~~<esc>lel", { desc = "Strikeout the word under the cursor" })
-map("v", "<leader>ns", "c~~<C-r>\"~~<esc>", { desc = "Strikeout the selection" })
+map("v", "<leader>ns", 'c~~<C-r>"~~<esc>', { desc = "Strikeout the selection" })
 map("n", "<leader>nh", function()
-    local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.notifier then snacks.notifier.show_history() end
+    require("noice").cmd("history")
 end, { desc = "Notification history" })
 map("n", "<leader>nd", function()
-    local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.notifier then snacks.notifier.hide() end
-end, { desc = "Dismiss all notifications" })
+    require("noice").cmd("dismiss")
+end, { desc = "Dismiss notifications" })
 
 -- Buffers and tabs
 map("n", "<leader>bn", cmd("bnext"), { desc = "Go to the next open file" })
@@ -150,11 +141,26 @@ map("n", "<leader>bo", function()
 end, { desc = "Close every file except this one" })
 
 -- Folding
-map("n", "<leader>za", "za", { desc = "Toggle fold" })
-map("n", "<leader>zc", "zc", { desc = "Close fold" })
-map("n", "<leader>zo", "zo", { desc = "Open fold" })
-map("n", "<leader>zR", function() require("ufo").openAllFolds() end, { desc = "Open all folds" })
-map("n", "<leader>zM", function() require("ufo").closeAllFolds() end, { desc = "Close all folds" })
+map("n", "<leader>zR", function()
+    require("ufo").openAllFolds()
+end, { desc = "Open all folds" })
+
+map("n", "<leader>zM", function()
+    require("ufo").closeAllFolds()
+end, { desc = "Close all folds" })
+
+map("n", "<leader>zv", function()
+    local winid = require("ufo").peekFoldedLinesUnderCursor()
+    if not winid then
+        vim.lsp.buf.hover()
+    end
+end, { desc = "Preview fold" })
+map("n", "<leader>zR", function()
+    require("ufo").openAllFolds()
+end, { desc = "Open all folds" })
+map("n", "<leader>zM", function()
+    require("ufo").closeAllFolds()
+end, { desc = "Close all folds" })
 map("n", "<leader>zv", function()
     local winid = require("ufo").peekFoldedLinesUnderCursor()
     if not winid then
@@ -182,19 +188,29 @@ map("n", "<leader>gc", cmd("Neogit commit"), { desc = "Start a git commit" })
 -- Search and discovery
 local function pick_files()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.files() else vim.cmd("find") end
+    if ok and snacks.picker then
+        snacks.picker.files()
+    else
+        vim.cmd("find")
+    end
 end
 local function live_grep()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.grep() end
+    if ok and snacks.picker then
+        snacks.picker.grep()
+    end
 end
 local function pick_buffers()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.buffers() end
+    if ok and snacks.picker then
+        snacks.picker.buffers()
+    end
 end
 local function pick_recent()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.recent() end
+    if ok and snacks.picker then
+        snacks.picker.recent()
+    end
 end
 local function pick_keymaps()
     local ok, snacks = pcall(require, "snacks")
@@ -203,33 +219,45 @@ local function pick_keymaps()
             layout = { preset = "vscode" },
         })
     else
-        pcall(function() require("which-key").show() end)
+        pcall(function()
+            require("which-key").show()
+        end)
     end
 end
 
 map("n", "<leader>p", function()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.commands() end
+    if ok and snacks.picker then
+        snacks.picker.commands()
+    end
 end, { desc = "Open the command palette" })
 map("n", "<leader>ff", pick_files, { desc = "Find a file by name" })
 map("n", "<leader>fg", live_grep, { desc = "Search for text in the project" })
 map("n", "<leader>f/", function()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.lines() end
+    if ok and snacks.picker then
+        snacks.picker.lines()
+    end
 end, { desc = "Search in the current file" })
 map("n", "<leader>fb", pick_buffers, { desc = "Switch between open files" })
 map("n", "<leader>fp", function()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.git_files() end
+    if ok and snacks.picker then
+        snacks.picker.git_files()
+    end
 end, { desc = "Find a tracked project file" })
 map("n", "<leader>fr", pick_recent, { desc = "Reopen a recent file" })
 map("n", "<leader>fS", function()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.lsp_symbols() end
+    if ok and snacks.picker then
+        snacks.picker.lsp_symbols()
+    end
 end, { desc = "Search symbols in this file" })
 map("n", "<leader>fw", function()
     local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.picker then snacks.picker.lsp_workspace_symbols() end
+    if ok and snacks.picker then
+        snacks.picker.lsp_workspace_symbols()
+    end
 end, { desc = "Search workspace symbols" })
 map("n", "<leader>ft", function()
     local ok, snacks = pcall(require, "snacks")
@@ -239,8 +267,12 @@ map("n", "<leader>ft", function()
         pcall(vim.cmd, "TodoQuickFix")
     end
 end, { desc = "Find every TODO, NOTE, or FIX comment" })
-map("n", "]t", function() require("todo-comments").jump_next() end, { desc = "Next TODO comment" })
-map("n", "[t", function() require("todo-comments").jump_prev() end, { desc = "Previous TODO comment" })
+map("n", "]t", function()
+    require("todo-comments").jump_next()
+end, { desc = "Next TODO comment" })
+map("n", "[t", function()
+    require("todo-comments").jump_prev()
+end, { desc = "Previous TODO comment" })
 map("n", "<leader>fk", pick_keymaps, { desc = "Browse every keybinding" })
 map("n", "<leader>?", pick_keymaps, { desc = "Browse every keybinding" })
 map({ "n", "x" }, "<leader>sr", cmd("GrugFar"), { desc = "Search and replace across the project" })
@@ -339,7 +371,9 @@ map({ "n", "i", "x" }, "<M-LeftMouse>", function()
 end, { desc = "Toggle cursor at mouse position" })
 
 -- Themes and comprehensive distro-grade UI & System toggles (<leader>u...)
-map("n", "<leader>uu", function() require("utils.updater").update() end, { desc = "Update Neovim config from Git repository" })
+map("n", "<leader>uu", function()
+    require("utils.updater").update()
+end, { desc = "Update Neovim config from Git repository" })
 map("n", "<leader>ut", cmd("ThemePicker"), { desc = "Choose a theme" })
 map("n", "<leader>un", cmd("ThemeNext"), { desc = "Switch to the next theme" })
 map("n", "<leader>up", cmd("ThemePrev"), { desc = "Switch to the previous theme" })
@@ -347,7 +381,11 @@ map("n", "<leader>uy", cmd("ThemeTransparencyToggle"), { desc = "Turn transparen
 map("n", "<leader>uS", cmd("StatusStyle"), { desc = "Choose statusline & header color style" })
 map("n", "<leader>uT", function()
     local ok, ts = pcall(require, "utils.terminal_style")
-    if ok then ts.select() else vim.cmd("TerminalStyle") end
+    if ok then
+        ts.select()
+    else
+        vim.cmd("TerminalStyle")
+    end
 end, { desc = "Choose terminal & code runner style (Center, Bottom, Right)" })
 
 map("n", "<leader>ud", function()
@@ -378,14 +416,6 @@ map("n", "<leader>uc", function()
     vim.wo.conceallevel = level
     vim.notify("Conceal level: " .. level, vim.log.levels.INFO)
 end, { desc = "Toggle conceal level" })
-
-map("n", "<leader>ux", function()
-    local ok, ts_ctx = pcall(require, "treesitter-context")
-    if ok then
-        ts_ctx.toggle()
-        vim.notify("Treesitter Context toggled", vim.log.levels.INFO)
-    end
-end, { desc = "Toggle Treesitter sticky header" })
 
 map("n", "<leader>us", function()
     vim.opt_local.spell = not vim.opt_local.spell:get()
