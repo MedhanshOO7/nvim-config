@@ -5,7 +5,7 @@ local function greeting()
     elseif hour < 18 then
         return "󰖙  Good afternoon, Medhansh"
     else
-        return "  Good evening, Medhansh"
+        return "  Good evening, Medhansh"
     end
 end
 
@@ -16,6 +16,13 @@ local function apply_dashboard_gradients()
     vim.api.nvim_set_hl(0, "SnacksDashGrad4", { fg = "#cba6f7", bold = true })
     vim.api.nvim_set_hl(0, "SnacksDashGrad5", { fg = "#f5c2e7", bold = true })
     vim.api.nvim_set_hl(0, "SnacksDashGrad6", { fg = "#fab387", bold = true })
+end
+
+-- Shared resize step for explorer width keymaps (+/> grow, -/< shrink)
+local function resize_explorer(delta)
+    return function()
+        vim.cmd("vertical resize " .. (delta > 0 and "+" .. delta or tostring(delta)))
+    end
 end
 
 return {
@@ -65,25 +72,49 @@ return {
             enabled = true,
             preset = {
                 keys = {
-                    { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
+                    { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
                     { icon = "󰈔 ", key = "n", desc = "New Empty Buffer", action = ":ene | startinsert" },
-                    { icon = " ", key = "g", desc = "Live Grep Workspace", action = ":lua Snacks.picker.grep()" },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
+                    { icon = " ", key = "g", desc = "Live Grep Workspace", action = ":lua Snacks.picker.grep()" },
+                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
                     { icon = "󰉋 ", key = "e", desc = "Project Explorer", action = ":lua Snacks.explorer()" },
                     { icon = "󱐌 ", key = "s", desc = "Restore Session", section = "session" },
-                    { icon = "󰒲 ", key = "l", desc = "Manage Plugins", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-                    { icon = " ", key = "q", desc = "Quit Editor", action = ":qa" },
+                    {
+                        icon = "󰒲 ",
+                        key = "l",
+                        desc = "Manage Plugins",
+                        action = ":Lazy",
+                        enabled = package.loaded.lazy ~= nil,
+                    },
+                    { icon = " ", key = "q", desc = "Quit Editor", action = ":qa" },
                 },
             },
             sections = {
                 {
                     text = {
-                        { "   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗\n", hl = "SnacksDashGrad1" },
-                        { "   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║\n", hl = "SnacksDashGrad2" },
-                        { "   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║\n", hl = "SnacksDashGrad3" },
-                        { "   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║\n", hl = "SnacksDashGrad4" },
-                        { "   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║\n", hl = "SnacksDashGrad5" },
-                        { "   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝\n", hl = "SnacksDashGrad6" },
+                        {
+                            "   ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗\n",
+                            hl = "SnacksDashGrad1",
+                        },
+                        {
+                            "   ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║\n",
+                            hl = "SnacksDashGrad2",
+                        },
+                        {
+                            "   ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║\n",
+                            hl = "SnacksDashGrad3",
+                        },
+                        {
+                            "   ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║\n",
+                            hl = "SnacksDashGrad4",
+                        },
+                        {
+                            "   ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║\n",
+                            hl = "SnacksDashGrad5",
+                        },
+                        {
+                            "   ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝\n",
+                            hl = "SnacksDashGrad6",
+                        },
                     },
                     align = "center",
                     padding = 1,
@@ -103,11 +134,11 @@ return {
                     padding = 1,
                 },
                 { section = "keys", gap = 1, padding = 1 },
-                { pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-                { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+                { pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+                { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
                 {
                     pane = 2,
-                    icon = " ",
+                    icon = " ",
                     title = "Git Status",
                     section = "terminal",
                     enabled = function()
@@ -137,7 +168,7 @@ return {
                 },
             },
         },
-        gh = { enabled = false },
+        gh = { enabled = false }, -- prefer gh CLI directly over in-editor GitHub integration
         gitbrowse = { enabled = true },
         image = {
             enabled = true,
@@ -181,7 +212,7 @@ return {
         },
         input = {
             enabled = true,
-            icon = " ",
+            icon = " ",
             icon_hl = "SnacksInputIcon",
             icon_pos = "left",
             prompt_pos = "title",
@@ -198,19 +229,7 @@ return {
             },
         },
         lazygit = { enabled = true },
-        notifier = {
-            enabled = false,
-            timeout = 3000,
-            width = { min = 35, max = 0.40 },
-            height = { min = 1, max = 0.60 },
-            margin = { top = 1, right = 1, bottom = 0 },
-            padding = true,
-            gap = 1,
-            sort = { "level", "added" },
-            level = vim.log.levels.TRACE,
-            style = "minimal",
-            top_down = true, -- top-to-bottom on the right side
-        },
+        notifier = { enabled = false }, -- Noice owns notifications (see <leader>un); no snacks notifier config needed
         picker = {
             enabled = true,
             ui_select = true,
@@ -251,16 +270,20 @@ return {
                                 ["c"] = "explorer_copy",
                                 ["m"] = "explorer_move",
                                 -- Dynamic interactive width resizing inside explorer
-                                ["+"] = function() vim.cmd("vertical resize +4") end,
-                                ["-"] = function() vim.cmd("vertical resize -4") end,
-                                [">"] = function() vim.cmd("vertical resize +4") end,
-                                ["<"] = function() vim.cmd("vertical resize -4") end,
+                                ["+"] = resize_explorer(4),
+                                ["-"] = resize_explorer(-4),
+                                [">"] = resize_explorer(4),
+                                ["<"] = resize_explorer(-4),
                                 ["w"] = function()
                                     local cur_w = vim.api.nvim_win_get_width(0)
                                     local next_w = 24
-                                    if cur_w <= 26 then next_w = 34
-                                    elseif cur_w <= 36 then next_w = 46
-                                    else next_w = 24 end
+                                    if cur_w <= 26 then
+                                        next_w = 34
+                                    elseif cur_w <= 36 then
+                                        next_w = 46
+                                    else
+                                        next_w = 24
+                                    end
                                     vim.cmd("vertical resize " .. next_w)
                                     vim.notify("Explorer Width: " .. next_w .. " columns", vim.log.levels.INFO)
                                 end,
@@ -270,7 +293,7 @@ return {
                 },
             },
         },
-        profiler = { enabled = false },
+        profiler = { enabled = false }, -- unused, no perf debugging needed currently
         quickfile = { enabled = true },
         scope = { enabled = true },
         scratch = { enabled = true },
@@ -291,7 +314,12 @@ return {
         vim.api.nvim_create_autocmd("User", {
             pattern = "OilActionsPost",
             callback = function(event)
-                if event.data and event.data.actions and event.data.actions[1] and event.data.actions[1].type == "move" then
+                if
+                    event.data
+                    and event.data.actions
+                    and event.data.actions[1]
+                    and event.data.actions[1].type == "move"
+                then
                     Snacks.rename.on_rename_file(event.data.actions[1].src_url, event.data.actions[1].dest_url)
                 end
             end,
@@ -300,7 +328,8 @@ return {
             if Snacks.image and Snacks.image.doc then
                 Snacks.image.doc.enabled = not Snacks.image.doc.enabled
                 vim.notify(
-                    Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 " or "Hovering Image Previews DISABLED 󰂭 ",
+                    Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 "
+                        or "Hovering Image Previews DISABLED 󰂭 ",
                     vim.log.levels.INFO,
                     { title = "Image Previews" }
                 )
@@ -308,8 +337,20 @@ return {
         end, { desc = "Toggle hovering image previews ON or OFF" })
     end,
     keys = {
-        { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
-        { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+        {
+            "<leader><space>",
+            function()
+                Snacks.picker.smart()
+            end,
+            desc = "Smart Find Files",
+        },
+        {
+            "<leader>e",
+            function()
+                Snacks.explorer()
+            end,
+            desc = "File Explorer",
+        },
         {
             "<leader>si",
             function()
@@ -321,14 +362,21 @@ return {
             end,
             desc = "Browse Images (Floating Preview)",
         },
-        { "<leader>ih", function() Snacks.image.hover() end, desc = "Hover Image Preview (Manual)" },
+        {
+            "<leader>ih",
+            function()
+                Snacks.image.hover()
+            end,
+            desc = "Hover Image Preview (Manual)",
+        },
         {
             "<leader>ui",
             function()
                 if Snacks.image and Snacks.image.doc then
                     Snacks.image.doc.enabled = not Snacks.image.doc.enabled
                     vim.notify(
-                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 " or "Hovering Image Previews DISABLED 󰂭 ",
+                        Snacks.image.doc.enabled and "Hovering Image Previews ENABLED 󰋩 "
+                            or "Hovering Image Previews DISABLED 󰂭 ",
                         vim.log.levels.INFO,
                         { title = "Image Previews" }
                     )
@@ -336,15 +384,69 @@ return {
             end,
             desc = "Toggle Hovering Image Previews",
         },
-        { "<leader>gl", function() Snacks.lazygit() end, desc = "Lazygit (VS Code-style panel)" },
-        { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
-        { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Open Git Permalink in Browser" },
-        { "<leader>uz", function() Snacks.zen() end, desc = "Toggle Zen Mode" },
-        { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
-        { "<leader>S", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
-        { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File (LSP)" },
-        { "]r", function() Snacks.words.jump(1, true) end, desc = "Next LSP Word Reference" },
-        { "[r", function() Snacks.words.jump(-1, true) end, desc = "Prev LSP Word Reference" },
+        {
+            "<leader>gl",
+            function()
+                Snacks.lazygit()
+            end,
+            desc = "Lazygit (VS Code-style panel)",
+        },
+        {
+            "<leader>gf",
+            function()
+                Snacks.lazygit.log_file()
+            end,
+            desc = "Lazygit Current File History",
+        },
+        {
+            "<leader>gB",
+            function()
+                Snacks.gitbrowse()
+            end,
+            desc = "Open Git Permalink in Browser",
+        },
+        {
+            "<leader>uz",
+            function()
+                Snacks.zen()
+            end,
+            desc = "Toggle Zen Mode",
+        },
+        {
+            "<leader>.",
+            function()
+                Snacks.scratch()
+            end,
+            desc = "Toggle Scratch Buffer",
+        },
+        {
+            "<leader>S",
+            function()
+                Snacks.scratch.select()
+            end,
+            desc = "Select Scratch Buffer",
+        },
+        {
+            "<leader>cR",
+            function()
+                Snacks.rename.rename_file()
+            end,
+            desc = "Rename File (LSP)",
+        },
+        {
+            "]r",
+            function()
+                Snacks.words.jump(1, true)
+            end,
+            desc = "Next LSP Word Reference",
+        },
+        {
+            "[r",
+            function()
+                Snacks.words.jump(-1, true)
+            end,
+            desc = "Prev LSP Word Reference",
+        },
         { "<leader>un", "<cmd>Noice history<cr>", desc = "Notification History" },
     },
 }
