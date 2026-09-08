@@ -28,7 +28,8 @@ end
 return {
     "folke/snacks.nvim",
     priority = 1000,
-    lazy = false,
+    lazy = true,
+    event = "VeryLazy",
     opts = {
         animate = {
             enabled = false,
@@ -73,7 +74,7 @@ return {
             preset = {
                 keys = {
                     { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
-                    { icon = "󰈔 ", key = "n", desc = "New Empty Buffer", action = ":ene | startinsert" },
+                    { icon = " ", key = "n", desc = "New Empty Buffer", action = ":ene | startinsert" },
                     { icon = " ", key = "g", desc = "Live Grep Workspace", action = ":lua Snacks.picker.grep()" },
                     { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
                     { icon = "󰉋 ", key = "e", desc = "Project Explorer", action = ":lua Snacks.explorer()" },
