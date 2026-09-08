@@ -5,7 +5,7 @@ local function greeting()
     elseif hour < 18 then
         return "󰖙  Good afternoon, Medhansh"
     else
-        return "  Good evening, Medhansh"
+        return "  Good evening, Medhansh"
     end
 end
 
@@ -247,6 +247,12 @@ return {
                     hidden = true,
                 },
                 explorer = {
+                    icons = {
+                        files = {
+                            dir = "󱧺 ",
+                            dir_open = "󰉖 ",
+                        },
+                    },
                     layout = {
                         preset = "sidebar",
                         preview = false,
