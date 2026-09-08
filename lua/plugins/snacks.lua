@@ -51,7 +51,7 @@ return {
                     statuscolumn = "",
                     conceallevel = 0,
                     relativenumber = false,
-                    cursorline = false,
+                    cursorline = true,
                     list = false,
                 })
                 vim.schedule(function()
@@ -247,6 +247,7 @@ return {
                     hidden = true,
                 },
                 explorer = {
+                    git_status = true,
                     icons = {
                         files = {
                             dir = "󱧺 ",
@@ -277,6 +278,7 @@ return {
                                 ["m"] = "explorer_move",
                                 -- Dynamic interactive width resizing inside explorer
                                 ["+"] = resize_explorer(4),
+                                ["."] = "explorer_hidden",
                                 ["-"] = resize_explorer(-4),
                                 [">"] = resize_explorer(4),
                                 ["<"] = resize_explorer(-4),
