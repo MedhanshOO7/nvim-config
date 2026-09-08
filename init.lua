@@ -71,7 +71,7 @@ if not vim.g.user_state_writable then
     vim.opt.shadafile = "NONE"
 end
 
-vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
+-- vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
 
 require("core.options")
 require("core.autocmds")
