@@ -155,18 +155,7 @@ map("n", "<leader>zv", function()
         vim.lsp.buf.hover()
     end
 end, { desc = "Preview fold" })
-map("n", "<leader>zR", function()
-    require("ufo").openAllFolds()
-end, { desc = "Open all folds" })
-map("n", "<leader>zM", function()
-    require("ufo").closeAllFolds()
-end, { desc = "Close all folds" })
-map("n", "<leader>zv", function()
-    local winid = require("ufo").peekFoldedLinesUnderCursor()
-    if not winid then
-        vim.lsp.buf.hover()
-    end
-end, { desc = "Preview fold" })
+
 
 -- Git
 map("n", "]h", cmd("Gitsigns next_hunk"), { desc = "Go to the next git change" })

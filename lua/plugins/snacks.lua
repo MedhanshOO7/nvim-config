@@ -456,6 +456,5 @@ return {
             end,
             desc = "Prev LSP Word Reference",
         },
-        { "<leader>un", "<cmd>Noice history<cr>", desc = "Notification History" },
     },
 }

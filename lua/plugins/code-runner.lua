@@ -1,8 +1,8 @@
 return {
     "CRAG666/code_runner.nvim",
     ft = { "python", "c", "cpp", "javascript", "typescript", "markdown" },
+    cmd = { "RunCode", "RunFile", "RunProject", "RunClose" },
     keys = {
-        { "<leader>rr", "<cmd>RunCode<cr>", desc = "Run: Code block / selection" },
         { "<leader>rf", "<cmd>RunFile<cr>", desc = "Run: Current file" },
         { "<leader>rp", "<cmd>RunProject<cr>", desc = "Run: Project" },
         { "<leader>rc", "<cmd>RunClose<cr>", desc = "Run: Close runner window" },
