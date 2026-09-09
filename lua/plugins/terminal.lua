@@ -1,7 +1,14 @@
 return {
     "akinsho/toggleterm.nvim",
     version = "*",
-    cmd = { "ToggleTerm", "TermExec" },
+    cmd = {
+        "ToggleTerm",
+        "TermExec",
+        "TerminalProject",
+        "TerminalHorizontal",
+        "TerminalVertical",
+        "TerminalSelect",
+    },
     config = function()
         local function terminal_size(term)
             if term.direction == "horizontal" then
