@@ -22,7 +22,8 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 -- ── Quick Dismiss Windows (q & Esc) ───────────────────────────
-vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+-- Optimized: Use only BufEnter instead of FileType+BufEnter for better performance
+vim.api.nvim_create_autocmd("BufEnter", {
     group = vim.api.nvim_create_augroup("QuickDismissWindows", { clear = true }),
     pattern = "*",
     callback = function(event)
@@ -102,21 +103,8 @@ vim.api.nvim_create_autocmd("FileType", {
         -- Use built-in regex syntax for manpages as Treesitter 'man' is unsupported
         vim.bo.syntax = "man"
 
-        -- ── Heuristic Code Highlighting ──────────────────────────
-        -- Since manpages don't have formal code block tags, we use regex
-        -- to find common C patterns in indented lines.
-        vim.cmd([[
-            syntax match manCInclude /^\s\+#include\s\+[<"].*[>"]/
-            syntax match manCKeyword /^\s\+\(if\|else\|while\|for\|return\|int\|char\|void\|static\|struct\|fprintf\|stdout\|printf\|NULL\)\>/
-            syntax region manCString start=/"/ skip=/\\"/ end=/"/ oneline
-            syntax match manCComment /^\s\+\/\/.*$/
-            syntax match manCComment /^\s\+\/\*.*\*\//
-
-            highlight link manCInclude PreProc
-            highlight link manCKeyword Statement
-            highlight link manCString String
-            highlight link manCComment Comment
-        ]])
+        -- Note: Heuristic code highlighting removed for better performance.
+        -- Consider adding lightweight syntax via ftplugin if needed.
     end,
 })
 
@@ -137,11 +125,13 @@ vim.api.nvim_create_autocmd("FileType", {
 -- ── ANSI Color Support (Pager) ───────────────────────────────
 -- Automatically trigger colorizer if ANSI escape codes are detected
 -- in plain text buffers (common for piped output like 'git log | nvim')
+-- Optimized: Check fewer lines for better performance
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
     group = vim.api.nvim_create_augroup("AnsiColorDetection", { clear = true }),
     callback = function()
         if vim.bo.filetype == "" or vim.bo.filetype == "text" then
-            local lines = vim.api.nvim_buf_get_lines(0, 0, 50, false)
+            -- Check first 20 lines instead of 50 for better performance
+            local lines = vim.api.nvim_buf_get_lines(0, 0, 20, false)
             local content = table.concat(lines, "\n")
             if content:find("\27%[") then
                 -- Schedule to ensure plugin is loaded

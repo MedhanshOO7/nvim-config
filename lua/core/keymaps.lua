@@ -31,7 +31,7 @@ map("n", "<leader>fe", function()
     if ok and snacks.explorer then
         snacks.explorer()
     else
-        vim.cmd("Oil")
+        vim.notify("Snacks explorer not available", vim.log.levels.WARN)
     end
 end, { desc = "Open file explorer" })
 map("n", "<leader>fs", cmd("write"), { desc = "Save the current file" })

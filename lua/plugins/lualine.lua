@@ -298,6 +298,29 @@ return {
             return icon .. str
         end
 
+        -- Git conflict indicators
+        local function git_conflict()
+            return vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.conflict and "" or ""
+        end
+
+        -- Buffer modification indicator
+        local function buffer_modified()
+            return vim.bo.modified and "●" or ""
+        end
+
+        -- LSP progress indicator (simple version)
+        local function lsp_progress()
+            local messages = vim.lsp.util.get_progress_messages()
+            if #messages == 0 then
+                return ""
+            end
+            local status = {}
+            for _, msg in ipairs(messages) do
+                table.insert(status, msg.percentage or msg.title or "")
+            end
+            return table.concat(status, " ")
+        end
+
         local function apply()
             local p = get_theme_palette()
             local style = vim.g.lualine_color_style or "frosted"
@@ -337,13 +360,23 @@ return {
                             padding = { left = 1, right = 1 },
                         },
                         {
+                            git_conflict,
+                            color = { fg = p.red, bg = "NONE", gui = "bold" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
                             color = { bg = "NONE" },
                             padding = { left = 1, right = 1 },
                         },
                     },
-                    lualine_c = {},
+                    lualine_c = {
+                        {
+                            buffer_modified,
+                            color = { fg = p.green, bg = "NONE", gui = "bold" },
+                        },
+                    },
                     lualine_x = {
                         {
                             macro_recording,
@@ -354,6 +387,10 @@ return {
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
                             color = { bg = "NONE" },
+                        },
+                        {
+                            lsp_progress,
+                            color = { fg = p.blue, bg = "NONE", gui = "bold" },
                         },
                         {
                             copilot_status,
@@ -427,12 +464,21 @@ return {
                             color = { fg = p.comment, bg = "NONE", gui = "bold" },
                         },
                         {
+                            git_conflict,
+                            color = { fg = p.red, bg = "NONE", gui = "bold" },
+                        },
+                        {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
                             color = { bg = "NONE" },
                         },
                     },
-                    lualine_c = {},
+                    lualine_c = {
+                        {
+                            buffer_modified,
+                            color = { fg = p.green, bg = "NONE", gui = "bold" },
+                        },
+                    },
                     lualine_x = {
                         {
                             macro_recording,
@@ -443,6 +489,10 @@ return {
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
                             color = { bg = "NONE" },
+                        },
+                        {
+                            lsp_progress,
+                            color = { fg = p.blue, bg = "NONE", gui = "bold" },
                         },
                         {
                             copilot_status,
@@ -517,6 +567,14 @@ return {
                             padding = { left = 1, right = 1 },
                         },
                         {
+                            git_conflict,
+                            color = function()
+                                return frost(p.red)
+                            end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
                             color = function()
@@ -526,12 +584,29 @@ return {
                             padding = { left = 1, right = 1 },
                         },
                     },
-                    lualine_c = {},
+                    lualine_c = {
+                        {
+                            buffer_modified,
+                            color = function()
+                                return frost(p.green)
+                            end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                    },
                     lualine_x = {
                         {
                             macro_recording,
                             color = function()
                                 return frost(p.red)
+                            end,
+                            separator = { left = " ", right = "" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
+                            lsp_progress,
+                            color = function()
+                                return frost(p.blue)
                             end,
                             separator = { left = " ", right = "" },
                             padding = { left = 1, right = 1 },
@@ -622,13 +697,23 @@ return {
                             padding = { left = 1, right = 1 },
                         },
                         {
+                            git_conflict,
+                            color = { fg = p.red, bg = "NONE", gui = "bold" },
+                            padding = { left = 1, right = 1 },
+                        },
+                        {
                             "diff",
                             symbols = { added = " ", modified = " ", removed = " " },
                             color = { bg = "NONE" },
                             padding = { left = 1, right = 1 },
                         },
                     },
-                    lualine_c = {},
+                    lualine_c = {
+                        {
+                            buffer_modified,
+                            color = { fg = p.green, bg = "NONE", gui = "bold" },
+                        },
+                    },
                     lualine_x = {
                         {
                             macro_recording,
@@ -639,6 +724,10 @@ return {
                             sources = { "nvim_diagnostic" },
                             symbols = { error = " ", warn = " ", info = " ", hint = " " },
                             color = { bg = "NONE" },
+                        },
+                        {
+                            lsp_progress,
+                            color = { fg = p.blue, bg = "NONE", gui = "bold" },
                         },
                         {
                             copilot_status,

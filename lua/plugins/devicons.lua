@@ -10,7 +10,7 @@ return {
             strict = true,
             override = {
                 default_icon = {
-                    icon = "󰈔",
+                    icon = "",
                     color = "#cdd6f4",
                     name = "Default",
                 },
