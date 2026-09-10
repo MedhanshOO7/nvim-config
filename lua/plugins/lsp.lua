@@ -90,6 +90,8 @@ return {
                     [vim.diagnostic.severity.HINT] = "",
                     [vim.diagnostic.severity.INFO] = "",
                 },
+                -- Add some spacing to prevent text from touching the signs
+                numhl = {},
             },
             underline = {
                 severity = vim.diagnostic.severity.ERROR,
@@ -100,7 +102,12 @@ return {
                 border = float_border,
                 source = "if_many",
                 scope = "cursor",
+                -- Better positioning for diagnostic floats
+                max_width = math.floor(vim.o.columns * 0.6),
+                max_height = math.floor(vim.o.lines * 0.4),
             },
+            -- Improved diagnostic update timing for better UX
+            debounce = 100,
         })
 
         -- Enhanced LSP progress with better visibility
@@ -114,14 +121,7 @@ return {
             local message = value.message
             local percentage = value.percentage
             local kind = value.kind
-            local lsp_progress = require("lsp.progress")
-            lsp_progress.update(title, {
-                message = message,
-                percentage = percentage,
-            }, {
-                client_id = ctx.client_id,
-                kind = kind,
-            })
+            -- fidget.nvim handles LSP progress display natively
         end
 
         vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
@@ -220,7 +220,7 @@ return {
                     "vtsls",
                     "yamlls",
                 },
-                automatic_installation = false,
+                automatic_installation = true,
                 automatic_enable = false,
             })
         end

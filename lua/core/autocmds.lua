@@ -21,6 +21,18 @@ vim.api.nvim_create_autocmd("User", {
     end,
 })
 
+-- ── Clear search highlights on <Esc> ─────────────────────────
+vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("ClearSearchOnEsc", { clear = true }),
+    pattern = "VeryLazy",
+    once = true,
+    callback = function()
+        vim.keymap.set("n", "<Esc>", function()
+            vim.cmd("nohlsearch")
+        end, { desc = "Clear search highlights", silent = true })
+    end,
+})
+
 -- ── Quick Dismiss Windows (q & Esc) ───────────────────────────
 -- Optimized: Use only BufEnter instead of FileType+BufEnter for better performance
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -232,3 +244,23 @@ vim.api.nvim_create_user_command("ExplorerSize", function(opts)
         vim.notify(string.format("Current Window Width: %d columns", w), vim.log.levels.INFO)
     end
 end, { nargs = "?", desc = "Show or set explorer / window width (e.g. :ExplorerSize 24)" })
+
+    -- Auto open explorer when starting nvim with a directory
+    vim.api.nvim_create_autocmd("VimEnter", {
+        group = vim.api.nvim_create_augroup("AutoOpenExplorer", { clear = true }),
+        callback = function()
+            local args = vim.fn.argv()
+            if #args == 1 then
+                local path = args[1]
+                if vim.fn.isdirectory(path) == 1 then
+                    -- Open explorer after a short delay to ensure UI is ready
+                    vim.schedule(function()
+                        local ok, snacks = pcall(require, "snacks")
+                        if ok and snacks.explorer then
+                            snacks.explorer()
+                        end
+                    end)
+                end
+            end
+        end,
+    })

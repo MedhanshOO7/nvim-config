@@ -1,12 +1,19 @@
+math.randomseed(os.time())
 local function greeting()
-    local hour = tonumber(os.date("%H")) or 12
-    if hour < 12 then
-        return "󰖨  Good morning, Medhansh"
-    elseif hour < 18 then
-        return "󰖙  Good afternoon, Medhansh"
-    else
-        return "  Good evening, Medhansh"
-    end
+    local quotes = {
+        "The only way to do great work is to love what you do. – Steve Jobs",
+        "Innovation distinguishes between a leader and a follower. – Steve Jobs",
+        "Stay hungry, stay foolish. – Steve Jobs",
+        "Your time is limited, don't waste it living someone else's life. – Steve Jobs",
+        "The future belongs to those who believe in the beauty of their dreams. – Eleanor Roosevelt",
+        "It is during our darkest moments that we must focus to see the light. – Aristotle",
+        "Whoever is happy will make others happy too. – Anne Frank",
+        "Do not go where the path may lead, go instead where there is no path and leave a trail. – Ralph Waldo Emerson",
+        "The journey of a thousand miles begins with one step. – Lao Tzu",
+        "What you get by achieving your goals is not as important as what you become by achieving your goals. – Zig Ziglar",
+    }
+    local idx = math.random(#quotes)
+    return "󰖨  " .. quotes[idx]
 end
 
 local function apply_dashboard_gradients()
@@ -307,9 +314,76 @@ return {
         scope = { enabled = true },
         scratch = { enabled = true },
         scroll = { enabled = false }, -- cinnamon.nvim handles smooth scrolling
-        statuscolumn = { enabled = true },
+        statuscolumn = {
+    enabled = true,
+    -- Improve statuscolumn UX with better information display
+    left = { "sign", "fold" }, -- Signs and fold indicators
+    right = { "git", "diagnostics" }, -- Git status and diagnostics
+    -- Better fold text
+    fold = "closed",
+    -- Git signs configuration
+    git = {
+        -- Patterns for git status
+        patterns = { "GitSign" },
+    },
+    -- Diagnostics configuration
+    diagnostics = {
+        -- Show diagnostics in statuscolumn
+        signs = {
+            { icon = " ", hl = "DiagnosticSignError" },
+            { icon = " ", hl = "DiagnosticSignWarn" },
+            { icon = " ", hl = "DiagnosticSignInfo" },
+            { icon = " ", hl = "DiagnosticSignHint" },
+        },
+        min_severity = vim.diagnostic.severity.HINT,
+    },
+    -- Update refresh rate for better performance
+    refresh = 50, -- ms
+},
         words = { enabled = true },
-        zen = { enabled = true },
+        zen = {
+    enabled = true,
+    -- Improve zen mode UX with better defaults
+    toggles = {
+        dim = false, -- Do not dim when entering zen mode
+        git_signs = false, -- Hide git signs in zen mode
+        diagnostics = false, -- Hide diagnostics in zen mode
+        line_number = false, -- Hide line numbers in zen mode (uses zen's own numbering)
+        cursorline = false, -- Hide cursorline in zen mode
+        cursorcolumn = false, -- Hide cursor column in zen mode
+        colorcolumn = false, -- Hide color column in zen mode
+        signcolumn = false, -- Hide sign column in zen mode
+    },
+    -- Better window sizing for zen mode
+    win = {
+        -- Width as percentage (0-1) or integer columns
+        width = 0.85,
+        -- Height as percentage (0-1) or integer rows
+        height = 0.9,
+        -- Options for the zen window
+        options = {
+            -- Better wrapping for prose in zen mode
+            wrap = true,
+            linebreak = true,
+            -- Keep signcolumn hidden but maintain proper spacing
+            signcolumn = "no",
+            -- Improve typing experience in zen mode
+            breakindent = true,
+            breakindentopt = "shift:2,min:20",
+            -- Better scrolling experience
+            sidescrolloff = 5,
+        },
+    },
+    -- Improve appearance when entering/leaving zen mode
+    on_open = function()
+        -- Optional: add a subtle indication that zen mode is active
+        vim.cmd("hi ZenBg guibg=#1a1b26")
+    end,
+    on_close = function()
+        -- Clean up when leaving zen mode
+        vim.cmd("hi ZenBg clear")
+    end,
+},
     },
     init = function()
         apply_dashboard_gradients()

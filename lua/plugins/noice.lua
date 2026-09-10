@@ -20,23 +20,19 @@ return {
             local notify = require("notify")
 
 notify.setup({
-    timeout = 3000,
-    minimum_width = 35,
-    max_width = function() return math.floor(vim.o.columns * 0.40) end,
-    max_height = function() return math.floor(vim.o.lines * 0.60) end,
-
-    render = "default",  -- was "wrapped-compact"
-
-    top_down = true,
-    background_colour = "#000000",
-
+    timeout = 5000,
+    minimum_width = 40,
+    max_width = function() return math.floor(vim.o.columns * 0.45) end,
+    max_height = function() return math.floor(vim.o.lines * 0.50) end,
+    render = "compact",
+    top_down = false,
+    background_colour = "NONE",
     on_open = function(win)
         vim.api.nvim_set_option_value("wrap", true, { win = win })
         vim.api.nvim_set_option_value("linebreak", true, { win = win })
-        vim.api.nvim_set_option_value("showbreak", "", { win = win })
+        vim.api.nvim_set_option_value("showbreak", "↪ ", { win = win })
     end,
 })
-
             ----------------------------------------------------------------------
             -- Noice
             ----------------------------------------------------------------------
@@ -343,7 +339,7 @@ notify.setup({
                     {
                         filter = {
                             event = "notify",
-                            severity = vim.log.levels.ERROR,
+                            kind = "error",
                         },
 
                         opts = {
@@ -358,7 +354,7 @@ notify.setup({
                     {
                         filter = {
                             event = "notify",
-                            severity = vim.log.levels.WARN,
+                            kind = "warn",
                         },
 
                         opts = {

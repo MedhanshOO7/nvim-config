@@ -50,7 +50,7 @@ M.themes = {}
 for _, t in ipairs(M.dark_themes) do table.insert(M.themes, t) end
 for _, t in ipairs(M.light_themes) do table.insert(M.themes, t) end
 
-M.default_theme = "tokyonight"
+ M.default_theme = "catppuccin-macchiato"
 M.default_transparency = true
 
 M.theme_aliases = {
@@ -957,6 +957,8 @@ function M.setup()
         apply_theme(M.default_theme, transparent)
         vim.g.preferred_theme = M.default_theme
     end
+    -- Set default lualine style to evil for a distinctive look
+    vim.g.lualine_color_style = "evil"
 end
 
 return M
