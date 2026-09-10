@@ -55,7 +55,6 @@ require("lazy").setup({
                 "netrwPlugin",
                 "editorconfig",
                 "rplugin",
-                "shada",
                 "spellfile",
                 "tarPlugin",
                 "tohtml",

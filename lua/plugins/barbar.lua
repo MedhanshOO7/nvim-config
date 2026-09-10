@@ -129,28 +129,28 @@ return {
             sort = { ignore_case = true },
 
             icons = {
-                buffer_index = false,
-                buffer_number = false,
+                buffer_index = true,  -- Show buffer index for quick identification
+                buffer_number = true, -- Show buffer number
                 button = "",
                 modified = { button = "●" },
-                filetype = { enabled = true, custom_colors = false },
+                filetype = { enabled = true, custom_colors = false, highlight_inactive = false },
                 separator = { left = "", right = "" },
                 separator_at_end = true,
                 pinned = { button = "", filename = true },
                 diagnostics = {
-                    [vim.diagnostic.severity.ERROR] = { enabled = true, icon = "  " },
-                    [vim.diagnostic.severity.WARN]  = { enabled = true, icon = "  " },
-                    [vim.diagnostic.severity.INFO]  = { enabled = false },
-                    [vim.diagnostic.severity.HINT]  = { enabled = false },
+                    [vim.diagnostic.severity.ERROR] = { enabled = true, icon = "" },
+                    [vim.diagnostic.severity.WARN]  = { enabled = true, icon = "" },
+                    [vim.diagnostic.severity.INFO]  = { enabled = true, icon = "" },
+                    [vim.diagnostic.severity.HINT]  = { enabled = true, icon = "" },
                 },
                 gitsigns = {
-                    added = { enabled = false },
-                    changed = { enabled = false },
-                    deleted = { enabled = false },
+                    added = { enabled = true, icon = "+" },
+                    changed = { enabled = true, icon = "~" },
+                    deleted = { enabled = true, icon = "-" },
                 },
-                current = { buffer_index = false },
+                current = { buffer_index = true, buffer_number = true },
                 inactive = { button = "" },
-                visible = { modified = { buffer_number = false } },
+                visible = { modified = { buffer_number = true } },
             },
 
             sidebar_filetypes = {
@@ -158,11 +158,15 @@ return {
                 ["snacks_explorer"]     = { event = "BufWipeout", text = "  Explorer", align = "left" },
                 ["oil"]                 = { event = "BufWipeout", text = "  Oil Browser", align = "left" },
                 ["mini.files"]           = { event = "BufWipeout", text = "  Mini Files", align = "left" },
+                ["neo-tree"]            = { event = "BufWipeout", text = "  NeoTree", align = "left" },
+                ["NvimTree"]            = { event = "BufWipeout", text = "  NvimTree", align = "left" },
             },
 
-            highlight_alternate = false,
+            highlight_alternate = true,
             highlight_inactive_file_icons = false,
             highlight_visible = true,
+            exclude_ft = {"json", "yaml", "toml"}, -- Exclude config files from sidebar
+            no_name_title = "[No Name]", -- Name for unnamed buffers
         })
 
         apply()

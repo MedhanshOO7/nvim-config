@@ -103,6 +103,27 @@ return {
             },
         })
 
+        -- Enhanced LSP progress with better visibility
+        vim.lsp.handlers["$/progress"] = function(_, result, ctx)
+            local client = vim.lsp.get_client_by_id(ctx.client_id)
+            local value = result.value
+            if not value or not client then
+                return
+            end
+            local title = client.name
+            local message = value.message
+            local percentage = value.percentage
+            local kind = value.kind
+            local lsp_progress = require("lsp.progress")
+            lsp_progress.update(title, {
+                message = message,
+                percentage = percentage,
+            }, {
+                client_id = ctx.client_id,
+                kind = kind,
+            })
+        end
+
         vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
             local opts = vim.tbl_extend("force", config or {}, {
                 border = float_border,

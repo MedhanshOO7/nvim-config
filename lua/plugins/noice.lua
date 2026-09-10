@@ -145,22 +145,32 @@ notify.setup({
                 lsp = {
                     progress = {
                         enabled = true,
-                        view = "mini",
-
-                        -- Don't update the UI excessively.
-                        throttle = 1000 / 30,
+                        view = "mini",  -- Using mini for subtle but visible progress
+                        -- Smoother updates for better UX
+                        throttle = 1000 / 20,  -- 50 FPS max for smoother progress
                     },
 
                     hover = {
                         enabled = true,
-                        view = nil,
+                        view = nil,  -- Let LSP config handle hover styling
+                        opts = {
+                            border = "rounded",
+                            max_width = math.max(
+                                60,
+                                math.floor(vim.o.columns * 0.5)
+                            ),
+                            max_height = math.max(
+                                10,
+                                math.floor(vim.o.lines * 0.25)
+                            ),
+                        },
                     },
 
                     signature = {
                         enabled = true,
 
                         auto_open = {
-                            enabled = false,
+                            enabled = true,  -- Enable auto-open for better discoverability
                             trigger = true,
                             luasnip = true,
                             throttle = 50,
@@ -169,14 +179,14 @@ notify.setup({
                         view = nil,
 
                         opts = {
+                            border = "rounded",
                             max_width = math.max(
-                                40,
-                                math.floor(vim.o.columns * 0.45)
+                                60,
+                                math.floor(vim.o.columns * 0.5)
                             ),
-
                             max_height = math.max(
-                                4,
-                                math.floor(vim.o.lines * 0.18)
+                                10,
+                                math.floor(vim.o.lines * 0.25)
                             ),
                         },
                     },
@@ -306,6 +316,53 @@ notify.setup({
 
                         opts = {
                             skip = true,
+                        },
+                    },
+
+                    ----------------------------------------------------------------
+                    -- Group write notifications to reduce noise
+                    ----------------------------------------------------------------
+
+                    {
+                        filter = {
+                            event = "notify",
+                            find = "written",
+                        },
+
+                        opts = {
+                            skip = true,  -- Skip individual write notifications
+                            -- We could implement a custom view that shows a summary
+                            -- For now, skipping reduces noise while keeping important info
+                        },
+                    },
+
+                    ----------------------------------------------------------------
+                    -- Make errors more visible with longer timeout
+                    ----------------------------------------------------------------
+
+                    {
+                        filter = {
+                            event = "notify",
+                            severity = vim.log.levels.ERROR,
+                        },
+
+                        opts = {
+                            timeout = 12000,  -- Longer timeout for errors
+                        },
+                    },
+
+                    ----------------------------------------------------------------
+                    -- Make warnings more noticeable
+                    ----------------------------------------------------------------
+
+                    {
+                        filter = {
+                            event = "notify",
+                            severity = vim.log.levels.WARN,
+                        },
+
+                        opts = {
+                            timeout = 8000,  -- Medium timeout for warnings
                         },
                     },
 
