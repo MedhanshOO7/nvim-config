@@ -21,8 +21,8 @@ return {
         event = "VeryLazy",
         opts = {
             keymaps = {
-                basic = false,
-                extra = false,
+                basic = true,   -- smooth C-d / C-u / C-f / C-b / C-e / C-y
+                extra = false,  -- keep extra off (they conflict with telescope bindings)
             },
             options = {
                 mode = "window",
