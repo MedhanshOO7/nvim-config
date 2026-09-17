@@ -1,12 +1,12 @@
 return {
     "folke/which-key.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     dependencies = {
         "echasnovski/mini.icons",
         "nvim-tree/nvim-web-devicons",
     },
     opts = {
-        delay = 50,
+        delay = 400,
         preset = "modern",
         win = {
             border = "rounded",
