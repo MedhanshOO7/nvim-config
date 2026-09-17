@@ -107,7 +107,7 @@ return {
                 max_height = math.floor(vim.o.lines * 0.4),
             },
             -- Improved diagnostic update timing for better UX
-            debounce = 100,
+            -- debounce = 100,
         })
 
         -- Enhanced LSP progress with better visibility
