@@ -112,6 +112,14 @@ return {
     },
     {
         "nvim-treesitter/nvim-treesitter-context",
-        enabled = false,
+        event = "BufReadPost",
+        opts = {
+            max_lines = 3,            -- show up to 3 context lines at top
+            min_window_height = 0,
+            line_numbers = true,
+            multiline_threshold = 20, -- collapse multiline contexts above 20 lines
+            trim_scope = "outer",
+            mode = "cursor",
+        },
     },
 }
