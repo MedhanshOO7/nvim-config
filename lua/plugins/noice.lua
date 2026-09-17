@@ -19,20 +19,24 @@ return {
 
             local notify = require("notify")
 
-notify.setup({
-    timeout = 5000,
-    minimum_width = 40,
-    max_width = function() return math.floor(vim.o.columns * 0.45) end,
-    max_height = function() return math.floor(vim.o.lines * 0.50) end,
-    render = "compact",
-    top_down = false,
-    background_colour = "NONE",
-    on_open = function(win)
-        vim.api.nvim_set_option_value("wrap", true, { win = win })
-        vim.api.nvim_set_option_value("linebreak", true, { win = win })
-        vim.api.nvim_set_option_value("showbreak", "↪ ", { win = win })
-    end,
-})
+            notify.setup({
+                timeout = 5000,
+                minimum_width = 40,
+                max_width = function()
+                    return math.floor(vim.o.columns * 0.45)
+                end,
+                max_height = function()
+                    return math.floor(vim.o.lines * 0.50)
+                end,
+                render = "compact",
+                top_down = false,
+                background_colour = "NONE",
+                on_open = function(win)
+                    vim.api.nvim_set_option_value("wrap", true, { win = win })
+                    vim.api.nvim_set_option_value("linebreak", true, { win = win })
+                    vim.api.nvim_set_option_value("showbreak", "↪ ", { win = win })
+                end,
+            })
             ----------------------------------------------------------------------
             -- Noice
             ----------------------------------------------------------------------
@@ -84,7 +88,6 @@ notify.setup({
                     },
                 },
 
-
                 ------------------------------------------------------------------
                 -- Messages
                 ------------------------------------------------------------------
@@ -106,7 +109,6 @@ notify.setup({
                     view_search = "virtualtext",
                 },
 
-
                 ------------------------------------------------------------------
                 -- Popup menu
                 --
@@ -117,7 +119,6 @@ notify.setup({
                 popupmenu = {
                     enabled = false,
                 },
-
 
                 ------------------------------------------------------------------
                 -- vim.notify()
@@ -133,7 +134,6 @@ notify.setup({
                     view = "notify",
                 },
 
-
                 ------------------------------------------------------------------
                 -- LSP
                 ------------------------------------------------------------------
@@ -141,24 +141,18 @@ notify.setup({
                 lsp = {
                     progress = {
                         enabled = true,
-                        view = "mini",  -- Using mini for subtle but visible progress
+                        view = "mini", -- Using mini for subtle but visible progress
                         -- Smoother updates for better UX
-                        throttle = 1000 / 20,  -- 50 FPS max for smoother progress
+                        throttle = 1000 / 20, -- 50 FPS max for smoother progress
                     },
 
                     hover = {
                         enabled = true,
-                        view = nil,  -- Let LSP config handle hover styling
+                        view = nil, -- Let LSP config handle hover styling
                         opts = {
                             border = "rounded",
-                            max_width = math.max(
-                                60,
-                                math.floor(vim.o.columns * 0.5)
-                            ),
-                            max_height = math.max(
-                                10,
-                                math.floor(vim.o.lines * 0.25)
-                            ),
+                            max_width = math.max(60, math.floor(vim.o.columns * 0.5)),
+                            max_height = math.max(10, math.floor(vim.o.lines * 0.25)),
                         },
                     },
 
@@ -166,7 +160,7 @@ notify.setup({
                         enabled = true,
 
                         auto_open = {
-                            enabled = true,  -- Enable auto-open for better discoverability
+                            enabled = true, -- Enable auto-open for better discoverability
                             trigger = true,
                             luasnip = true,
                             throttle = 50,
@@ -176,14 +170,8 @@ notify.setup({
 
                         opts = {
                             border = "rounded",
-                            max_width = math.max(
-                                60,
-                                math.floor(vim.o.columns * 0.5)
-                            ),
-                            max_height = math.max(
-                                10,
-                                math.floor(vim.o.lines * 0.25)
-                            ),
+                            max_width = math.max(60, math.floor(vim.o.columns * 0.5)),
+                            max_height = math.max(10, math.floor(vim.o.lines * 0.25)),
                         },
                     },
 
@@ -192,7 +180,6 @@ notify.setup({
                         view = "notify",
                     },
                 },
-
 
                 ------------------------------------------------------------------
                 -- Custom views
@@ -249,7 +236,6 @@ notify.setup({
                     },
                 },
 
-
                 ------------------------------------------------------------------
                 -- Presets
                 ------------------------------------------------------------------
@@ -272,7 +258,6 @@ notify.setup({
                     -- Rounded LSP documentation borders.
                     lsp_doc_border = true,
                 },
-
 
                 ------------------------------------------------------------------
                 -- Routes
@@ -326,7 +311,7 @@ notify.setup({
                         },
 
                         opts = {
-                            skip = true,  -- Skip individual write notifications
+                            skip = true, -- Skip individual write notifications
                             -- We could implement a custom view that shows a summary
                             -- For now, skipping reduces noise while keeping important info
                         },
@@ -343,7 +328,7 @@ notify.setup({
                         },
 
                         opts = {
-                            timeout = 12000,  -- Longer timeout for errors
+                            timeout = 12000, -- Longer timeout for errors
                         },
                     },
 
@@ -358,7 +343,7 @@ notify.setup({
                         },
 
                         opts = {
-                            timeout = 8000,  -- Medium timeout for warnings
+                            timeout = 8000, -- Medium timeout for warnings
                         },
                     },
 
