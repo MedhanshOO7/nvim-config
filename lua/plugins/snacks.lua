@@ -46,7 +46,7 @@ return {
         bigfile = {
             enabled = true,
             notify = true,
-            size = 1.0 * 1024 * 1024, -- 1 MB threshold
+            size = 0.5 * 1024 * 1024, -- 1 MB threshold
             line_length = 1000, -- line length threshold for minified files
             setup = function(ctx)
                 vim.b[ctx.buf].large_file = true
@@ -80,10 +80,10 @@ return {
             enabled = true,
             preset = {
                 keys = {
-                    { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
+                    { icon = " ", key = "f", desc = "Smart Find Files", action = ":lua Snacks.picker.smart()" },
                     { icon = " ", key = "n", desc = "New Empty Buffer", action = ":ene | startinsert" },
-                    { icon = " ", key = "g", desc = "Live Grep Workspace", action = ":lua Snacks.picker.grep()" },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
+                    { icon = "󰵪 ", key = "g", desc = "Live Grep Workspace", action = ":lua Snacks.picker.grep()" },
+                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
                     { icon = "󰉋 ", key = "e", desc = "Project Explorer", action = ":lua Snacks.explorer()" },
                     { icon = "󱐌 ", key = "s", desc = "Restore Session", section = "session" },
                     {
@@ -93,7 +93,7 @@ return {
                         action = ":Lazy",
                         enabled = package.loaded.lazy ~= nil,
                     },
-                    { icon = " ", key = "q", desc = "Quit Editor", action = ":qa" },
+                    { icon = "󰅝 ", key = "q", desc = "Quit Editor", action = ":qa" },
                 },
             },
             sections = {
@@ -198,7 +198,7 @@ return {
         },
         indent = {
             enabled = true,
-            char = "│",
+            char = "",
             animate = {
                 enabled = true,
                 style = "out",
@@ -315,75 +315,75 @@ return {
         scratch = { enabled = true },
         scroll = { enabled = false }, -- cinnamon.nvim handles smooth scrolling
         statuscolumn = {
-    enabled = true,
-    -- Improve statuscolumn UX with better information display
-    left = { "sign", "fold" }, -- Signs and fold indicators
-    right = { "git", "diagnostics" }, -- Git status and diagnostics
-    -- Better fold text
-    fold = "closed",
-    -- Git signs configuration
-    git = {
-        -- Patterns for git status
-        patterns = { "GitSign" },
-    },
-    -- Diagnostics configuration
-    diagnostics = {
-        -- Show diagnostics in statuscolumn
-        signs = {
-            { icon = " ", hl = "DiagnosticSignError" },
-            { icon = " ", hl = "DiagnosticSignWarn" },
-            { icon = " ", hl = "DiagnosticSignInfo" },
-            { icon = " ", hl = "DiagnosticSignHint" },
+            enabled = true,
+            -- Improve statuscolumn UX with better information display
+            left = { "sign", "fold" }, -- Signs and fold indicators
+            right = { "git", "diagnostics" }, -- Git status and diagnostics
+            -- Better fold text
+            fold = "closed",
+            -- Git signs configuration
+            git = {
+                -- Patterns for git status
+                patterns = { "GitSign" },
+            },
+            -- Diagnostics configuration
+            diagnostics = {
+                -- Show diagnostics in statuscolumn
+                signs = {
+                    { icon = " ", hl = "DiagnosticSignError" },
+                    { icon = " ", hl = "DiagnosticSignWarn" },
+                    { icon = " ", hl = "DiagnosticSignInfo" },
+                    { icon = " ", hl = "DiagnosticSignHint" },
+                },
+                min_severity = vim.diagnostic.severity.HINT,
+            },
+            -- Update refresh rate for better performance
+            refresh = 50, -- ms
         },
-        min_severity = vim.diagnostic.severity.HINT,
-    },
-    -- Update refresh rate for better performance
-    refresh = 50, -- ms
-},
         words = { enabled = true },
         zen = {
-    enabled = true,
-    -- Improve zen mode UX with better defaults
-    toggles = {
-        dim = false, -- Do not dim when entering zen mode
-        git_signs = false, -- Hide git signs in zen mode
-        diagnostics = false, -- Hide diagnostics in zen mode
-        line_number = false, -- Hide line numbers in zen mode (uses zen's own numbering)
-        cursorline = false, -- Hide cursorline in zen mode
-        cursorcolumn = false, -- Hide cursor column in zen mode
-        colorcolumn = false, -- Hide color column in zen mode
-        signcolumn = false, -- Hide sign column in zen mode
-    },
-    -- Better window sizing for zen mode
-    win = {
-        -- Width as percentage (0-1) or integer columns
-        width = 0.85,
-        -- Height as percentage (0-1) or integer rows
-        height = 0.9,
-        -- Options for the zen window
-        options = {
-            -- Better wrapping for prose in zen mode
-            wrap = true,
-            linebreak = true,
-            -- Keep signcolumn hidden but maintain proper spacing
-            signcolumn = "no",
-            -- Improve typing experience in zen mode
-            breakindent = true,
-            breakindentopt = "shift:2,min:20",
-            -- Better scrolling experience
-            sidescrolloff = 5,
+            enabled = true,
+            -- Improve zen mode UX with better defaults
+            toggles = {
+                dim = false, -- Do not dim when entering zen mode
+                git_signs = false, -- Hide git signs in zen mode
+                diagnostics = false, -- Hide diagnostics in zen mode
+                line_number = false, -- Hide line numbers in zen mode (uses zen's own numbering)
+                cursorline = false, -- Hide cursorline in zen mode
+                cursorcolumn = false, -- Hide cursor column in zen mode
+                colorcolumn = false, -- Hide color column in zen mode
+                signcolumn = false, -- Hide sign column in zen mode
+            },
+            -- Better window sizing for zen mode
+            win = {
+                -- Width as percentage (0-1) or integer columns
+                width = 0.85,
+                -- Height as percentage (0-1) or integer rows
+                height = 0.9,
+                -- Options for the zen window
+                options = {
+                    -- Better wrapping for prose in zen mode
+                    wrap = true,
+                    linebreak = true,
+                    -- Keep signcolumn hidden but maintain proper spacing
+                    signcolumn = "no",
+                    -- Improve typing experience in zen mode
+                    breakindent = true,
+                    breakindentopt = "shift:2,min:20",
+                    -- Better scrolling experience
+                    sidescrolloff = 5,
+                },
+            },
+            -- Improve appearance when entering/leaving zen mode
+            on_open = function()
+                -- Optional: add a subtle indication that zen mode is active
+                vim.cmd("hi ZenBg guibg=#1a1b26")
+            end,
+            on_close = function()
+                -- Clean up when leaving zen mode
+                vim.cmd("hi ZenBg clear")
+            end,
         },
-    },
-    -- Improve appearance when entering/leaving zen mode
-    on_open = function()
-        -- Optional: add a subtle indication that zen mode is active
-        vim.cmd("hi ZenBg guibg=#1a1b26")
-    end,
-    on_close = function()
-        -- Clean up when leaving zen mode
-        vim.cmd("hi ZenBg clear")
-    end,
-},
     },
     init = function()
         apply_dashboard_gradients()
