@@ -135,19 +135,33 @@ return {
                     "Headline5Bg",
                     "Headline6Bg",
                 },
+                foregrounds = {
+                    "Headline1Fg",
+                    "Headline2Fg",
+                    "Headline3Fg",
+                    "Headline4Fg",
+                    "Headline5Fg",
+                    "Headline6Fg",
+                },
+                width = "full",
+                border = true,
+                above = "▄",
+                below = "▀",
             },
             code = {
                 sign = false,
                 style = "full",
                 width = "block",
                 min_width = 30,
-                left_pad = 1,
                 right_pad = 1,
                 highlight_mode = "combine",
+                language_pad = 0,
+                disable_background = { "diff" },
             },
             bullet = {
                 enabled = true,
                 icons = { "●", "○", "◆", "◇" },
+                highlight = "RenderMarkdownBullet",
             },
             checkbox = {
                 enabled = true,
@@ -165,7 +179,7 @@ return {
                 },
             },
             callout = {
-                -- Obsidian-style callouts
+                -- Enhanced Obsidian-style callouts with better visual hierarchy
                 note = { raw = "[!NOTE]", rendered = "󰋽 Note", highlight = "RenderMarkdownInfo" },
                 tip = { raw = "[!TIP]", rendered = "󰌶 Tip", highlight = "RenderMarkdownSuccess" },
                 important = { raw = "[!IMPORTANT]", rendered = "󰅾 Important", highlight = "RenderMarkdownWarn" },
@@ -182,18 +196,18 @@ return {
                 quote = { raw = "[!QUOTE]", rendered = "󱆧 Quote", highlight = "RenderMarkdownQuote" },
             },
             pipe_table = {
-                enabled = true,
+                enabled = false,
                 preset = "round",
                 style = "full",
+                border = {
+                    "╭", "─", "╮", "│", "╯", "─", "╰", "│",
+                },
             },
             latex = {
-                -- Guarded: only enable LaTeX rendering if the converter binary actually exists,
-                -- so :RenderMarkdown doesn't error out on machines without it installed.
                 enabled = vim.fn.executable("latex2text") == 1,
                 converter = "latex2text",
                 highlight = "RenderMarkdownMath",
             },
-
             sign = {
                 enabled = false,
             },
@@ -212,6 +226,7 @@ return {
                     rendered = "nv",
                 },
             },
+            filetypes = { "markdown", "vimwiki", "quarto", "rmd" },
         },
     },
     {
@@ -237,6 +252,8 @@ return {
             extra_filetypes = { "sql" },
             reader = {
                 auto_open = false,
+                border = "rounded",
+                title_pos = "center",
             },
         },
     },
