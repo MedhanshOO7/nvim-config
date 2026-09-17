@@ -49,14 +49,7 @@ return {
             end,
             -- Write all buffers when one saves (for session safety)
             write_all_buffers = vim.fn.has("nvim-0.9") == 1,
-            -- Show notification on save
-            execution_message = {
-                message = function()
-                    return ("AutoSave: " .. vim.fn.strftime("%H:%M:%S"))
-                end,
-                dim = 0.18,
-                cleaning_interval = 1250,
-            },
+            -- Show notification on save (execution_message removed; auto-save.nvim now automatically clears the message area)
         })
 
         vim.api.nvim_create_user_command("AutoSaveToggle", function()
