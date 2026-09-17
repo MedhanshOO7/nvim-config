@@ -36,13 +36,55 @@ return {
             "alfaix/neotest-gtest",
         },
         keys = {
-            { "<leader>Tr", function() require("neotest").run.run() end, desc = "Test: Run nearest" },
-            { "<leader>Tf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Test: Run file" },
-            { "<leader>Ts", function() require("neotest").summary.toggle() end, desc = "Test: Toggle summary" },
-            { "<leader>To", function() require("neotest").output.open({ enter = true }) end, desc = "Test: Open output" },
-            { "<leader>Tp", function() require("neotest").output_panel.toggle() end, desc = "Test: Toggle output panel" },
-            { "<leader>Td", function() require("neotest").run.run({ strategy = "dap" }) end, desc = "Test: Debug nearest" },
-            { "<leader>TS", function() require("neotest").run.stop() end, desc = "Test: Stop running tests" },
+            {
+                "<leader>Tr",
+                function()
+                    require("neotest").run.run()
+                end,
+                desc = "Test: Run nearest",
+            },
+            {
+                "<leader>Tf",
+                function()
+                    require("neotest").run.run(vim.fn.expand("%"))
+                end,
+                desc = "Test: Run file",
+            },
+            {
+                "<leader>Ts",
+                function()
+                    require("neotest").summary.toggle()
+                end,
+                desc = "Test: Toggle summary",
+            },
+            {
+                "<leader>To",
+                function()
+                    require("neotest").output.open({ enter = true })
+                end,
+                desc = "Test: Open output",
+            },
+            {
+                "<leader>Tp",
+                function()
+                    require("neotest").output_panel.toggle()
+                end,
+                desc = "Test: Toggle output panel",
+            },
+            {
+                "<leader>Td",
+                function()
+                    require("neotest").run.run({ strategy = "dap" })
+                end,
+                desc = "Test: Debug nearest",
+            },
+            {
+                "<leader>TS",
+                function()
+                    require("neotest").run.stop()
+                end,
+                desc = "Test: Stop running tests",
+            },
         },
         config = function()
             local function get_python_path()
