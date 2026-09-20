@@ -219,6 +219,8 @@ return {
                     "tailwindcss",
                     "vtsls",
                     "yamlls",
+                    -- arduino_language_server removed: Arduino support flows through
+                    -- PlatformIO → compile_commands.json → clangd
                 },
                 automatic_installation = true,
                 automatic_enable = false,

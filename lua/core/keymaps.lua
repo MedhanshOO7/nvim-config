@@ -314,6 +314,24 @@ map("n", "<leader>ms", cmd("MoltenShowOutput"), { desc = "Show Molten output" })
 map("n", "<leader>mr", cmd("MoltenRestart"), { desc = "Restart the active Molten kernel" })
 map("n", "<leader>mo", cmd("MoltenOpenInBrowser"), { desc = "Open the current Molten output in a browser" })
 
+-- Embedded development — PlatformIO is the single backend.
+-- Arduino projects are supported as a PlatformIO framework (framework = arduino).
+-- There is no separate Arduino implementation.
+
+-- PlatformIO development
+map("n", "<leader>p", "", { desc = "+PlatformIO" })
+map("n", "<leader>pi", "<cmd>lua require('commands.platformio').init_platformio_project()<cr>", { desc = "Initialize PlatformIO Project" })
+map("n", "<leader>pb", "<cmd>lua require('commands.platformio').build_platformio()<cr>", { desc = "Build Project" })
+map("n", "<leader>pu", "<cmd>lua require('commands.platformio').upload_platformio()<cr>", { desc = "Upload Project" })
+map("n", "<leader>pm", "<cmd>lua require('commands.platformio').serial_monitor_platformio()<cr>", { desc = "Serial Monitor" })
+map("n", "<leader>pl", "<cmd>lua require('commands.platformio').libraries_marketplace()<cr>", { desc = "Libraries Marketplace" })
+map("n", "<leader>pd", "<cmd>lua require('commands.platformio').select_device()<cr>", { desc = "Select Device" })
+map("n", "<leader>pU", "<cmd>lua require('commands.platformio').upload_and_monitor_platformio()<cr>", { desc = "Upload + Monitor" })
+map("n", "<leader>pr", "<cmd>lua require('commands.platformio').rebuild_platformio()<cr>", { desc = "Rebuild" })
+map("n", "<leader>pC", "<cmd>lua require('commands.platformio').clean_build_platformio()<cr>", { desc = "Clean Build" })
+map("n", "<leader>pI", "<cmd>lua require('commands.platformio').refresh_clangd()<cr>", { desc = "Refresh clangd (regen compile_commands)" })
+map("n", "<leader>pp", "<cmd>lua require('commands.platformio').project_info()<cr>", { desc = "Show platformio.ini" })
+
 -- Multi-cursor
 local function add_cursor_above()
     multicursor().lineAddCursor(-1)

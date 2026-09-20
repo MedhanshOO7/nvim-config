@@ -21,11 +21,34 @@ return {
             "--log=error",
             "--query-driver=**/*arm-none-eabi*,/usr/bin/arm-none-eabi-*,/usr/bin/*gcc*,/usr/bin/*g++*,/usr/bin/clang*,/opt/homebrew/bin/*,/usr/local/bin/*,/Library/Developer/CommandLineTools/usr/bin/*",
         },
-        init_options = {
-            clangdFileStatus = false,
-            completeUnimported = true,
-            usePlaceholders = true,
-        },
+        filetypes = { "c", "cpp", "objc", "objcpp" },
+        -- PlatformIO integration: auto-generate compile_commands.json if missing.
+        -- This is the bridge that lets clangd understand PlatformIO build config.
+        before_init = function(_, config)
+            local root = config.root_dir or vim.fn.getcwd()
+            local platformio_ini = vim.fn.glob(root .. "/platformio.ini")
+            local opts = vim.deepcopy(config.init_options or {})
+            if platformio_ini ~= "" then
+                local compile_commands = root .. "/compile_commands.json"
+                if vim.fn.filereadable(compile_commands) == 0 then
+                    -- Generate compile_commands.json asynchronously so it does
+                    -- not block the LSP startup. clangd will pick it up once ready.
+                    vim.system({ "pio", "run", "--target", "compiledb" }, { cwd = root }, function(obj)
+                        if obj.code ~= 0 then
+                            vim.schedule(function()
+                                vim.notify(
+                                    "PlatformIO: Failed to generate compile_commands.json\n" .. (obj.stderr or ""),
+                                    vim.log.levels.WARN,
+                                    { title = "clangd/PlatformIO" }
+                                )
+                            end)
+                        end
+                    end)
+                end
+                opts.compilationDatabasePath = root
+            end
+            config.init_options = opts
+        end,
     },
     cssls = {
         settings = {
