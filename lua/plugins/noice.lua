@@ -30,7 +30,7 @@ return {
                 end,
                 render = "compact",
                 top_down = false,
-                background_colour = "NONE",
+                background_colour = "#000000",
                 on_open = function(win)
                     vim.api.nvim_set_option_value("wrap", true, { win = win })
                     vim.api.nvim_set_option_value("linebreak", true, { win = win })
@@ -130,7 +130,7 @@ return {
                 ------------------------------------------------------------------
 
                 notify = {
-                    enabled = true,
+                    enabled = false,
                     view = "notify",
                 },
 
