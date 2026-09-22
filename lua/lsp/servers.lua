@@ -1,13 +1,24 @@
 return {
+    -- ============================================================
+    -- BASH
+    -- ============================================================
+
     bashls = {
         filetypes = { "bash", "sh", "zsh" },
+
         settings = {
             bashIde = {
                 globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.bash|.zsh|.env|.envrc|.ksh|PKGBUILD)",
+
                 shellcheckPath = "shellcheck",
             },
         },
     },
+
+    -- ============================================================
+    -- CLANGD
+    -- ============================================================
+
     clangd = {
         cmd = {
             "clangd",
@@ -19,49 +30,117 @@ return {
             "--header-insertion=iwyu",
             "--fallback-style=WebKit",
             "--log=error",
-            "--query-driver=**/*arm-none-eabi*,/usr/bin/arm-none-eabi-*,/usr/bin/*gcc*,/usr/bin/*g++*,/usr/bin/clang*,/opt/homebrew/bin/*,/usr/local/bin/*,/Library/Developer/CommandLineTools/usr/bin/*",
+
+            "--query-driver=/usr/bin/arm-none-eabi-*,"
+                .. "/opt/homebrew/bin/*,"
+                .. "/usr/local/bin/*,"
+                .. "/usr/bin/*gcc*,"
+                .. "/usr/bin/*g++,"
+                .. "/usr/bin/clang*,"
+                .. "/Library/Developer/CommandLineTools/usr/bin/*",
         },
-        filetypes = { "c", "cpp", "objc", "objcpp" },
-        -- PlatformIO integration: auto-generate compile_commands.json if missing.
-        -- This is the bridge that lets clangd understand PlatformIO build config.
+
+        filetypes = {
+            "c",
+            "cpp",
+            "objc",
+            "objcpp",
+        },
+
         before_init = function(_, config)
             local root = config.root_dir or vim.fn.getcwd()
+
             local platformio_ini = vim.fn.glob(root .. "/platformio.ini")
+
             local opts = vim.deepcopy(config.init_options or {})
+
             if platformio_ini ~= "" then
                 local compile_commands = root .. "/compile_commands.json"
-                if vim.fn.filereadable(compile_commands) == 0 then
-                    -- Generate compile_commands.json asynchronously so it does
-                    -- not block the LSP startup. clangd will pick it up once ready.
-                    vim.system({ "pio", "run", "--target", "compiledb" }, { cwd = root }, function(obj)
-                        if obj.code ~= 0 then
-                            vim.schedule(function()
+
+                local already_exists = vim.fn.filereadable(compile_commands) == 1
+
+                if not already_exists then
+                    vim.system({
+                        "pio",
+                        "run",
+                        "--target",
+                        "compiledb",
+                    }, {
+                        cwd = root,
+                    }, function(obj)
+                        vim.schedule(function()
+                            if obj.code ~= 0 then
                                 vim.notify(
                                     "PlatformIO: Failed to generate compile_commands.json\n" .. (obj.stderr or ""),
                                     vim.log.levels.WARN,
-                                    { title = "clangd/PlatformIO" }
+                                    {
+                                        title = "clangd/PlatformIO",
+                                    }
                                 )
+
+                                return
+                            end
+
+                            vim.notify(
+                                "PlatformIO: compile_commands.json generated, restarting clangd",
+                                vim.log.levels.INFO,
+                                {
+                                    title = "clangd/PlatformIO",
+                                }
+                            )
+
+                            for _, client in
+                                ipairs(vim.lsp.get_clients({
+                                    name = "clangd",
+                                }))
+                            do
+                                if client.config.root_dir == root then
+                                    vim.lsp.stop_client(client.id)
+                                end
+                            end
+
+                            vim.schedule(function()
+                                vim.cmd("silent! LspStart clangd")
                             end)
-                        end
+                        end)
                     end)
                 end
+
                 opts.compilationDatabasePath = root
             end
+
             config.init_options = opts
         end,
     },
+
+    -- ============================================================
+    -- CSS
+    -- ============================================================
+
     cssls = {
         settings = {
             css = {
                 validate = true,
+
                 lint = {
                     unknownAtRules = "ignore",
                 },
             },
-            scss = { validate = true },
-            less = { validate = true },
+
+            scss = {
+                validate = true,
+            },
+
+            less = {
+                validate = true,
+            },
         },
     },
+
+    -- ============================================================
+    -- TAILWIND
+    -- ============================================================
+
     tailwindcss = {
         filetypes = {
             "html",
@@ -77,6 +156,11 @@ return {
             "astro",
         },
     },
+
+    -- ============================================================
+    -- EMMET
+    -- ============================================================
+
     emmet_language_server = {
         filetypes = {
             "css",
@@ -91,36 +175,70 @@ return {
             "typescriptreact",
         },
     },
+
+    -- ============================================================
+    -- HTML
+    -- ============================================================
+
     html = {
-        filetypes = { "html", "templ" },
+        filetypes = {
+            "html",
+            "templ",
+        },
     },
+
+    -- ============================================================
+    -- JSON
+    -- ============================================================
+
     jsonls = {
         settings = {
             json = {
-                validate = { enable = true },
-                format = { enable = true },
+                validate = {
+                    enable = true,
+                },
+
+                format = {
+                    enable = true,
+                },
             },
         },
+
         on_new_config = function(new_config)
             local ok, schemastore = pcall(require, "schemastore")
+
             if ok then
                 new_config.settings = new_config.settings or {}
+
                 new_config.settings.json = new_config.settings.json or {}
+
                 new_config.settings.json.schemas = schemastore.json.schemas()
             end
         end,
     },
+
+    -- ============================================================
+    -- LUA
+    -- ============================================================
+
     lua_ls = {
         settings = {
             Lua = {
-                runtime = { version = "LuaJIT" },
+                runtime = {
+                    version = "LuaJIT",
+                },
+
                 completion = {
                     autoRequire = true,
                     callSnippet = "Replace",
                 },
+
                 diagnostics = {
-                    globals = { "vim" },
+                    globals = {
+                        "vim",
+                    },
                 },
+
                 hint = {
                     enable = true,
                     arrayIndex = "Disable",
@@ -128,50 +246,42 @@ return {
                     paramType = true,
                     setType = true,
                 },
+
                 workspace = {
                     checkThirdParty = false,
                 },
-                telemetry = { enable = false },
+
+                telemetry = {
+                    enable = false,
+                },
             },
         },
     },
-    basedpyright = {
-        before_init = function(_, config)
-            local root = config.root_dir or vim.fn.getcwd()
-            local venv = vim.env.VIRTUAL_ENV
-            if not venv or venv == "" then
-                local file_path = vim.api.nvim_buf_get_name(0)
-                local start_dir = (file_path ~= "" and vim.fs.dirname(file_path)) or root
-                local found = vim.fs.find({ ".venv", "venv" }, { upward = true, path = start_dir })[1]
-                if found then
-                    venv = vim.fn.fnamemodify(found, ":p"):gsub("/$", "")
-                end
-            end
-            if venv and venv ~= "" then
-                local python_bin = venv .. "/bin/python"
-                if vim.fn.executable(python_bin) == 1 then
-                    config.settings = config.settings or {}
-                    config.settings.python = config.settings.python or {}
-                    config.settings.python.pythonPath = python_bin
 
-                    local site_packages = vim.fn.glob(venv .. "/lib/python*/site-packages", false, true)
-                    if #site_packages > 0 then
-                        config.settings.basedpyright = config.settings.basedpyright or {}
-                        config.settings.basedpyright.analysis = config.settings.basedpyright.analysis or {}
-                        config.settings.basedpyright.analysis.extraPaths = site_packages
-                    end
-                end
-            end
-        end,
+    -- ============================================================
+    -- PYTHON / BASEDPYRIGHT
+    -- ============================================================
+
+    basedpyright = {
         settings = {
-            python = {},
             basedpyright = {
                 analysis = {
-                    autoSearchPaths = true,
-                    useLibraryCodeForTypes = true,
+                    -- Only diagnose files you currently have open.
                     diagnosticMode = "openFilesOnly",
+
+                    -- Good balance between useful checking and noise.
                     typeCheckingMode = "standard",
+
+                    -- Let basedpyright discover normal Python paths.
+                    autoSearchPaths = true,
+
+                    -- Use installed package source/type information.
+                    useLibraryCodeForTypes = true,
+
+                    -- Enable automatic import suggestions.
                     autoImportCompletions = true,
+
+                    -- Useful Python type information in the editor.
                     inlayHints = {
                         variableTypes = true,
                         functionReturnTypes = true,
@@ -181,14 +291,48 @@ return {
             },
         },
     },
-    marksman = {},
-    qmlls = {},
+
+    -- ============================================================
+    -- MARKDOWN
+    -- ============================================================
+
+    marksman = {
+        filetypes = {
+            "markdown",
+            "markdown.mdx",
+        },
+    },
+
+    -- ============================================================
+    -- QML
+    -- ============================================================
+
+    qmlls = {
+        filetypes = {
+            "qml",
+        },
+    },
+
+    -- ============================================================
+    -- TYPESCRIPT / JAVASCRIPT
+    -- ============================================================
+
     vtsls = {
+        filetypes = {
+            "javascript",
+            "javascriptreact",
+            "javascript.jsx",
+            "typescript",
+            "typescriptreact",
+            "typescript.tsx",
+        },
+
         settings = {
             typescript = {
                 suggest = {
                     completeFunctionCalls = true,
                 },
+
                 inlayHints = {
                     includeInlayEnumMemberValueHints = true,
                     includeInlayFunctionLikeReturnTypeHints = true,
@@ -198,16 +342,19 @@ return {
                     includeInlayPropertyDeclarationTypeHints = true,
                     includeInlayVariableTypeHints = false,
                 },
+
                 preferences = {
                     includePackageJsonAutoImports = "auto",
                     importModuleSpecifier = "shortest",
                     quoteStyle = "auto",
                 },
             },
+
             javascript = {
                 suggest = {
                     completeFunctionCalls = true,
                 },
+
                 inlayHints = {
                     includeInlayEnumMemberValueHints = true,
                     includeInlayFunctionLikeReturnTypeHints = true,
@@ -217,6 +364,7 @@ return {
                     includeInlayPropertyDeclarationTypeHints = true,
                     includeInlayVariableTypeHints = false,
                 },
+
                 preferences = {
                     includePackageJsonAutoImports = "auto",
                     importModuleSpecifier = "shortest",
@@ -225,19 +373,32 @@ return {
             },
         },
     },
+
+    -- ============================================================
+    -- YAML
+    -- ============================================================
+
     yamlls = {
         settings = {
             yaml = {
                 keyOrdering = false,
-                format = { enable = true },
+
+                format = {
+                    enable = true,
+                },
+
                 validate = true,
             },
         },
+
         on_new_config = function(new_config)
             local ok, schemastore = pcall(require, "schemastore")
+
             if ok then
                 new_config.settings = new_config.settings or {}
+
                 new_config.settings.yaml = new_config.settings.yaml or {}
+
                 new_config.settings.yaml.schemas = schemastore.yaml.schemas()
             end
         end,
