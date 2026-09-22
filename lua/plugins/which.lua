@@ -1,16 +1,19 @@
 return {
     "folke/which-key.nvim",
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     dependencies = {
         "echasnovski/mini.icons",
         "nvim-tree/nvim-web-devicons",
     },
     opts = {
-        delay = 400,
+        delay = 100,
         preset = "modern",
         win = {
             border = "rounded",
             padding = { 1, 2 },
+        },
+        layout = {
+            height = { min = 4, max = 25 },
         },
     },
     config = function(_, opts)
@@ -26,21 +29,21 @@ return {
             { "<leader>c", group = "Code", icon = { icon = "󰅩", color = "orange" } },
             { "<leader>D", group = "Database (Dadbod)", icon = { icon = "󰆼", color = "yellow" } },
             { "<leader>d", group = "Debug", icon = { icon = "󰃤", color = "red" } },
-            { "<leader>f", group = "Find", icon = { icon = "", color = "blue" } },
-            { "<leader>g", group = "Git", icon = { icon = "", color = "purple" } },
+            { "<leader>f", group = "Find", icon = { icon = "", color = "blue" } },
+            { "<leader>g", group = "Git", icon = { icon = "", color = "purple" } },
             { "<leader>gC", group = "Git Conflicts", icon = { icon = "󰰚", color = "red" } },
             { "<leader>h", group = "Harpoon", icon = { icon = "󰛢", color = "cyan" } },
             { "<leader>hv", group = "Helpview", icon = { icon = "󰋖", color = "blue" } },
-            { "<leader>l", group = "LSP", icon = { icon = "", color = "blue" } },
+            { "<leader>l", group = "LSP", icon = { icon = "", color = "blue" } },
             { "<leader>m", group = "Molten", icon = { icon = "󰘦", color = "yellow" } },
-            { "<leader>M", group = "Multicursor", icon = { icon = "󰆿", color = "pink" } },
+            { "<leader>M", group = "Multicursor", icon = { icon = "󰆿", color = "purple" } },
             { "<leader>n", group = "Notes and writing", icon = { icon = "󰠮", color = "yellow" } },
             { "<leader>o", group = "Obsidian", icon = { icon = "󰠮", color = "purple" } },
-            { "<leader>P", group = "Python", icon = { icon = "", color = "yellow" } },
-            { "<leader>r", group = "Run Code", icon = { icon = "", color = "green" } },
+            { "<leader>P", group = "Python", icon = { icon = "", color = "yellow" } },
+            { "<leader>r", group = "Run Code", icon = { icon = "", color = "green" } },
             { "<leader>s", group = "Search and jump", icon = { icon = "󰉁", color = "azure" } },
             { "<leader>T", group = "Testing (Neotest)", icon = { icon = "󰙨", color = "green" } },
-            { "<leader>t", group = "Terminal and tasks", icon = { icon = "", color = "red" } },
+            { "<leader>t", group = "Terminal and tasks", icon = { icon = "", color = "red" } },
             { "<leader>u", group = "UI and theme", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>w", group = "Windows and sessions", icon = { icon = "󰖲", color = "blue" } },
             { "<leader>x", group = "Diagnostics and lists", icon = { icon = "󱖫", color = "red" } },
@@ -58,7 +61,7 @@ return {
 
             -- Core Shortcuts
             { "<leader>e", desc = "Toggle file explorer", icon = { icon = "󰉋", color = "yellow" } },
-            { "<leader>p", desc = "Command palette", icon = { icon = "", color = "purple" } },
+            { "<leader>p", desc = "Command palette", icon = { icon = "", color = "purple" } },
             { "<leader>q", desc = "Quit window", icon = { icon = "󰅖", color = "red" } },
 
             -- Buffers
@@ -74,39 +77,40 @@ return {
             { "<leader>rn", desc = "Rename symbol", icon = { icon = "󰑕", color = "orange" } },
 
             -- Run Code
-            { "<leader>rr", desc = "Run code selection / block", icon = { icon = "", color = "green" } },
-            { "<leader>rf", desc = "Run current file", icon = { icon = "", color = "green" } },
-            { "<leader>rp", desc = "Run project", icon = { icon = "", color = "green" } },
-            { "<leader>rc", desc = "Close runner output", icon = { icon = "", color = "red" } },
+            { "<leader>rr", desc = "Run code selection / block", icon = { icon = "", color = "green" } },
+            { "<leader>rf", desc = "Run current file", icon = { icon = "", color = "green" } },
+            { "<leader>rp", desc = "Run project", icon = { icon = "", color = "green" } },
+            { "<leader>rc", desc = "Close runner output", icon = { icon = "", color = "red" } },
 
             -- Debug
-            { "<leader>db", desc = "Toggle breakpoint", icon = { icon = "", color = "red" } },
-            { "<leader>dc", desc = "Continue", icon = { icon = "", color = "green" } },
+            { "<leader>db", desc = "Toggle breakpoint", icon = { icon = "", color = "red" } },
+            { "<leader>dc", desc = "Continue", icon = { icon = "", color = "green" } },
             { "<leader>di", desc = "Step into", icon = { icon = "󰆹", color = "blue" } },
             { "<leader>do", desc = "Step over", icon = { icon = "󰆸", color = "blue" } },
             { "<leader>dO", desc = "Step out", icon = { icon = "󰆷", color = "blue" } },
-            { "<leader>dr", desc = "Toggle REPL", icon = { icon = "", color = "yellow" } },
+            { "<leader>dr", desc = "Toggle REPL", icon = { icon = "", color = "yellow" } },
+
             -- Database (Dadbod)
             { "<leader>Ds", desc = "Select database for buffer", icon = { icon = "󰆼", color = "yellow" } },
             { "<leader>DS", desc = "View table schema & columns", icon = { icon = "󰓫", color = "cyan" } },
             { "<leader>Db", desc = "Toggle Database UI", icon = { icon = "󰆼", color = "yellow" } },
-            { "<leader>Df", desc = "Find DB buffer", icon = { icon = "", color = "blue" } },
-            { "<leader>Dl", desc = "Last DB query info", icon = { icon = "", color = "orange" } },
+            { "<leader>Df", desc = "Find DB buffer", icon = { icon = "", color = "blue" } },
+            { "<leader>Dl", desc = "Last DB query info", icon = { icon = "", color = "orange" } },
 
             -- Find
-            { "<leader>f/", desc = "Search in current buffer", icon = { icon = "", color = "blue" } },
+            { "<leader>f/", desc = "Search in current buffer", icon = { icon = "", color = "blue" } },
             { "<leader>fb", desc = "Search buffers", icon = { icon = "󰓩", color = "cyan" } },
             { "<leader>fe", desc = "Classic Explorer (netrw)", icon = { icon = "󰉋", color = "yellow" } },
             { "<leader>ff", desc = "Find file", icon = { icon = "󰈔", color = "blue" } },
-            { "<leader>fg", desc = "Live grep", icon = { icon = "", color = "green" } },
-            { "<leader>fk", desc = "Keymap help", icon = { icon = "", color = "purple" } },
+            { "<leader>fg", desc = "Live grep", icon = { icon = "", color = "green" } },
+            { "<leader>fk", desc = "Keymap help", icon = { icon = "", color = "purple" } },
             { "<leader>fm", desc = "Mini.files directory browser", icon = { icon = "󱏒", color = "azure" } },
             { "<leader>fO", desc = "Open Oil file browser", icon = { icon = "󰉋", color = "yellow" } },
-            { "<leader>fp", desc = "Git files", icon = { icon = "", color = "purple" } },
-            { "<leader>fr", desc = "Recent files", icon = { icon = "", color = "orange" } },
+            { "<leader>fp", desc = "Git files", icon = { icon = "", color = "purple" } },
+            { "<leader>fr", desc = "Recent files", icon = { icon = "", color = "orange" } },
             { "<leader>fs", desc = "Save file", icon = { icon = "󰆓", color = "green" } },
             { "<leader>fS", desc = "LSP document symbols", icon = { icon = "󰅩", color = "blue" } },
-            { "<leader>ft", desc = "Search TODOs", icon = { icon = "", color = "green" } },
+            { "<leader>ft", desc = "Search TODOs", icon = { icon = "", color = "green" } },
             { "<leader>fw", desc = "LSP workspace symbols", icon = { icon = "󰚗", color = "blue" } },
             { "<leader>fy", desc = "Find Registers / Yank history", icon = { icon = "󰅍", color = "yellow" } },
 
@@ -121,9 +125,9 @@ return {
             -- Git
             { "<leader>gb", desc = "Show git blame line", icon = { icon = "󰊢", color = "purple" } },
             { "<leader>gp", desc = "Preview hunk", icon = { icon = "󰢔", color = "blue" } },
-            { "<leader>gd", desc = "Open side-by-side diffview", icon = { icon = "", color = "blue" } },
-            { "<leader>gD", desc = "Close diffview", icon = { icon = "", color = "blue" } },
-            { "<leader>gg", desc = "Neogit status tab", icon = { icon = "", color = "purple" } },
+            { "<leader>gd", desc = "Open side-by-side diffview", icon = { icon = "", color = "blue" } },
+            { "<leader>gD", desc = "Close diffview", icon = { icon = "", color = "blue" } },
+            { "<leader>gg", desc = "Neogit status tab", icon = { icon = "", color = "purple" } },
             { "<leader>gn", desc = "Next hunk", icon = { icon = "󰒭", color = "purple" } },
             { "<leader>gN", desc = "Prev hunk", icon = { icon = "󰒮", color = "purple" } },
             { "<leader>gr", desc = "Reset hunk", icon = { icon = "󰜢", color = "red" } },
@@ -137,7 +141,7 @@ return {
             { "<leader>gc0", desc = "Conflict: Choose None", icon = { icon = "󰅖", color = "red" } },
             { "<leader>gc]", desc = "Conflict: Next conflict", icon = { icon = "󰒭", color = "orange" } },
             { "<leader>gc[", desc = "Conflict: Prev conflict", icon = { icon = "󰒮", color = "orange" } },
-            { "<leader>gcq", desc = "Conflict: Quickfix list", icon = { icon = "", color = "yellow" } },
+            { "<leader>gcq", desc = "Conflict: Quickfix list", icon = { icon = "", color = "yellow" } },
 
             -- Harpoon
             { "<leader>ha", desc = "Add to harpoon", icon = { icon = "󰛢", color = "cyan" } },
@@ -171,9 +175,15 @@ return {
             { "<leader>ms", desc = "Show output" },
             { "<leader>mv", desc = "Evaluate visual selection", mode = "v" },
 
+            -- Markdown Tables
+            { "<leader>mT", group = "Markdown tables", icon = { icon = "󰓫", color = "blue" } },
+            { "<leader>mTi", desc = "Toggle Markdown table inline view" },
+            { "<leader>mTr", desc = "Toggle Markdown table reader" },
+            { "<leader>mTp", desc = "Toggle Markdown table preview" },
+
             -- Multicursor
-            { "<leader>Ma", desc = "Add next match", icon = { icon = "󰆿", color = "pink" } },
-            { "<leader>MA", desc = "Add all matches", icon = { icon = "󰆿", color = "pink" } },
+            { "<leader>Ma", desc = "Add next match", icon = { icon = "󰆿", color = "purple" } },
+            { "<leader>MA", desc = "Add all matches", icon = { icon = "󰆿", color = "purple" } },
             { "<leader>Mj", desc = "Add cursor below", mode = { "n", "x" } },
             { "<leader>MJ", desc = "Skip cursor below", mode = { "n", "x" } },
             { "<leader>Mk", desc = "Add cursor above", mode = { "n", "x" } },
@@ -195,57 +205,51 @@ return {
             { "<leader>nw", desc = "Writing mode toggle", icon = { icon = "󰠮", color = "yellow" } },
             { "<leader>nz", desc = "Zen Mode", icon = { icon = "󰈈", color = "purple" } },
 
-            -- Markdown Tables
-            { "<leader>mT", group = "Markdown tables", icon = { icon = "󰓫", color = "blue" } },
-            { "<leader>mTi", desc = "Toggle Markdown table inline view" },
-            { "<leader>mTr", desc = "Toggle Markdown table reader" },
-            { "<leader>mTp", desc = "Toggle Markdown table preview" },
-
             -- Obsidian
             { "<leader>ob", desc = "Show backlinks", icon = { icon = "󰌹", color = "purple" } },
-            { "<leader>of", desc = "Find notes", icon = { icon = "", color = "purple" } },
+            { "<leader>of", desc = "Find notes", icon = { icon = "", color = "purple" } },
             { "<leader>oi", desc = "Paste image", icon = { icon = "󰋩", color = "purple" } },
             { "<leader>ol", desc = "Show links", mode = { "n", "v" } },
             { "<leader>on", desc = "New note", mode = { "n", "v" }, icon = { icon = "󰈔", color = "purple" } },
-            { "<leader>os", desc = "Search notes", icon = { icon = "", color = "purple" } },
+            { "<leader>os", desc = "Search notes", icon = { icon = "", color = "purple" } },
             { "<leader>ot", desc = "Today's daily note", icon = { icon = "󰸗", color = "purple" } },
             { "<leader>oy", desc = "Yesterday's daily note", icon = { icon = "󰸗", color = "purple" } },
             { "<leader>ch", desc = "Toggle checkbox (Obsidian)", icon = { icon = "󰄲", color = "green" } },
 
             -- Python
-            { "<leader>Pv", desc = "Select VirtualEnv", icon = { icon = "", color = "yellow" } },
-            { "<leader>Pc", desc = "Select Cached VirtualEnv", icon = { icon = "", color = "yellow" } },
-            { "<leader>Pm", desc = "Make / Create VirtualEnv", icon = { icon = "", color = "green" } },
+            { "<leader>Pv", desc = "Select VirtualEnv", icon = { icon = "", color = "yellow" } },
+            { "<leader>Pc", desc = "Select Cached VirtualEnv", icon = { icon = "", color = "yellow" } },
+            { "<leader>Pm", desc = "Make / Create VirtualEnv", icon = { icon = "", color = "green" } },
             { "<leader>Pi", desc = "Install package", icon = { icon = "󰏖", color = "cyan" } },
             { "<leader>PR", desc = "Install requirements.txt", icon = { icon = "󰈔", color = "blue" } },
-            { "<leader>Pr", desc = "Run current file", icon = { icon = "", color = "green" } },
+            { "<leader>Pr", desc = "Run current file", icon = { icon = "", color = "green" } },
 
             -- Testing (Neotest)
-            { "<leader>Tr", desc = "Run nearest test", icon = { icon = "", color = "green" } },
-            { "<leader>Tf", desc = "Run test file", icon = { icon = "", color = "green" } },
-            { "<leader>Ts", desc = "Toggle test summary", icon = { icon = "", color = "yellow" } },
+            { "<leader>Tr", desc = "Run nearest test", icon = { icon = "", color = "green" } },
+            { "<leader>Tf", desc = "Run test file", icon = { icon = "", color = "green" } },
+            { "<leader>Ts", desc = "Toggle test summary", icon = { icon = "", color = "yellow" } },
             { "<leader>To", desc = "Open test output", icon = { icon = "󰅩", color = "blue" } },
-            { "<leader>Tp", desc = "Toggle test output panel", icon = { icon = "", color = "red" } },
+            { "<leader>Tp", desc = "Toggle test output panel", icon = { icon = "", color = "red" } },
             { "<leader>Td", desc = "Debug nearest test", icon = { icon = "󰃤", color = "red" } },
             { "<leader>TS", desc = "Stop running tests", icon = { icon = "󰅖", color = "red" } },
 
             -- Search and jump
             { "<leader>sr", desc = "Search and replace", mode = { "n", "x" }, icon = { icon = "󰛔", color = "yellow" } },
-            { "<leader>sB", desc = "Search in current file", icon = { icon = "", color = "blue" } },
+            { "<leader>sB", desc = "Search in current file", icon = { icon = "", color = "blue" } },
             { "<leader>sj", desc = "Jump (flash)", icon = { icon = "󰉁", color = "azure" } },
             { "<leader>ss", desc = "Treesitter jump (flash)", icon = { icon = "󰉁", color = "azure" } },
-            { "<leader>sw", desc = "Search word under cursor", icon = { icon = "", color = "blue" } },
+            { "<leader>sw", desc = "Search word under cursor", icon = { icon = "", color = "blue" } },
 
             -- Terminal and tasks
-            { "<leader>ta", desc = "Task action chooser", icon = { icon = "", color = "red" } },
-            { "<leader>tf", desc = "Project shell", icon = { icon = "", color = "red" } },
-            { "<leader>tg", desc = "Terminal picker", icon = { icon = "", color = "red" } },
-            { "<leader>th", desc = "Horizontal shell", icon = { icon = "", color = "red" } },
-            { "<leader>tl", desc = "Load task bundle", icon = { icon = "", color = "red" } },
-            { "<leader>to", desc = "Toggle terminal", icon = { icon = "", color = "red" } },
-            { "<leader>tr", desc = "Run task", icon = { icon = "", color = "green" } },
-            { "<leader>tt", desc = "Toggle task list", icon = { icon = "", color = "yellow" } },
-            { "<leader>tv", desc = "Vertical shell", icon = { icon = "", color = "red" } },
+            { "<leader>ta", desc = "Task action chooser", icon = { icon = "", color = "red" } },
+            { "<leader>tf", desc = "Project shell", icon = { icon = "", color = "red" } },
+            { "<leader>tg", desc = "Terminal picker", icon = { icon = "", color = "red" } },
+            { "<leader>th", desc = "Horizontal shell", icon = { icon = "", color = "red" } },
+            { "<leader>tl", desc = "Load task bundle", icon = { icon = "", color = "red" } },
+            { "<leader>to", desc = "Toggle terminal", icon = { icon = "", color = "red" } },
+            { "<leader>tr", desc = "Run task", icon = { icon = "", color = "green" } },
+            { "<leader>tt", desc = "Toggle task list", icon = { icon = "", color = "yellow" } },
+            { "<leader>tv", desc = "Vertical shell", icon = { icon = "", color = "red" } },
 
             -- UI and theme
             { "<leader>ua", desc = "Toggle auto-save (global)", icon = { icon = "󰔎", color = "cyan" } },
@@ -278,13 +282,13 @@ return {
             { "<leader>w=", desc = "Equalize window sizes", icon = { icon = "󰝤", color = "cyan" } },
             { "<leader>wr", desc = "Restore session", icon = { icon = "󰦛", color = "green" } },
             { "<leader>ws", desc = "Save session", icon = { icon = "󰆓", color = "green" } },
-            { "<leader>wl", desc = "Search sessions", icon = { icon = "", color = "blue" } },
+            { "<leader>wl", desc = "Search sessions", icon = { icon = "", color = "blue" } },
 
             -- Diagnostics and lists
             { "<leader>xd", desc = "Buffer diagnostics", icon = { icon = "󱖫", color = "red" } },
-            { "<leader>xl", desc = "Location list", icon = { icon = "", color = "yellow" } },
+            { "<leader>xl", desc = "Location list", icon = { icon = "", color = "yellow" } },
             { "<leader>xo", desc = "Document symbols side", icon = { icon = "󰅩", color = "blue" } },
-            { "<leader>xq", desc = "Quickfix list", icon = { icon = "", color = "yellow" } },
+            { "<leader>xq", desc = "Quickfix list", icon = { icon = "", color = "yellow" } },
             { "<leader>xx", desc = "Project diagnostics", icon = { icon = "󱖫", color = "red" } },
 
             -- Yanky / Clipboard
