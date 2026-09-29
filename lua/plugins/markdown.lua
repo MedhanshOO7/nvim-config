@@ -2,15 +2,27 @@ return {
     {
         "MeanderingProgrammer/render-markdown.nvim",
         enabled = true,
+
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
             "nvim-tree/nvim-web-devicons",
         },
-        ft = { "markdown" },
+
+        ft = {
+            "markdown",
+            "vimwiki",
+            "quarto",
+            "rmd",
+        },
+
         init = function()
             local function resolve_group(groups)
                 for _, group in ipairs(groups) do
-                    local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
+                    local ok, hl = pcall(vim.api.nvim_get_hl, 0, {
+                        name = group,
+                        link = false,
+                    })
+
                     if ok and hl and not vim.tbl_isempty(hl) then
                         return group
                     end
@@ -18,31 +30,53 @@ return {
             end
 
             local function hl_bg(group)
-                local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
-                return (ok and hl.bg) and string.format("#%06x", hl.bg) or nil
+                local ok, hl = pcall(vim.api.nvim_get_hl, 0, {
+                    name = group,
+                    link = false,
+                })
+
+                if ok and hl and hl.bg then
+                    return string.format("#%06x", hl.bg)
+                end
+
+                return nil
             end
 
             local function hl_fg(group)
-                local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
-                return (ok and hl.fg) and string.format("#%06x", hl.fg) or nil
+                local ok, hl = pcall(vim.api.nvim_get_hl, 0, {
+                    name = group,
+                    link = false,
+                })
+
+                if ok and hl and hl.fg then
+                    return string.format("#%06x", hl.fg)
+                end
+
+                return nil
             end
 
             local function first_hl_bg(groups)
                 for _, group in ipairs(groups) do
                     local value = hl_bg(group)
+
                     if value then
                         return value
                     end
                 end
+
+                return nil
             end
 
             local function first_hl_fg(groups)
                 for _, group in ipairs(groups) do
                     local value = hl_fg(group)
+
                     if value then
                         return value
                     end
                 end
+
+                return nil
             end
 
             local function set_highlights()
@@ -55,11 +89,16 @@ return {
                     { "@markup.heading.6.markdown", "Statement", "Title" },
                 }
 
-                local normal_bg = first_hl_bg({ "Normal", "NormalFloat", "ColorColumn" }) or "NONE"
+                local normal_bg = first_hl_bg({
+                    "Normal",
+                    "NormalFloat",
+                    "ColorColumn",
+                }) or "NONE"
 
                 for i, groups in ipairs(head_groups) do
                     local target = resolve_group(groups)
                     local fg = target and hl_fg(target) or nil
+
                     local headline_bg = {
                         fg = normal_bg,
                         bold = true,
@@ -78,55 +117,150 @@ return {
                     end
                 end
 
-                local code_bg = first_hl_bg({ "ColorColumn", "CursorLine", "NormalFloat" })
+                -- Code blocks
+                local code_bg = first_hl_bg({
+                    "ColorColumn",
+                    "NormalFloat",
+                    "CursorLine",
+                })
+
                 if code_bg then
-                    vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = code_bg })
-                    vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { bg = code_bg })
+                    vim.api.nvim_set_hl(0, "RenderMarkdownCode", {
+                        bg = code_bg,
+                    })
+
+                    vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", {
+                        bg = code_bg,
+                    })
                 else
-                    vim.api.nvim_set_hl(0, "RenderMarkdownCode", { link = "ColorColumn" })
-                    vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { link = "ColorColumn" })
+                    vim.api.nvim_set_hl(0, "RenderMarkdownCode", {
+                        link = "ColorColumn",
+                    })
+
+                    vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", {
+                        link = "ColorColumn",
+                    })
                 end
 
-                vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { link = "DiagnosticOk" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { link = "DiagnosticHint" })
+                -- Checkboxes
+                vim.api.nvim_set_hl(0, "RenderMarkdownChecked", {
+                    link = "DiagnosticOk",
+                })
 
-                vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { link = "Special" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownQuote", { link = "Comment" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownDash", { link = "LineNr" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownLink", { link = "Underlined" })
+                vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", {
+                    link = "DiagnosticHint",
+                })
 
-                -- Callouts and Checkboxes
-                vim.api.nvim_set_hl(0, "RenderMarkdownTodo", { link = "DiagnosticInfo" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownImportant", { link = "DiagnosticWarn" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownInfo", { link = "DiagnosticInfo" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", { link = "DiagnosticOk" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownWarn", { link = "DiagnosticWarn" })
-                vim.api.nvim_set_hl(0, "RenderMarkdownError", { link = "DiagnosticError" })
+                -- Markdown elements
+                vim.api.nvim_set_hl(0, "RenderMarkdownBullet", {
+                    link = "Special",
+                })
 
-                -- Mark highlights (==text==) — now theme-derived instead of a hardcoded hex pair,
-                -- so it stays in sync with whatever colorscheme is active (falls back to IncSearch/Search).
-                local mark_bg = first_hl_bg({ "IncSearch", "Search", "Visual" }) or "#F5C2E7"
-                local mark_fg = first_hl_fg({ "Normal" }) or normal_bg or "#1E1E2E"
-                vim.api.nvim_set_hl(0, "RenderMarkdownHighlight", { bg = mark_bg, fg = mark_fg, bold = true })
+                vim.api.nvim_set_hl(0, "RenderMarkdownQuote", {
+                    link = "Comment",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownDash", {
+                    link = "LineNr",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownLink", {
+                    link = "Underlined",
+                })
+
+                -- Callouts
+                vim.api.nvim_set_hl(0, "RenderMarkdownTodo", {
+                    link = "DiagnosticInfo",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownImportant", {
+                    link = "DiagnosticWarn",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownInfo", {
+                    link = "DiagnosticInfo",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", {
+                    link = "DiagnosticOk",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownWarn", {
+                    link = "DiagnosticWarn",
+                })
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownError", {
+                    link = "DiagnosticError",
+                })
+
+                -- ==highlight==
+                local mark_bg = first_hl_bg({
+                    "IncSearch",
+                    "Search",
+                    "Visual",
+                }) or "#F5C2E7"
+
+                local mark_fg = first_hl_fg({
+                    "Normal",
+                }) or "#1E1E2E"
+
+                vim.api.nvim_set_hl(0, "RenderMarkdownHighlight", {
+                    bg = mark_bg,
+                    fg = mark_fg,
+                    bold = true,
+                })
             end
 
-            -- Apply on startup
+            -- Theme-dependent highlights
             set_highlights()
 
-            -- Re-apply on every theme change
             vim.api.nvim_create_autocmd("ColorScheme", {
                 group = vim.api.nvim_create_augroup("render_markdown_theme_sync", { clear = true }),
                 pattern = "*",
                 callback = set_highlights,
+            })
+
+            -- Disable normal Vim line wrapping in Markdown buffers.
+            -- render-markdown.nvim handles table-cell wrapping itself.
+            vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("markdown_no_line_wrap", { clear = true }),
+                pattern = {
+                    "markdown",
+                    "vimwiki",
+                    "quarto",
+                    "rmd",
+                },
+                callback = function()
+                    vim.opt_local.wrap = false
+                    vim.opt_local.linebreak = false
+                    vim.opt_local.breakindent = false
+                end,
             })
         end,
 
         opts = {
             render_modes = { "n", "c" },
 
+            -- Current option name is file_types, not filetypes.
+            file_types = {
+                "markdown",
+                "vimwiki",
+                "quarto",
+                "rmd",
+            },
+
             heading = {
                 sign = false,
-                icons = { "󰎤 ", "󰎧 ", "󰪛 ", "󰎭 ", "󰎱 ", "󰎳 " },
+
+                icons = {
+                    "󰎤 ",
+                    "󰎧 ",
+                    "󰪛 ",
+                    "󰎭 ",
+                    "󰎱 ",
+                    "󰎳 ",
+                },
+
                 backgrounds = {
                     "Headline1Bg",
                     "Headline2Bg",
@@ -135,6 +269,7 @@ return {
                     "Headline5Bg",
                     "Headline6Bg",
                 },
+
                 foregrounds = {
                     "Headline1Fg",
                     "Headline2Fg",
@@ -143,162 +278,238 @@ return {
                     "Headline5Fg",
                     "Headline6Fg",
                 },
+
                 width = "full",
                 border = true,
                 above = "▄",
                 below = "▀",
             },
+
             code = {
                 sign = false,
                 style = "full",
                 width = "block",
                 min_width = 30,
                 right_pad = 1,
-                highlight_mode = "combine",
                 language_pad = 0,
                 disable_background = { "diff" },
+
+                -- Current API uses highlight/highlight_inline.
+                highlight = "RenderMarkdownCode",
+                highlight_inline = "RenderMarkdownCodeInline",
             },
+
             bullet = {
                 enabled = true,
-                icons = { "●", "○", "◆", "◇" },
+                icons = {
+                    "●",
+                    "○",
+                    "◆",
+                    "◇",
+                },
                 highlight = "RenderMarkdownBullet",
             },
+
             checkbox = {
                 enabled = true,
+
                 unchecked = {
                     icon = "󰄱 ",
                     highlight = "RenderMarkdownUnchecked",
                 },
+
                 checked = {
                     icon = "󰱒 ",
                     highlight = "RenderMarkdownChecked",
                 },
+
                 custom = {
-                    todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
-                    important = { raw = "[!]", rendered = "󰀦 ", highlight = "RenderMarkdownImportant" },
+                    todo = {
+                        raw = "[-]",
+                        rendered = "󰥔 ",
+                        highlight = "RenderMarkdownTodo",
+                    },
+
+                    important = {
+                        raw = "[!]",
+                        rendered = "󰀦 ",
+                        highlight = "RenderMarkdownImportant",
+                    },
                 },
             },
+
             callout = {
-                -- Enhanced Obsidian-style callouts with better visual hierarchy
-                note = { raw = "[!NOTE]", rendered = "󰋽 Note", highlight = "RenderMarkdownInfo" },
-                tip = { raw = "[!TIP]", rendered = "󰌶 Tip", highlight = "RenderMarkdownSuccess" },
-                important = { raw = "[!IMPORTANT]", rendered = "󰅾 Important", highlight = "RenderMarkdownWarn" },
-                warning = { raw = "[!WARNING]", rendered = "󰀦 Warning", highlight = "RenderMarkdownWarn" },
-                caution = { raw = "[!CAUTION]", rendered = "󰳦 Caution", highlight = "RenderMarkdownError" },
-                abstract = { raw = "[!ABSTRACT]", rendered = "󰨸 Abstract", highlight = "RenderMarkdownInfo" },
-                todo = { raw = "[!TODO]", rendered = "󰗡 Todo", highlight = "RenderMarkdownInfo" },
-                success = { raw = "[!SUCCESS]", rendered = "󰄬 Success", highlight = "RenderMarkdownSuccess" },
-                question = { raw = "[!QUESTION]", rendered = "󰘥 Question", highlight = "RenderMarkdownWarn" },
-                failure = { raw = "[!FAILURE]", rendered = "󰅖 Failure", highlight = "RenderMarkdownError" },
-                danger = { raw = "[!DANGER]", rendered = "󱐌 Danger", highlight = "RenderMarkdownError" },
-                bug = { raw = "[!BUG]", rendered = "󰨰 Bug", highlight = "RenderMarkdownError" },
-                example = { raw = "[!EXAMPLE]", rendered = "󰉹 Example", highlight = "RenderMarkdownInfo" },
-                quote = { raw = "[!QUOTE]", rendered = "󱆧 Quote", highlight = "RenderMarkdownQuote" },
-            },
-            pipe_table = {
-                enabled = false,
-                preset = "round",
-                style = "full",
-                border = {
-                    "╭", "─", "╮", "│", "╯", "─", "╰", "│",
+                note = {
+                    raw = "[!NOTE]",
+                    rendered = " Note",
+                    highlight = "RenderMarkdownInfo",
+                },
+
+                tip = {
+                    raw = "[!TIP]",
+                    rendered = "󰌶 Tip",
+                    highlight = "RenderMarkdownSuccess",
+                },
+
+                important = {
+                    raw = "[!IMPORTANT]",
+                    rendered = "󰽎 Important",
+                    highlight = "RenderMarkdownWarn",
+                },
+
+                warning = {
+                    raw = "[!WARNING]",
+                    rendered = "󰀧 Warning",
+                    highlight = "RenderMarkdownWarn",
+                },
+
+                caution = {
+                    raw = "[!CAUTION]",
+                    rendered = "󰝧 Caution",
+                    highlight = "RenderMarkdownError",
+                },
+
+                abstract = {
+                    raw = "[!ABSTRACT]",
+                    rendered = "󰨸 Abstract",
+                    highlight = "RenderMarkdownInfo",
+                },
+
+                todo = {
+                    raw = "[!TODO]",
+                    rendered = " Todo",
+                    highlight = "RenderMarkdownInfo",
+                },
+
+                success = {
+                    raw = "[!SUCCESS]",
+                    rendered = " Success",
+                    highlight = "RenderMarkdownSuccess",
+                },
+
+                question = {
+                    raw = "[!QUESTION]",
+                    rendered = "󰺴 Question",
+                    highlight = "RenderMarkdownWarn",
+                },
+
+                answer = {
+                    raw = "[!ANSWER]",
+                    rendered = " Question",
+                    highlight = "RenderMarkdownWarn",
+                },
+                failure = {
+                    raw = "[!FAILURE]",
+                    rendered = "󰅖 Failure",
+                    highlight = "RenderMarkdownError",
+                },
+
+                danger = {
+                    raw = "[!DANGER]",
+                    rendered = "󱐌 Danger",
+                    highlight = "RenderMarkdownError",
+                },
+
+                bug = {
+                    raw = "[!BUG]",
+                    rendered = "󰨰 Bug",
+                    highlight = "RenderMarkdownError",
+                },
+
+                example = {
+                    raw = "[!EXAMPLE]",
+                    rendered = "󰉹 Example",
+                    highlight = "RenderMarkdownInfo",
+                },
+
+                quote = {
+                    raw = "[!QUOTE]",
+                    rendered = "󱆧 Quote",
+                    highlight = "RenderMarkdownQuote",
                 },
             },
+
+            -- Native render-markdown table renderer.
+            -- Do not add wrap here because your installed version's
+            -- schema explicitly rejects pipe_table.wrap.
+            pipe_table = {
+                enabled = true,
+                preset = "round",
+                cell = "padded",
+                padding = 1,
+                min_width = 0,
+                border_enabled = true,
+                border_virtual = false,
+                style = "full",
+            },
+
             latex = {
-                enabled = vim.fn.executable("latex2text") == 1,
+                enabled = true,
                 converter = "latex2text",
                 highlight = "RenderMarkdownMath",
+                position = "center",
+                top_pad = 0,
+                bottom_pad = 0,
             },
+
             sign = {
                 enabled = false,
             },
-            mark = {
+
+            inline_highlight = {
                 enabled = true,
-                sign = false,
-                highlight = "RenderMarkdownHighlight",
+                highlight = "RenderMarkdownInlineHighlight",
             },
+
             win_options = {
                 conceallevel = {
                     default = vim.o.conceallevel,
-                    rendered = 2,
+                    rendered = 3,
                 },
+
                 concealcursor = {
                     default = vim.o.concealcursor,
-                    rendered = "nv",
+                    rendered = "",
                 },
             },
-            filetypes = { "markdown", "vimwiki", "quarto", "rmd" },
         },
     },
-    {
-        "ice345/markdown-table-wrap.nvim",
-        ft = "markdown",
-        keys = {
-            { "<leader>mTi", "<cmd>MarkdownTableToggleInline<cr>", desc = "Toggle Markdown Table Inline View" },
-            { "<leader>mTr", "<cmd>MarkdownTableToggleReader<cr>", desc = "Toggle Markdown Table Reader" },
-            { "<leader>mTp", "<cmd>MarkdownTableTogglePreview<cr>", desc = "Toggle Markdown Table Preview" },
-        },
-        opts = {
-            preview_mode = "inline",
-            inline_mode = "replace",
-            auto_preview = false, -- Manual toggle only (<leader>mTi, <leader>mTp)!
-            render_all = false,
-            inline_viewport_scrolling = true,
-            inline_wrap_scope = "cursor",
-            auto_preview_in_insert = false,
-            clear_on_insert = true,
-            highlight_preset = "render_markdown",
-            table_border = "rounded",
-            use_unicode_border = true,
-            extra_filetypes = { "sql" },
-            reader = {
-                auto_open = false,
-                border = "rounded",
-                title_pos = "center",
-            },
-        },
-    },
+
     {
         "iamcco/markdown-preview.nvim",
-        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        ft = { "markdown" },
+
+        cmd = {
+            "MarkdownPreviewToggle",
+            "MarkdownPreview",
+            "MarkdownPreviewStop",
+        },
+
+        ft = {
+            "markdown",
+        },
+
         build = "cd app && npm install",
+
         init = function()
-            vim.g.mkdp_filetypes = { "markdown" }
+            vim.g.mkdp_filetypes = {
+                "markdown",
+            }
+
             vim.g.mkdp_command_for_global = 1
             vim.g.mkdp_auto_start = 0
-            vim.g.mkdp_auto_close = 0 -- Keep browser open & sync to current file when switching buffers!
-            vim.g.mkdp_refresh_slow = 0 -- Instant refresh on text change
+            vim.g.mkdp_auto_close = 0
+            vim.g.mkdp_refresh_slow = 0
             vim.g.mkdp_echo_preview_url = 1
             vim.g.mkdp_page_title = "「${name}」"
 
-            -- Single browser-opening function (removed the unused OpenZenBrowser
-            -- duplicate — mkdp_browserfunc only ever pointed at this one).
-            vim.cmd([[
-                function! OpenMarkdownBrowser(url)
-                    let l:is_mac = has('mac') || has('macunix') || system('uname') =~? '^darwin'
-                    let l:is_win = has('win32') || has('win64')
-
-                    if executable('zen-browser')
-                        silent execute '!zen-browser ' . shellescape(a:url) . ' &'
-                    elseif executable('zen')
-                        silent execute '!zen ' . shellescape(a:url) . ' &'
-                    elseif l:is_mac
-                        if isdirectory('/Applications/Zen Browser.app')
-                            silent execute '!open -a "Zen Browser" ' . shellescape(a:url) . ' &'
-                        elseif isdirectory('/Applications/Zen.app')
-                            silent execute '!open -a "Zen" ' . shellescape(a:url) . ' &'
-                        else
-                            silent execute '!open ' . shellescape(a:url) . ' &'
-                        endif
-                    elseif l:is_win
-                        silent execute '!cmd.exe /c start "" ' . shellescape(a:url)
-                    elseif executable('xdg-open')
-                        silent execute '!xdg-open ' . shellescape(a:url) . ' &'
-                    endif
-                endfunction
-            ]])
-            vim.g.mkdp_browserfunc = "OpenMarkdownBrowser"
+            -- Zen Browser
+            if vim.fn.executable("zen") == 1 then
+                vim.g.mkdp_browser = "zen"
+            elseif vim.fn.executable("zen-browser") == 1 then
+                vim.g.mkdp_browser = "zen-browser"
+            end
         end,
+
         keys = {
             {
                 "<leader>mp",
