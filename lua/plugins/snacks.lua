@@ -1,16 +1,7 @@
 math.randomseed(os.time())
 local function greeting()
     local quotes = {
-        "The only way to do great work is to love what you do. – Steve Jobs",
-        "Innovation distinguishes between a leader and a follower. – Steve Jobs",
-        "Stay hungry, stay foolish. – Steve Jobs",
-        "Your time is limited, don't waste it living someone else's life. – Steve Jobs",
-        "The future belongs to those who believe in the beauty of their dreams. – Eleanor Roosevelt",
-        "It is during our darkest moments that we must focus to see the light. – Aristotle",
-        "Whoever is happy will make others happy too. – Anne Frank",
-        "Do not go where the path may lead, go instead where there is no path and leave a trail. – Ralph Waldo Emerson",
-        "The journey of a thousand miles begins with one step. – Lao Tzu",
-        "What you get by achieving your goals is not as important as what you become by achieving your goals. – Zig Ziglar",
+        "Work hard, stay humble.",
     }
     local idx = math.random(#quotes)
     return "󰖨  " .. quotes[idx]
@@ -386,7 +377,75 @@ return {
         },
     },
     init = function()
+        ----------------------------------------------------------------------
+        -- Transparent Snacks surfaces
+        --
+        -- Snacks pickers/explorer use their own highlight groups rather than
+        -- relying only on NormalFloat. Keep the existing foreground/border
+        -- colors, but remove the opaque backgrounds so the terminal/window
+        -- transparency underneath remains visible.
+        ----------------------------------------------------------------------
+
+        local function apply_snacks_transparency()
+            local groups = {
+                -- Generic picker/container surfaces
+                "SnacksPicker",
+                "SnacksPickerBox",
+                "SnacksPickerInput",
+                "SnacksPickerList",
+                "SnacksPickerPreview",
+
+                -- Picker borders/titles/footers
+                "SnacksPickerBorder",
+                "SnacksPickerTitle",
+                "SnacksPickerFooter",
+                "SnacksPickerBoxBorder",
+                "SnacksPickerBoxTitle",
+                "SnacksPickerBoxFooter",
+                "SnacksPickerInputBorder",
+                "SnacksPickerInputTitle",
+                "SnacksPickerInputFooter",
+                "SnacksPickerListBorder",
+                "SnacksPickerListTitle",
+                "SnacksPickerListFooter",
+                "SnacksPickerPreviewBorder",
+                "SnacksPickerPreviewTitle",
+                "SnacksPickerPreviewFooter",
+
+                -- Snacks input style used by the current config
+                "SnacksInputNormal",
+                "SnacksInputBorder",
+                "SnacksInputTitle",
+            }
+
+            for _, group in ipairs(groups) do
+                local ok, hl = pcall(vim.api.nvim_get_hl, 0, {
+                    name = group,
+                    link = false,
+                })
+
+                hl = ok and hl or {}
+                hl.bg = "NONE"
+
+                pcall(vim.api.nvim_set_hl, 0, group, hl)
+            end
+        end
+
         apply_dashboard_gradients()
+        apply_snacks_transparency()
+
+        vim.api.nvim_create_autocmd("ColorScheme", {
+            group = vim.api.nvim_create_augroup("snacks_dashboard_gradient_sync", { clear = true }),
+            pattern = "*",
+            callback = function()
+                apply_dashboard_gradients()
+
+                -- Snacks may restore its default highlights during the same
+                -- ColorScheme event, so apply transparency after everything
+                -- else has had a chance to run.
+                vim.schedule(apply_snacks_transparency)
+            end,
+        })
 
         vim.api.nvim_create_autocmd("ColorScheme", {
             group = vim.api.nvim_create_augroup("snacks_dashboard_gradient_sync", { clear = true }),
