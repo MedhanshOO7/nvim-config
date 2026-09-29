@@ -187,15 +187,15 @@ return {
         -- SIGNATURE HELP
         -- ============================================================
 
-        vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
-            local opts = vim.tbl_extend("force", config or {}, {
-                border = float_border,
-                max_width = math.floor(vim.o.columns * 0.45),
-                max_height = math.floor(vim.o.lines * 0.18),
-            })
-
-            return vim.lsp.handlers.signature_help(err, result, ctx, opts)
-        end
+        -- vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
+        --     local opts = vim.tbl_extend("force", config or {}, {
+        --         border = float_border,
+        --         max_width = math.floor(vim.o.columns * 0.45),
+        --         max_height = math.floor(vim.o.lines * 0.18),
+        --     })
+        --
+        --     return vim.lsp.handlers.signature_help(err, result, ctx, opts)
+        -- end
 
         -- ============================================================
         -- SERVER CONFIGURATION

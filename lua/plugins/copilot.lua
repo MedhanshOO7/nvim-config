@@ -33,12 +33,9 @@ return {
             },
             filetypes = {
                 ["*"] = true,
-                yaml = false,
-                markdown = false,
                 help = false,
                 gitcommit = true,
                 gitrebase = true,
-                hgcommit = false,
                 svn = false,
                 cvs = false,
                 ["."] = false,
