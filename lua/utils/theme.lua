@@ -958,7 +958,7 @@ function M.setup()
         vim.g.preferred_theme = M.default_theme
     end
     -- Set default lualine style to evil for a distinctive look
-    vim.g.lualine_color_style = "LazyVim"
+    vim.g.lualine_color_style = "evil"
 end
 
 return M
