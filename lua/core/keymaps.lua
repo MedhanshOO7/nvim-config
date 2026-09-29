@@ -418,6 +418,18 @@ map("n", "<leader>ul", function()
     end
 end, { desc = "Toggle relative line numbers" })
 
+vim.keymap.set("n", "<leader>lp", function()
+    local enabled = vim.diagnostic.is_enabled()
+
+    if enabled then
+        vim.diagnostic.enable(false)
+        vim.notify("Diagnostics disabled")
+    else
+        vim.diagnostic.enable(true)
+        vim.notify("Diagnostics enabled")
+    end
+end, { desc = "Toggle Diagnostics" })
+
 map("n", "<leader>uc", function()
     local level = vim.wo.conceallevel == 0 and 2 or 0
     vim.wo.conceallevel = level
