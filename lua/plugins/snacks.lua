@@ -387,6 +387,10 @@ return {
         ----------------------------------------------------------------------
 
         local function apply_snacks_transparency()
+            if vim.g.preferred_transparent ~= true then
+                return
+            end
+
             local groups = {
                 -- Generic picker/container surfaces
                 "SnacksPicker",
@@ -445,12 +449,6 @@ return {
                 -- else has had a chance to run.
                 vim.schedule(apply_snacks_transparency)
             end,
-        })
-
-        vim.api.nvim_create_autocmd("ColorScheme", {
-            group = vim.api.nvim_create_augroup("snacks_dashboard_gradient_sync", { clear = true }),
-            pattern = "*",
-            callback = apply_dashboard_gradients,
         })
 
         vim.api.nvim_create_autocmd("User", {

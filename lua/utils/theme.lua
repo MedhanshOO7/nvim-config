@@ -50,7 +50,7 @@ M.themes = {}
 for _, t in ipairs(M.dark_themes) do table.insert(M.themes, t) end
 for _, t in ipairs(M.light_themes) do table.insert(M.themes, t) end
 
- M.default_theme = "catppuccin-macchiato"
+M.default_theme = "catppuccin-macchiato"
 M.default_transparency = true
 
 M.theme_aliases = {
@@ -196,50 +196,108 @@ local function write_state(theme, transparent)
     file:close()
 end
 
--- Some themes do not fully clear plugin windows when transparency changes, so this
--- explicitly removes backgrounds from the editor surfaces that matter most.
+-- Explicitly removes backgrounds from all editor surfaces when transparency is enabled.
+-- Preserves existing foreground colors and attributes instead of blanking them out.
 local function set_transparent_highlights(enabled)
-    local normal_bg = enabled and "none" or nil
+    if not enabled then
+        return
+    end
 
-    local groups = {
+    local transparent_groups = {
         "Normal",
         "NormalNC",
-        "NormalFloat",
-        "EndOfBuffer",
         "SignColumn",
-        "NeoTreeNormal",
-        "NeoTreeNormalNC",
+        "LineNr",
+        "CursorLineNr",
+        "EndOfBuffer",
+        "FoldColumn",
+        "Folded",
         "StatusLine",
         "StatusLineNC",
+        "WinBar",
+        "WinBarNC",
+        "WinSeparator",
+        "VertSplit",
         "FloatBorder",
+        "FloatTitle",
+        "FloatFooter",
+        "NormalFloat",
         "TelescopeNormal",
+        "TelescopeNormalNC",
         "TelescopeBorder",
         "TelescopePromptNormal",
         "TelescopePromptBorder",
+        "TelescopePromptPrefix",
         "TelescopeResultsNormal",
         "TelescopeResultsBorder",
         "TelescopePreviewNormal",
         "TelescopePreviewBorder",
-        "WinSeparator",
         "SnacksNormal",
         "SnacksNormalNC",
         "SnacksPicker",
         "SnacksPickerList",
         "SnacksPickerInput",
         "SnacksPickerBox",
-        "InclineNormal",
-        "InclineNormalNC",
+        "SnacksPickerPreview",
+        "SnacksPickerBorder",
+        "SnacksPickerBoxBorder",
+        "SnacksPickerInputBorder",
+        "SnacksPickerListBorder",
+        "SnacksPickerPreviewBorder",
+        "SnacksInputNormal",
+        "SnacksInputBorder",
+        "SnacksInputTitle",
+        "SnacksBackdrop",
+        "SnacksDashboardNormal",
+        "NoiceCmdline",
         "NoiceCmdlinePopup",
         "NoiceCmdlinePopupBorder",
         "NoicePopup",
         "NoicePopupBorder",
-        "SnacksInputNormal",
-        "SnacksInputBorder",
-        "SnacksBackdrop",
+        "NoiceConfirm",
+        "NoiceConfirmBorder",
+        "NoicePopupmenu",
+        "NoicePopupmenuBorder",
+        "NotifyBackground",
+        "NotifyBorder",
+        "InclineNormal",
+        "InclineNormalNC",
+        "NeoTreeNormal",
+        "NeoTreeNormalNC",
+        "NeoTreeEndOfBuffer",
+        "NvimTreeNormal",
+        "NvimTreeNormalNC",
+        "NvimTreeEndOfBuffer",
+        "OilNormal",
+        "OilNormalNC",
+        "ToggleTerm",
+        "ToggleTermNormal",
+        "ToggleTermBorder",
+        "TroubleNormal",
+        "TroubleNormalNC",
+        "TroublePreview",
+        "WhichKey",
+        "WhichKeyNormal",
+        "WhichKeyBorder",
+        "FidgetNormal",
+        "FidgetTask",
+        "AerialNormal",
+        "DapUINormal",
+        "DapUINormalNC",
+        "DapUIFloatBorder",
+        "DropBarMenuNormalFloat",
+        "DropBarMenuFloatBorder",
+        "ZenBg",
     }
 
-    for _, group in ipairs(groups) do
-        vim.api.nvim_set_hl(0, group, { bg = normal_bg })
+    for _, group in ipairs(transparent_groups) do
+        local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
+        if ok and hl then
+            hl.bg = "NONE"
+            pcall(vim.api.nvim_set_hl, 0, group, hl)
+        else
+            pcall(vim.api.nvim_set_hl, 0, group, { bg = "NONE" })
+        end
     end
 end
 
@@ -256,21 +314,18 @@ local function apply_editor_chrome(transparent)
     local danger = hl_hex("DiagnosticError", "fg", "#ed8796")
 
     -- MATUGEN INTEGRATION: Safely inject Material You colors into the UI chrome!
-    -- We do NOT touch the actual code syntax colors (which stay powered by your base theme),
-    -- we only override the UI elements (borders, Telescope, menus, highlights).
     package.loaded["matugen-colors"] = nil
     local ok_matugen, matugen = pcall(require, "matugen-colors")
     if ok_matugen and type(matugen) == "table" then
         accent = matugen.primary or accent
         accent_alt = matugen.secondary or accent_alt
         danger = matugen.error or danger
-        -- If we aren't transparent, subtly tint the background with Matugen's surface color
         if not transparent and matugen.surface then
             normal_bg = blend(matugen.surface, normal_bg, 0.6)
         end
     end
 
-    local float_bg = get_glass_bg(normal_bg, normal_fg, transparent)
+    local float_bg = transparent and "NONE" or get_glass_bg(normal_bg, normal_fg, transparent)
     local float_border = blend(accent, normal_bg, 0.60)
     local sidebar_bg = transparent and "NONE" or blend(normal_fg, normal_bg, 0.04)
     local accent_bg = transparent and "NONE" or blend(accent, normal_bg, 0.12)
@@ -278,9 +333,13 @@ local function apply_editor_chrome(transparent)
 
     local highlights = {
         -- ── Editor chrome ─────────────────────────────────────────────────────
+        Normal = { fg = normal_fg, bg = transparent and "NONE" or normal_bg },
+        NormalNC = { fg = normal_fg, bg = transparent and "NONE" or normal_bg },
         CursorLine = { bg = transparent and "NONE" or blend(accent, normal_bg, 0.07) },
-        CursorLineNr = { fg = accent, bold = true },
-        LineNr = { fg = blend(comment, normal_bg, 0.85) },
+        CursorLineNr = { fg = accent, bg = "NONE", bold = true },
+        LineNr = { fg = blend(comment, normal_bg, 0.85), bg = "NONE" },
+        SignColumn = { bg = "NONE" },
+        EndOfBuffer = { fg = comment, bg = "NONE" },
         Visual = { bg = blend(accent_alt, normal_bg, 0.20) },
         Search = { fg = normal_fg, bg = blend(warning, normal_bg, 0.26) },
         IncSearch = { fg = normal_fg, bg = blend(danger, normal_bg, 0.30) },
@@ -303,7 +362,8 @@ local function apply_editor_chrome(transparent)
         NormalFloat = { fg = normal_fg, bg = float_bg },
         FloatBorder = { fg = float_border, bg = "NONE" },
         FloatTitle = { fg = accent, bg = "NONE", bold = true },
-        WinSeparator = { fg = soft_edge, bg = transparent and "NONE" or normal_bg },
+        FloatFooter = { fg = comment, bg = "NONE" },
+        WinSeparator = { fg = soft_edge, bg = "NONE" },
 
         -- ── Bufferline / tabline ──────────────────────────────────────────────
         BufferLineFill = { bg = sidebar_bg },
@@ -311,11 +371,17 @@ local function apply_editor_chrome(transparent)
 
         -- ── Telescope ─────────────────────────────────────────────────────────
         TelescopeNormal = { fg = normal_fg, bg = float_bg },
+        TelescopeNormalNC = { fg = normal_fg, bg = float_bg },
         TelescopeBorder = { fg = float_border, bg = float_bg },
         TelescopePromptNormal = { fg = normal_fg, bg = accent_bg },
         TelescopePromptBorder = { fg = float_border, bg = accent_bg },
+        TelescopePromptPrefix = { fg = accent, bg = accent_bg, bold = true },
         TelescopePromptTitle = { fg = normal_bg, bg = accent, bold = true },
+        TelescopePreviewNormal = { fg = normal_fg, bg = float_bg },
+        TelescopePreviewBorder = { fg = float_border, bg = float_bg },
         TelescopePreviewTitle = { fg = normal_bg, bg = success, bold = true },
+        TelescopeResultsNormal = { fg = normal_fg, bg = float_bg },
+        TelescopeResultsBorder = { fg = float_border, bg = float_bg },
         TelescopeResultsTitle = { fg = normal_bg, bg = accent_alt, bold = true },
 
         -- ── Trouble ───────────────────────────────────────────────────────────
@@ -347,6 +413,7 @@ local function apply_editor_chrome(transparent)
         Headline5Fg = { fg = accent_alt, bold = true },
         Headline6Fg = { fg = comment, bold = true },
         RenderMarkdownCode = { bg = float_bg },
+        RenderMarkdownCodeInline = { bg = float_bg },
         RenderMarkdownBullet = { fg = accent_alt },
         RenderMarkdownUnchecked = { fg = warning },
         RenderMarkdownChecked = { fg = success },
@@ -407,15 +474,24 @@ local function apply_editor_chrome(transparent)
         SnacksPickerList = { fg = normal_fg, bg = transparent and "NONE" or sidebar_bg },
         SnacksPickerInput = { fg = normal_fg, bg = transparent and "NONE" or sidebar_bg },
         SnacksPickerBox = { fg = normal_fg, bg = transparent and "NONE" or sidebar_bg },
+        SnacksPickerPreview = { fg = normal_fg, bg = transparent and "NONE" or sidebar_bg },
         SnacksPickerBorder = { fg = float_border, bg = transparent and "NONE" or float_bg },
+        SnacksPickerBoxBorder = { fg = float_border, bg = transparent and "NONE" or float_bg },
+        SnacksPickerInputBorder = { fg = float_border, bg = transparent and "NONE" or float_bg },
+        SnacksPickerListBorder = { fg = float_border, bg = transparent and "NONE" or float_bg },
+        SnacksPickerPreviewBorder = { fg = float_border, bg = transparent and "NONE" or float_bg },
         SnacksPickerTitle = { fg = normal_bg, bg = accent, bold = true },
         SnacksPickerMatch = { fg = accent, bold = true },
         SnacksPickerSelected = { fg = accent, bg = blend(accent, normal_bg, 0.15), bold = true },
         SnacksPickerDir = { fg = comment },
         SnacksPickerTotals = { fg = comment, italic = true },
         SnacksInputNormal = { fg = normal_fg, bg = transparent and "NONE" or float_bg },
-        SnacksInputTitle = { fg = normal_bg, bg = accent, bold = true },
-        SnacksInputBorder = { fg = float_border, bg = transparent and "NONE" or float_bg },
+        SnacksInputBorder = { fg = accent, bg = "NONE" },
+        SnacksInputTitle = { fg = accent, bg = "NONE", bold = true },
+        SnacksInputPrompt = { fg = accent_alt, bold = true },
+        SnacksInputIcon = { fg = accent },
+        SnacksBackdrop = { bg = "NONE" },
+        SnacksDashboardNormal = { bg = transparent and "NONE" or normal_bg },
         SnacksIndent = { fg = blend(comment, normal_bg, 0.32) },
         SnacksIndentScope = { fg = blend(accent, normal_bg, 0.85), bold = true },
         SnacksDashboardHeader = { fg = accent, bold = true },
@@ -444,10 +520,6 @@ local function apply_editor_chrome(transparent)
         AlphaButtons = { fg = accent_alt },
         AlphaShortcut = { fg = warning },
         AlphaFooter = { fg = comment },
-
-        -- ── Window labels ────────────────────────────────────────────────────
-        InclineNormal = { bg = "NONE" },
-        InclineNormalNC = { bg = "NONE" },
 
         -- ── Aerial ────────────────────────────────────────────────────────────
         AerialLine = { bg = blend(accent, normal_bg, 0.12) },
@@ -552,14 +624,6 @@ local function apply_editor_chrome(transparent)
 
         SnacksNotifierHistory = { fg = normal_fg, bg = float_bg },
 
-        -- ── Snacks Input (Floating Input Dialogs) ────────────────────────────
-        SnacksInputNormal = { fg = normal_fg, bg = float_bg },
-        SnacksInputBorder = { fg = accent, bg = "NONE" },
-        SnacksInputTitle = { fg = accent, bg = "NONE", bold = true },
-        SnacksInputPrompt = { fg = accent_alt, bold = true },
-        SnacksInputIcon = { fg = accent },
-        SnacksBackdrop = { bg = "NONE" },
-
         -- ── Completion item kinds ─────────────────────────────────────────────
         CmpItemKindFunction = { fg = accent },
         CmpItemKindMethod = { fg = accent },
@@ -615,154 +679,259 @@ end
 
 local function apply_catppuccin(theme, transparent)
     local flavour = theme:gsub("^catppuccin%-?", "")
-    if flavour == "" then
-        flavour = "mocha"
+    if flavour == "" or flavour == "catppuccin" then
+        flavour = "macchiato"
     end
 
-    require("catppuccin").setup({
-        flavour = flavour,
-        transparent_background = transparent,
-        term_colors = true,
-        integrations = {
-            aerial = true,
-            bufferline = true,
-            cmp = true,
-            gitsigns = true,
-            neotree = true,
-            noice = true,
-            notify = true,
-            render_markdown = true,
-            telescope = true,
-            treesitter = true,
-            which_key = true,
-        },
-    })
-
-    local ok = pcall(vim.cmd.colorscheme, "catppuccin")
-    if not ok then
-        pcall(vim.cmd.colorscheme, "catppuccin-mocha")
+    local ok, catppuccin = pcall(require, "catppuccin")
+    if ok then
+        catppuccin.setup({
+            flavour = flavour,
+            transparent_background = transparent,
+            term_colors = true,
+            integrations = {
+                aerial = true,
+                barbar = true,
+                bufferline = true,
+                cmp = true,
+                gitsigns = true,
+                neotree = true,
+                noice = true,
+                notify = true,
+                render_markdown = true,
+                snacks = true,
+                telescope = true,
+                treesitter = true,
+                which_key = true,
+            },
+        })
     end
+
+    local res = pcall(vim.cmd.colorscheme, "catppuccin-" .. flavour)
+    if not res then
+        pcall(vim.cmd.colorscheme, "catppuccin")
+    end
+end
+
+local function apply_tokyonight(theme, transparent)
+    local style = theme:gsub("^tokyonight%-?", "")
+    if style == "" or style == "tokyonight" then
+        style = "night"
+    end
+
+    local ok, tokyonight = pcall(require, "tokyonight")
+    if ok then
+        tokyonight.setup({
+            style = style,
+            transparent = transparent,
+            styles = {
+                sidebars = transparent and "transparent" or "dark",
+                floats = transparent and "transparent" or "dark",
+            },
+        })
+    end
+
+    vim.g.tokyonight_transparent = transparent
+    pcall(vim.cmd.colorscheme, theme)
 end
 
 local function apply_rose_pine(theme, transparent)
     local variant = theme == "rose-pine" and "main" or theme:match("^rose%-pine%-(.+)$") or "main"
 
-    require("rose-pine").setup({
-        variant = variant,
-        dark_variant = "main",
-        disable_background = transparent,
-        disable_float_background = transparent,
-        disable_italics = true,
-    })
+    local ok, rose_pine = pcall(require, "rose-pine")
+    if ok then
+        rose_pine.setup({
+            variant = variant,
+            dark_variant = "main",
+            disable_background = transparent,
+            disable_float_background = transparent,
+            disable_italics = true,
+        })
+    end
 
-    vim.cmd.colorscheme("rose-pine")
+    pcall(vim.cmd.colorscheme, "rose-pine")
 end
 
 local function apply_kanagawa(theme, transparent)
     local variant = theme:match("^kanagawa%-(.+)$") or "wave"
 
-    require("kanagawa").setup({
-        theme = variant,
-        transparent = transparent,
-        commentStyle = { italic = false },
-        keywordStyle = { italic = false },
-        statementStyle = { bold = false },
-    })
+    local ok, kanagawa = pcall(require, "kanagawa")
+    if ok then
+        kanagawa.setup({
+            theme = variant,
+            transparent = transparent,
+            commentStyle = { italic = false },
+            keywordStyle = { italic = false },
+            statementStyle = { bold = false },
+        })
+    end
 
-    vim.cmd.colorscheme("kanagawa")
+    pcall(vim.cmd.colorscheme, "kanagawa")
 end
 
 local function apply_nightfox(theme, transparent)
-    require("nightfox").setup({
-        options = {
-            transparent = transparent,
-        },
-    })
+    local ok, nightfox = pcall(require, "nightfox")
+    if ok then
+        nightfox.setup({
+            options = {
+                transparent = transparent,
+            },
+        })
+    end
 
-    vim.cmd.colorscheme(theme)
+    pcall(vim.cmd.colorscheme, theme)
+end
+
+local function apply_gruvbox(theme, transparent)
+    local ok, gruvbox = pcall(require, "gruvbox")
+    if ok then
+        gruvbox.setup({
+            transparent_mode = transparent,
+            contrast = "hard",
+        })
+    end
+    vim.g.gruvbox_transparent_bg = transparent and 1 or 0
+    pcall(vim.cmd.colorscheme, "gruvbox")
+end
+
+local function apply_gruvbox_material(theme, transparent)
+    vim.g.gruvbox_material_background = "hard"
+    vim.g.gruvbox_material_transparent_background = transparent and 1 or 0
+    pcall(vim.cmd.colorscheme, "gruvbox-material")
+end
+
+local function apply_everforest(theme, transparent)
+    vim.g.everforest_background = "hard"
+    vim.g.everforest_transparent_background = transparent and 1 or 0
+    pcall(vim.cmd.colorscheme, "everforest")
+end
+
+local function apply_dracula(theme, transparent)
+    local ok, dracula = pcall(require, "dracula")
+    if ok then
+        dracula.setup({
+            transparent_bg = transparent,
+        })
+    end
+    vim.g.dracula_transparent_bg = transparent
+    pcall(vim.cmd.colorscheme, "dracula")
+end
+
+local function apply_cyberdream(theme, transparent)
+    local ok, cyberdream = pcall(require, "cyberdream")
+    if ok then
+        cyberdream.setup({
+            transparent = transparent,
+            italic_comments = false,
+            hide_fillchars = true,
+            borderless_telescope = false,
+        })
+    end
+    pcall(vim.cmd.colorscheme, "cyberdream")
+end
+
+local function apply_onedark(theme, transparent)
+    local ok, onedarkpro = pcall(require, "onedarkpro")
+    if ok then
+        onedarkpro.setup({
+            options = { transparency = transparent },
+        })
+    end
+    pcall(vim.cmd.colorscheme, "onedark")
+end
+
+local function apply_material(theme, transparent)
+    local ok, material = pcall(require, "material")
+    if ok then
+        material.setup({
+            disable = {
+                background = transparent,
+                float_background = transparent,
+            },
+        })
+    end
+    vim.g.material_style = "ocean"
+    pcall(vim.cmd.colorscheme, "material")
+end
+
+local function apply_nord(theme, transparent)
+    vim.g.nord_disable_background = transparent
+    pcall(vim.cmd.colorscheme, "nord")
+end
+
+local function apply_vscode(theme, transparent)
+    local ok, vscode = pcall(require, "vscode")
+    if ok then
+        vscode.setup({
+            transparent = transparent,
+            italic_comments = false,
+        })
+    end
+    pcall(vim.cmd.colorscheme, "vscode")
+end
+
+local function apply_matugen(theme, transparent)
+    local ok_tokyo, tokyonight = pcall(require, "tokyonight")
+    if ok_tokyo then
+        tokyonight.setup({
+            style = "night",
+            transparent = transparent,
+            styles = {
+                sidebars = transparent and "transparent" or "dark",
+                floats = transparent and "transparent" or "dark",
+            },
+        })
+    end
+    vim.g.tokyonight_transparent = transparent
+    pcall(vim.cmd.colorscheme, "tokyonight-night")
+
+    package.loaded["matugen-colors"] = nil
+    local ok, matugen = pcall(require, "matugen-colors")
+    if ok and type(matugen) == "table" and matugen.background then
+        vim.api.nvim_set_hl(0, "Normal", { bg = transparent and "NONE" or matugen.background })
+        vim.api.nvim_set_hl(0, "NormalNC", { bg = transparent and "NONE" or matugen.background })
+    end
 end
 
 -- Apply the requested theme first, then re-style the surrounding UI so plugin windows
 -- look intentional instead of inheriting whatever defaults the colorscheme shipped with.
 local function apply_theme(theme, transparent)
-    if #vim.api.nvim_list_uis() == 0 then
-        return true
-    end
-
     if theme:match("^catppuccin") then
         apply_catppuccin(theme, transparent)
-        set_transparent_highlights(transparent)
-        apply_editor_chrome(transparent)
-        return true
-    end
-
-    if theme == "matugen" then
-        -- Load TokyoNight for robust syntax highlighting, 
-        -- the UI Chrome layer will override it with Matugen colors.
-        vim.g.tokyonight_transparent = transparent
-        pcall(vim.cmd.colorscheme, "tokyonight-night")
-        
-        -- Force the Normal background to be the exact Matugen background
-        package.loaded["matugen-colors"] = nil
-        local ok, matugen = pcall(require, "matugen-colors")
-        if ok and type(matugen) == "table" and matugen.background then
-            vim.api.nvim_set_hl(0, "Normal", { bg = transparent and "NONE" or matugen.background })
-            vim.api.nvim_set_hl(0, "NormalNC", { bg = transparent and "NONE" or matugen.background })
-        end
-
-        set_transparent_highlights(transparent)
-        apply_editor_chrome(transparent)
-        return true
-    end
-
-    if theme:match("^rose%-pine") then
+    elseif theme:match("^tokyonight") then
+        apply_tokyonight(theme, transparent)
+    elseif theme == "matugen" then
+        apply_matugen(theme, transparent)
+    elseif theme:match("^rose%-pine") then
         apply_rose_pine(theme, transparent)
-        set_transparent_highlights(transparent)
-        apply_editor_chrome(transparent)
-        return true
-    end
-
-    if theme:match("^kanagawa") then
+    elseif theme:match("^kanagawa") then
         apply_kanagawa(theme, transparent)
-        set_transparent_highlights(transparent)
-        apply_editor_chrome(transparent)
-        return true
-    end
-
-    if nightfox_themes[theme] then
+    elseif nightfox_themes[theme] then
         apply_nightfox(theme, transparent)
-        set_transparent_highlights(transparent)
-        apply_editor_chrome(transparent)
-        return true
-    end
-
-    if theme == "material" then
-        vim.g.material_style = "ocean"
-    elseif theme == "monokai" then
-        -- Standard monokai setup
-    elseif theme == "onedark" then
-        require("onedarkpro").setup({
-            options = { transparency = transparent }
-        })
-    elseif theme == "oxocarbon" then
-        -- oxocarbon doesn't have a setup, just a colorscheme
-    elseif theme == "gruvbox-material" then
-        vim.g.gruvbox_material_background = "hard"
-        vim.g.gruvbox_material_transparent_background = transparent and 1 or 0
-    end
-
-    if theme:match("^tokyonight") then
-        vim.g.tokyonight_transparent = transparent
     elseif theme == "gruvbox" then
-        vim.g.gruvbox_transparent_bg = transparent and 1 or 0
+        apply_gruvbox(theme, transparent)
+    elseif theme == "gruvbox-material" then
+        apply_gruvbox_material(theme, transparent)
+    elseif theme == "everforest" then
+        apply_everforest(theme, transparent)
     elseif theme == "dracula" then
-        vim.g.dracula_transparent_bg = transparent
-    end
-
-    local ok, err = pcall(vim.cmd.colorscheme, theme)
-    if not ok then
-        vim.notify("Could not load theme " .. theme .. ": " .. err, vim.log.levels.ERROR)
-        return false
+        apply_dracula(theme, transparent)
+    elseif theme == "cyberdream" then
+        apply_cyberdream(theme, transparent)
+    elseif theme == "onedark" then
+        apply_onedark(theme, transparent)
+    elseif theme == "material" then
+        apply_material(theme, transparent)
+    elseif theme == "nord" then
+        apply_nord(theme, transparent)
+    elseif theme == "vscode" then
+        apply_vscode(theme, transparent)
+    else
+        local ok, err = pcall(vim.cmd.colorscheme, theme)
+        if not ok then
+            vim.notify("Could not load theme " .. theme .. ": " .. tostring(err), vim.log.levels.ERROR)
+            return false
+        end
     end
 
     set_transparent_highlights(transparent)
@@ -781,26 +950,36 @@ function M.apply(name)
         return
     end
 
+    vim.g.preferred_theme = name
+    write_state(name, transparent)
+
     if not apply_theme(name, transparent) then
         return
     end
 
-    vim.g.preferred_theme = name
-    write_state(name, transparent)
-    vim.notify("Theme switched to " .. name)
+    vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
+    vim.api.nvim_exec_autocmds("User", { pattern = "StatusStyleChanged" })
+    pcall(function() require("incline").refresh() end)
+
+    vim.notify("Theme switched to " .. name, vim.log.levels.INFO, { title = "Theme" })
 end
 
 function M.toggle_transparency()
     local theme = vim.g.preferred_theme or M.default_theme
-    local transparent = not vim.g.preferred_transparent
+    local transparent = not (vim.g.preferred_transparent == true)
+
+    vim.g.preferred_transparent = transparent
+    write_state(theme, transparent)
 
     if not apply_theme(theme, transparent) then
         return
     end
 
-    vim.g.preferred_transparent = transparent
-    write_state(theme, transparent)
-    vim.notify(transparent and "Transparency is on" or "Transparency is off")
+    vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
+    vim.api.nvim_exec_autocmds("User", { pattern = "StatusStyleChanged" })
+    pcall(function() require("incline").refresh() end)
+
+    vim.notify(transparent and "Transparency is on" or "Transparency is off", vim.log.levels.INFO, { title = "Theme" })
 end
 
 function M.select()
@@ -848,28 +1027,24 @@ function M.select()
         snacks.picker.pick({
             title = " Colorscheme (Live Preview) ",
             items = items,
-            format = function(item, picker)
-                local ret = {}
-                if item.category == "Dark" then
-                    table.insert(ret, { "󰖔 ", "Directory" })
-                else
-                    table.insert(ret, { "󰖙 ", "DiagnosticWarn" })
-                end
-                table.insert(ret, { string.format("%-22s", item.text), item.is_default and "Function" or "Normal" })
-                table.insert(ret, { " [" .. item.category .. "]", "Comment" })
-                if item.is_default then
-                    table.insert(ret, { " (default)", "Special" })
-                end
-                return ret
+            format = function(item)
+                local icon = item.category == "Dark" and "󰖔 " or "󰖙 "
+                local def_str = item.is_default and " (default)" or ""
+                return {
+                    { icon, "SnacksPickerDim" },
+                    { item.text .. " ", "Normal" },
+                    { "[" .. item.category .. "]", "Comment" },
+                    { def_str, "DiagnosticInfo" },
+                }
             end,
             layout = {
                 preset = "select",
-                preview = false, -- Single panel (NO side preview box!)
-                width = 0.58,    -- Clean 58-60% width
+                preview = false,
+                width = 0.58,
                 min_width = 45,
                 height = 0.60,
             },
-            on_change = function(picker, item)
+            on_change = function(item)
                 if item and item.theme then
                     preview_theme(item.theme)
                 end
@@ -879,23 +1054,23 @@ function M.select()
                 if preview_timer then preview_timer:stop() end
                 picker:close()
                 if item and item.theme then
-                    vim.schedule(function()
-                        M.apply(item.theme)
-                    end)
+                    M.apply(item.theme)
                 end
             end,
-            on_close = function()
+            cancel = function(picker)
+                confirmed = true
                 if preview_timer then preview_timer:stop() end
-                if not confirmed then
-                    pcall(M.apply, initial_theme)
-                end
+                picker:close()
+                apply_theme(initial_theme, vim.g.preferred_transparent == true)
+                pcall(function() require("incline").refresh() end)
             end,
         })
         return
     end
 
+    -- Fallback to standard vim.ui.select if snacks is not ready
     vim.ui.select(items, {
-        prompt = "Select Colorscheme",
+        prompt = "Select a colorscheme:",
         format_item = function(item)
             local icon = item.category == "Dark" and "󰖔 " or "󰖙 "
             local def_str = item.is_default and " (default)" or ""
@@ -957,7 +1132,6 @@ function M.setup()
         apply_theme(M.default_theme, transparent)
         vim.g.preferred_theme = M.default_theme
     end
-    -- Set default lualine style to evil for a distinctive look
     vim.g.lualine_color_style = "evil"
 end
 
