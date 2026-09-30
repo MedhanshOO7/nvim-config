@@ -2605,8 +2605,64 @@ return {
 
         local function set_statusline_style(style_id)
             if not style_id or style_id == "" then
-                local choices = {}
+                local ok, snacks = pcall(require, "snacks")
+                local initial_style = get_style()
 
+                local items = {}
+                for _, s in ipairs(styles) do
+                    table.insert(items, {
+                        text = s.name,
+                        id = s.id,
+                        is_current = (s.id == initial_style),
+                    })
+                end
+
+                if ok and snacks and snacks.picker then
+                    snacks.picker.pick({
+                        title = " Statusline & Tab Style ",
+                        items = items,
+                        layout = {
+                            preset = "select",
+                            preview = false,
+                            width = 0.52,
+                            min_width = 38,
+                            height = 0.60,
+                        },
+                        format = function(item)
+                            local icon = item.is_current and "● " or "○ "
+                            local cur_str = item.is_current and " (active)" or ""
+                            return {
+                                { icon, item.is_current and "Function" or "Comment" },
+                                { item.text .. " ", "Normal" },
+                                { cur_str, "DiagnosticOk" },
+                            }
+                        end,
+                        on_change = function(item)
+                            if item and item.id then
+                                vim.g.lualine_color_style = item.id
+                                apply()
+                                refresh_barbar()
+                                refresh_incline()
+                            end
+                        end,
+                        confirm = function(picker, item)
+                            picker:close()
+                            if item and item.id then
+                                apply_style(item.id)
+                            end
+                        end,
+                        cancel = function(picker)
+                            picker:close()
+                            vim.g.lualine_color_style = initial_style
+                            apply()
+                            refresh_barbar()
+                            refresh_incline()
+                        end,
+                    })
+                    return
+                end
+
+                local choices = {}
                 for _, style in ipairs(styles) do
                     table.insert(choices, style.name)
                 end
@@ -2614,8 +2670,7 @@ return {
                 vim.ui.select(
                     choices,
                     {
-                        prompt =
-                            "Choose Statusline & Header Style:",
+                        prompt = "Choose Statusline & Header Style:",
                     },
                     function(choice)
                         if not choice then

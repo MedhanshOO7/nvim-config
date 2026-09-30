@@ -236,6 +236,11 @@ return {
                 preset = "telescope",
             },
             sources = {
+                select = {
+                    layout = {
+                        preset = "select",
+                    },
+                },
                 files = {
                     hidden = true,
                 },
