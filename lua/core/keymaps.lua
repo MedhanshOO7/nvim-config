@@ -449,4 +449,10 @@ end, { desc = "Toggle text wrapping" })
 map("n", "<leader>ua", cmd("AutoSaveToggle"), { desc = "Turn autosave on or off" })
 map("n", "<leader>ub", cmd("AutoSaveBufferToggle"), { desc = "Turn autosave on or off for this file" })
 
+-- Disable arrow keys to enforce hjkl navigation muscle memory
+map({ "n", "v", "x", "i" }, "<Up>", "<nop>", { desc = "Disabled (use k)" })
+map({ "n", "v", "x", "i" }, "<Down>", "<nop>", { desc = "Disabled (use j)" })
+map({ "n", "v", "x", "i" }, "<Left>", "<nop>", { desc = "Disabled (use h)" })
+map({ "n", "v", "x", "i" }, "<Right>", "<nop>", { desc = "Disabled (use l)" })
+
 -- Windows and sessions are defined in lua/plugins/windows.lua
