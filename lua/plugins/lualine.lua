@@ -9,6 +9,8 @@ return {
     },
 
     config = function()
+        local status_style = require("utils.status_style")
+
         ----------------------------------------------------------------------
         -- Autocmd group
         ----------------------------------------------------------------------
@@ -2577,6 +2579,7 @@ return {
 
         local function apply_style(style_id)
             vim.g.lualine_color_style = style_id
+            status_style.save_style(style_id)
 
             apply()
             refresh_barbar()
@@ -2771,6 +2774,7 @@ return {
                     end
 
                     vim.g.ui_nvchad_separator = name
+                    status_style.save_separator(name)
 
                     apply()
 

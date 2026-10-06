@@ -9,6 +9,7 @@ return {
 
     init = function()
         vim.g.barbar_auto_setup = false
+        require("utils.status_style").load()
 
         ----------------------------------------------------------------------
         -- Shared NvChad separator.
@@ -1482,6 +1483,7 @@ return {
                     end
 
                     vim.g.ui_nvchad_separator = name
+                    require("utils.status_style").save_separator(name)
 
                     setup_barbar()
 
