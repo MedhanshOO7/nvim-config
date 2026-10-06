@@ -76,6 +76,7 @@ end
 require("core.options")
 require("core.autocmds")
 require("core.lazy")
+require("utils.status_style").load()
 require("utils.theme").setup()
 require("core.keymaps")
 

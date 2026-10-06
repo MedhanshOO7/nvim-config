@@ -871,26 +871,263 @@ local function apply_vscode(theme, transparent)
 end
 
 local function apply_matugen(theme, transparent)
-    local ok_tokyo, tokyonight = pcall(require, "tokyonight")
-    if ok_tokyo then
-        tokyonight.setup({
-            style = "night",
-            transparent = transparent,
-            styles = {
-                sidebars = transparent and "transparent" or "dark",
-                floats = transparent and "transparent" or "dark",
-            },
-        })
-    end
-    vim.g.tokyonight_transparent = transparent
-    pcall(vim.cmd.colorscheme, "tokyonight-night")
-
+    -- Force-reload the generated palette so we always pick up fresh colors.
     package.loaded["matugen-colors"] = nil
-    local ok, matugen = pcall(require, "matugen-colors")
-    if ok and type(matugen) == "table" and matugen.background then
-        vim.api.nvim_set_hl(0, "Normal", { bg = transparent and "NONE" or matugen.background })
-        vim.api.nvim_set_hl(0, "NormalNC", { bg = transparent and "NONE" or matugen.background })
+    local ok, m = pcall(require, "matugen-colors")
+    if not ok or type(m) ~= "table" or not m.primary then
+        vim.notify("matugen-colors.lua missing or invalid — run matugen first", vim.log.levels.WARN)
+        return
     end
+
+    -- Reset everything before applying our own palette.
+    vim.cmd("highlight clear")
+
+    -- Aliases for readability.
+    local bg           = transparent and "NONE" or m.background
+    local fg           = m.on_background
+    local surface      = transparent and "NONE" or m.surface
+    local surface_c    = m.surface_container or m.surface_variant
+    local surface_cl   = m.surface_container_low or surface_c
+    local surface_ch   = m.surface_container_high or surface_c
+    local surface_chst = m.surface_container_highest or surface_ch
+    local surface_v    = m.surface_variant
+    local on_surface   = m.on_surface
+    local on_sv        = m.on_surface_variant
+    local outline      = m.outline
+    local outline_v    = m.outline_variant
+    local primary      = m.primary
+    local on_primary   = m.on_primary
+    local primary_c    = m.primary_container
+    local on_primary_c = m.on_primary_container
+    local secondary    = m.secondary
+    local on_secondary = m.on_secondary
+    local secondary_c  = m.secondary_container
+    local on_sec_c     = m.on_secondary_container
+    local tertiary     = m.tertiary
+    local on_tertiary  = m.on_tertiary
+    local tertiary_c   = m.tertiary_container
+    local on_tert_c    = m.on_tertiary_container
+    local error_col    = m.error
+    local on_error     = m.on_error
+    local error_c      = m.error_container
+    local on_error_c   = m.on_error_container
+    local inv_surface  = m.inverse_surface
+    local inv_on_surf  = m.inverse_on_surface
+    local inv_primary  = m.inverse_primary
+    local surf_bright  = m.surface_bright
+    local surf_dim     = m.surface_dim
+
+    local hl = function(group, opts) vim.api.nvim_set_hl(0, group, opts) end
+
+    -- ── Editor chrome ────────────────────────────────────────────────────
+    hl("Normal",        { fg = fg, bg = bg })
+    hl("NormalNC",      { fg = fg, bg = bg })
+    hl("NormalFloat",   { fg = fg, bg = transparent and "NONE" or surface_cl })
+    hl("FloatBorder",   { fg = outline, bg = "NONE" })
+    hl("FloatTitle",    { fg = primary, bg = "NONE", bold = true })
+    hl("FloatFooter",   { fg = outline, bg = "NONE" })
+    hl("WinSeparator",  { fg = outline_v, bg = "NONE" })
+    hl("VertSplit",     { fg = outline_v, bg = "NONE" })
+
+    -- Cursor & lines
+    hl("Cursor",        { fg = bg, bg = primary })
+    hl("lCursor",       { fg = bg, bg = primary })
+    hl("CursorLine",    { bg = transparent and "NONE" or surface_c })
+    hl("CursorColumn",  { bg = transparent and "NONE" or surface_c })
+    hl("CursorLineNr",  { fg = primary, bold = true })
+    hl("LineNr",        { fg = outline })
+    hl("SignColumn",    { bg = "NONE" })
+    hl("EndOfBuffer",   { fg = outline_v })
+    hl("ColorColumn",   { bg = surface_c })
+    hl("Conceal",       { fg = outline })
+
+    -- Selection & search
+    hl("Visual",        { bg = primary_c })
+    hl("VisualNOS",     { bg = primary_c })
+    hl("Search",        { fg = on_primary_c, bg = primary_c })
+    hl("IncSearch",     { fg = on_secondary, bg = secondary })
+    hl("CurSearch",     { fg = on_primary, bg = primary, bold = true })
+    hl("Substitute",    { fg = on_error, bg = error_col })
+
+    -- Statusline
+    hl("StatusLine",    { fg = on_surface, bg = transparent and "NONE" or surface_c })
+    hl("StatusLineNC",  { fg = outline, bg = transparent and "NONE" or surface_cl })
+    hl("WinBar",        { fg = on_surface, bg = "NONE" })
+    hl("WinBarNC",      { fg = outline, bg = "NONE" })
+
+    -- Tabs & folds
+    hl("TabLine",       { fg = on_sv, bg = surface_cl })
+    hl("TabLineSel",    { fg = primary, bg = surface_c, bold = true })
+    hl("TabLineFill",   { bg = transparent and "NONE" or surface_cl })
+    hl("Folded",        { fg = outline, bg = transparent and "NONE" or surface_cl })
+    hl("FoldColumn",    { fg = outline, bg = "NONE" })
+
+    -- Popup menu
+    hl("Pmenu",         { fg = on_surface, bg = surface_c })
+    hl("PmenuSel",      { fg = on_primary_c, bg = primary_c, bold = true })
+    hl("PmenuSbar",     { bg = surface_ch })
+    hl("PmenuThumb",    { bg = primary })
+
+    -- Messages & mode
+    hl("MsgArea",       { fg = on_surface })
+    hl("ModeMsg",       { fg = primary, bold = true })
+    hl("MoreMsg",       { fg = primary })
+    hl("WarningMsg",    { fg = error_col })
+    hl("ErrorMsg",      { fg = on_error, bg = error_col })
+    hl("Question",      { fg = primary })
+    hl("Title",         { fg = primary, bold = true })
+    hl("Directory",     { fg = primary })
+
+    -- Diff
+    hl("DiffAdd",       { bg = blend(primary, m.background, 0.15) })
+    hl("DiffChange",    { bg = blend(secondary, m.background, 0.12) })
+    hl("DiffDelete",    { fg = error_col, bg = blend(error_col, m.background, 0.10) })
+    hl("DiffText",      { bg = blend(primary, m.background, 0.25) })
+
+    -- Spell
+    hl("SpellBad",      { sp = error_col, undercurl = true })
+    hl("SpellCap",      { sp = primary, undercurl = true })
+    hl("SpellLocal",    { sp = secondary, undercurl = true })
+    hl("SpellRare",     { sp = tertiary, undercurl = true })
+
+    -- Misc
+    hl("NonText",       { fg = outline_v })
+    hl("SpecialKey",    { fg = outline_v })
+    hl("MatchParen",    { fg = primary, bg = surface_v, bold = true })
+
+    -- ── Syntax highlighting ──────────────────────────────────────────────
+    hl("Comment",       { fg = outline, italic = true })
+    hl("Constant",      { fg = tertiary })
+    hl("String",        { fg = secondary })
+    hl("Character",     { fg = secondary })
+    hl("Number",        { fg = tertiary })
+    hl("Boolean",       { fg = tertiary, bold = true })
+    hl("Float",         { fg = tertiary })
+    hl("Identifier",    { fg = on_surface })
+    hl("Function",      { fg = primary })
+    hl("Statement",     { fg = primary, bold = true })
+    hl("Conditional",   { fg = primary })
+    hl("Repeat",        { fg = primary })
+    hl("Label",         { fg = primary })
+    hl("Operator",      { fg = on_sv })
+    hl("Keyword",       { fg = tertiary })
+    hl("Exception",     { fg = error_col })
+    hl("PreProc",       { fg = tertiary })
+    hl("Include",       { fg = tertiary })
+    hl("Define",        { fg = tertiary })
+    hl("Macro",         { fg = tertiary })
+    hl("PreCondit",     { fg = tertiary })
+    hl("Type",          { fg = secondary })
+    hl("StorageClass",  { fg = secondary })
+    hl("Structure",     { fg = secondary })
+    hl("Typedef",       { fg = secondary })
+    hl("Special",       { fg = primary })
+    hl("SpecialChar",   { fg = primary })
+    hl("Tag",           { fg = primary })
+    hl("Delimiter",     { fg = on_sv })
+    hl("SpecialComment",{ fg = primary, italic = true })
+    hl("Debug",         { fg = error_col })
+    hl("Underlined",    { fg = primary, underline = true })
+    hl("Bold",          { bold = true })
+    hl("Italic",        { italic = true })
+    hl("Ignore",        { fg = outline_v })
+    hl("Error",         { fg = on_error, bg = error_col })
+    hl("Todo",          { fg = on_primary, bg = primary, bold = true })
+
+    -- ── Diagnostics ──────────────────────────────────────────────────────
+    hl("DiagnosticError",          { fg = error_col })
+    hl("DiagnosticWarn",           { fg = tertiary })
+    hl("DiagnosticInfo",           { fg = primary })
+    hl("DiagnosticHint",           { fg = secondary })
+    hl("DiagnosticOk",             { fg = primary })
+    hl("DiagnosticUnderlineError", { sp = error_col, undercurl = true })
+    hl("DiagnosticUnderlineWarn",  { sp = tertiary, undercurl = true })
+    hl("DiagnosticUnderlineInfo",  { sp = primary, undercurl = true })
+    hl("DiagnosticUnderlineHint",  { sp = secondary, undercurl = true })
+    hl("DiagnosticVirtualTextError", { fg = error_col, bg = blend(error_col, m.background, 0.10) })
+    hl("DiagnosticVirtualTextWarn",  { fg = tertiary, bg = blend(tertiary, m.background, 0.10) })
+    hl("DiagnosticVirtualTextInfo",  { fg = primary, bg = blend(primary, m.background, 0.10) })
+    hl("DiagnosticVirtualTextHint",  { fg = secondary, bg = blend(secondary, m.background, 0.10) })
+
+    -- ── LSP ──────────────────────────────────────────────────────────────
+    hl("LspReferenceText",  { bg = blend(primary, m.background, 0.12) })
+    hl("LspReferenceRead",  { bg = blend(primary, m.background, 0.12) })
+    hl("LspReferenceWrite", { bg = blend(primary, m.background, 0.18) })
+    hl("LspInlayHint",     { fg = outline, bg = blend(outline, m.background, 0.06), italic = true })
+
+    -- ── Treesitter ───────────────────────────────────────────────────────
+    hl("@variable",                 { fg = on_surface })
+    hl("@variable.builtin",         { fg = tertiary, italic = true })
+    hl("@variable.parameter",       { fg = on_sv, italic = true })
+    hl("@variable.member",          { fg = on_surface })
+    hl("@constant",                 { fg = tertiary })
+    hl("@constant.builtin",         { fg = tertiary, bold = true })
+    hl("@module",                   { fg = secondary })
+    hl("@string",                   { fg = secondary })
+    hl("@string.escape",            { fg = primary })
+    hl("@string.regex",             { fg = tertiary })
+    hl("@character",                { fg = secondary })
+    hl("@number",                   { fg = tertiary })
+    hl("@boolean",                  { fg = tertiary, bold = true })
+    hl("@float",                    { fg = tertiary })
+    hl("@function",                 { fg = primary })
+    hl("@function.builtin",         { fg = primary, italic = true })
+    hl("@function.call",            { fg = primary })
+    hl("@function.macro",           { fg = tertiary })
+    hl("@method",                   { fg = primary })
+    hl("@method.call",              { fg = primary })
+    hl("@constructor",              { fg = primary })
+    hl("@keyword",                  { fg = tertiary })
+    hl("@keyword.function",         { fg = tertiary })
+    hl("@keyword.operator",         { fg = on_sv })
+    hl("@keyword.return",           { fg = error_col, bold = true })
+    hl("@keyword.coroutine",        { fg = tertiary, bold = true })
+    hl("@keyword.exception",        { fg = error_col, bold = true })
+    hl("@conditional",              { fg = primary })
+    hl("@repeat",                   { fg = primary })
+    hl("@label",                    { fg = primary })
+    hl("@operator",                 { fg = on_sv })
+    hl("@exception",                { fg = error_col })
+    hl("@type",                     { fg = secondary })
+    hl("@type.builtin",             { fg = secondary, italic = true })
+    hl("@type.qualifier",           { fg = tertiary })
+    hl("@include",                  { fg = tertiary })
+    hl("@punctuation.bracket",      { fg = on_sv })
+    hl("@punctuation.delimiter",    { fg = on_sv })
+    hl("@punctuation.special",      { fg = primary })
+    hl("@comment",                  { fg = outline, italic = true })
+    hl("@comment.documentation",    { fg = outline, italic = true })
+    hl("@tag",                      { fg = primary })
+    hl("@tag.attribute",            { fg = tertiary, italic = true })
+    hl("@tag.delimiter",            { fg = on_sv })
+    hl("@attribute",                { fg = tertiary })
+    hl("@property",                 { fg = on_surface })
+    hl("@text.strong",              { bold = true })
+    hl("@text.emphasis",            { italic = true })
+    hl("@text.underline",           { underline = true })
+    hl("@text.title",               { fg = primary, bold = true })
+    hl("@text.uri",                 { fg = primary, underline = true })
+    hl("@text.todo",                { fg = on_primary, bg = primary, bold = true })
+    hl("@text.note",                { fg = on_primary_c, bg = primary_c })
+    hl("@text.warning",             { fg = on_error_c, bg = error_c })
+    hl("@text.danger",              { fg = on_error, bg = error_col })
+
+    -- Semantic tokens (LSP)
+    hl("@lsp.type.comment",         { fg = outline, italic = true })
+    hl("@lsp.type.interface",       { fg = secondary, bold = true })
+    hl("@lsp.type.struct",          { fg = secondary, bold = true })
+    hl("@lsp.type.typeParameter",   { fg = tertiary, italic = true })
+    hl("@lsp.type.decorator",       { fg = tertiary, bold = true })
+
+    -- Markup (markdown)
+    hl("@markup.raw.block.markdown",          { bg = transparent and "NONE" or surface_cl })
+    hl("@markup.link.label.markdown_inline",  { fg = primary, bold = true, underline = true })
+    hl("@markup.link.url.markdown_inline",    { fg = outline, underline = true })
+
+    -- ── Git signs ────────────────────────────────────────────────────────
+    hl("GitSignsAdd",    { fg = primary })
+    hl("GitSignsChange", { fg = secondary })
+    hl("GitSignsDelete", { fg = error_col })
 end
 
 -- Apply the requested theme first, then re-style the surrounding UI so plugin windows
@@ -1097,6 +1334,23 @@ function M.setup()
         end,
     })
 
+    -- Live-reload: when matugen regenerates colors it sends SIGUSR1 to all nvim
+    -- instances. Re-apply the matugen theme so the new palette takes effect.
+    vim.api.nvim_create_autocmd("Signal", {
+        group = vim.api.nvim_create_augroup("matugen_live_reload", { clear = true }),
+        pattern = "SIGUSR1",
+        callback = function()
+            if vim.g.preferred_theme == "matugen" then
+                local transparent = vim.g.preferred_transparent == true
+                apply_theme("matugen", transparent)
+                apply_editor_chrome(transparent)
+                vim.api.nvim_exec_autocmds("User", { pattern = "StatusStyleChanged" })
+                pcall(function() require("incline").refresh() end)
+                vim.notify("Matugen colors reloaded", vim.log.levels.INFO, { title = "Theme" })
+            end
+        end,
+    })
+
     vim.api.nvim_create_user_command("ThemePicker", function()
         M.select()
     end, { desc = "Pick a colorscheme" })
@@ -1132,7 +1386,7 @@ function M.setup()
         apply_theme(M.default_theme, transparent)
         vim.g.preferred_theme = M.default_theme
     end
-    vim.g.lualine_color_style = "evil"
+    vim.g.lualine_color_style = vim.g.lualine_color_style or "evil"
 end
 
 return M
