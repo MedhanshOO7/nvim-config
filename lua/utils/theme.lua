@@ -1154,7 +1154,6 @@ function M.apply(name)
 
     vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
     vim.api.nvim_exec_autocmds("User", { pattern = "StatusStyleChanged" })
-    pcall(function() require("incline").refresh() end)
 
     vim.notify("Theme switched to " .. name, vim.log.levels.INFO, { title = "Theme" })
 end
@@ -1172,7 +1171,6 @@ function M.toggle_transparency()
 
     vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
     vim.api.nvim_exec_autocmds("User", { pattern = "StatusStyleChanged" })
-    pcall(function() require("incline").refresh() end)
 
     vim.notify(transparent and "Transparency is on" or "Transparency is off", vim.log.levels.INFO, { title = "Theme" })
 end
@@ -1210,7 +1208,6 @@ function M.select()
         preview_timer:start(35, 0, vim.schedule_wrap(function()
             if not confirmed and name then
                 apply_theme(name, vim.g.preferred_transparent == true)
-                pcall(function() require("incline").refresh() end)
                 pcall(function()
                     vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
                 end)
@@ -1257,7 +1254,6 @@ function M.select()
                 if preview_timer then preview_timer:stop() end
                 picker:close()
                 apply_theme(initial_theme, vim.g.preferred_transparent == true)
-                pcall(function() require("incline").refresh() end)
             end,
         })
         return
@@ -1303,7 +1299,6 @@ function M.setup()
                 apply_theme("matugen", transparent)
                 apply_editor_chrome(transparent)
                 vim.api.nvim_exec_autocmds("User", { pattern = "StatusStyleChanged" })
-                pcall(function() require("incline").refresh() end)
                 vim.notify("Matugen colors reloaded", vim.log.levels.INFO, { title = "Theme" })
             end
         end,
