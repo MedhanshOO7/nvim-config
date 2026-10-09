@@ -8,12 +8,13 @@ local function greeting()
 end
 
 local function apply_dashboard_gradients()
-    vim.api.nvim_set_hl(0, "SnacksDashGrad1", { fg = "#89dceb", bold = true })
-    vim.api.nvim_set_hl(0, "SnacksDashGrad2", { fg = "#89b4fa", bold = true })
-    vim.api.nvim_set_hl(0, "SnacksDashGrad3", { fg = "#b4befe", bold = true })
-    vim.api.nvim_set_hl(0, "SnacksDashGrad4", { fg = "#cba6f7", bold = true })
-    vim.api.nvim_set_hl(0, "SnacksDashGrad5", { fg = "#f5c2e7", bold = true })
-    vim.api.nvim_set_hl(0, "SnacksDashGrad6", { fg = "#fab387", bold = true })
+    -- Header gradient follows the active theme (cyan → accent → keyword → constant)
+    local palette = require("utils.palette")
+    local c = palette.colors()
+    local steps = palette.gradient({ c.cyan, c.blue, c.violet, c.orange }, 6)
+    for i, color in ipairs(steps) do
+        vim.api.nvim_set_hl(0, "SnacksDashGrad" .. i, { fg = color, bold = true })
+    end
 end
 
 -- Shared resize step for explorer width keymaps (+/> grow, -/< shrink)
@@ -26,8 +27,7 @@ end
 return {
     "folke/snacks.nvim",
     priority = 1000,
-    lazy = true,
-    event = "VeryLazy",
+    lazy = false, -- bigfile/quickfile/dashboard must hook in before the first buffer loads
     opts = {
         animate = {
             enabled = false,
@@ -37,7 +37,7 @@ return {
         bigfile = {
             enabled = true,
             notify = true,
-            size = 0.5 * 1024 * 1024, -- 1 MB threshold
+            size = 0.5 * 1024 * 1024, -- 512 KB threshold
             line_length = 1000, -- line length threshold for minified files
             setup = function(ctx)
                 vim.b[ctx.buf].large_file = true
@@ -456,19 +456,6 @@ return {
             end,
         })
 
-        vim.api.nvim_create_autocmd("User", {
-            pattern = "OilActionsPost",
-            callback = function(event)
-                if
-                    event.data
-                    and event.data.actions
-                    and event.data.actions[1]
-                    and event.data.actions[1].type == "move"
-                then
-                    Snacks.rename.on_rename_file(event.data.actions[1].src_url, event.data.actions[1].dest_url)
-                end
-            end,
-        })
         vim.api.nvim_create_user_command("ImageToggle", function()
             if Snacks.image and Snacks.image.doc then
                 Snacks.image.doc.enabled = not Snacks.image.doc.enabled

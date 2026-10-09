@@ -34,30 +34,37 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 -- ── Quick Dismiss Windows (q & Esc) ───────────────────────────
--- Optimized: Use only BufEnter instead of FileType+BufEnter for better performance
-vim.api.nvim_create_autocmd("BufEnter", {
+-- Explicit filetype list: matching every `buftype=nofile` buffer used to hijack
+-- `q` (macro recording) in scratch buffers and plugin UIs that own their keys.
+vim.api.nvim_create_autocmd("FileType", {
     group = vim.api.nvim_create_augroup("QuickDismissWindows", { clear = true }),
-    pattern = "*",
+    pattern = {
+        "qf",
+        "help",
+        "notify",
+        "noice",
+        "checkhealth",
+        "lspinfo",
+        "startuptime",
+        "query",
+        "dap-float",
+        "neotest-output",
+        "neotest-output-panel",
+        "OverseerList",
+        "OverseerForm",
+        "git",
+    },
     callback = function(event)
-        local bt = vim.bo[event.buf].buftype
-        local ft = vim.bo[event.buf].filetype or ""
-
-        -- Do not hijack keys in interactive explorer / DB buffers / terminal buffers
-        if ft == "dbui" or ft == "dbout" or ft == "dadbod" or ft == "oil" or ft:match("dbui") or bt == "terminal" then
-            return
-        end
-
-        if bt == "nofile" or bt == "quickfix" or ft:match("overseer") or ft:match("Overseer") or ft == "qf" or ft == "help" or ft == "notify" then
-            local function close_win()
-                if #vim.api.nvim_tabpage_list_wins(0) > 1 then
-                    pcall(vim.cmd, "close")
-                else
-                    pcall(vim.cmd, "bdelete")
-                end
+        local function close_win()
+            if #vim.api.nvim_tabpage_list_wins(0) > 1 then
+                pcall(vim.cmd, "close")
+            else
+                pcall(vim.cmd, "bdelete")
             end
-            pcall(vim.keymap.set, "n", "q", close_win, { buffer = event.buf, silent = true, desc = "Close window" })
-            pcall(vim.keymap.set, "n", "<Esc>", close_win, { buffer = event.buf, silent = true, desc = "Close window" })
         end
+        vim.bo[event.buf].buflisted = false
+        vim.keymap.set("n", "q", close_win, { buffer = event.buf, silent = true, desc = "Close window" })
+        vim.keymap.set("n", "<Esc>", close_win, { buffer = event.buf, silent = true, desc = "Close window" })
     end,
 })
 
@@ -117,20 +124,6 @@ vim.api.nvim_create_autocmd("FileType", {
 
         -- Note: Heuristic code highlighting removed for better performance.
         -- Consider adding lightweight syntax via ftplugin if needed.
-    end,
-})
-
--- ── Help Page Enhancements ───────────────────────────────────
-local help_group = vim.api.nvim_create_augroup("HelpPageSettings", { clear = true })
-
-vim.api.nvim_create_autocmd("FileType", {
-    group = help_group,
-    pattern = "help",
-    callback = function()
-        -- Help pages usually have their own keybindings, but we ensure 'q' works if not set
-        if vim.fn.maparg("q", "n") == "" then
-            vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = true, silent = true, desc = "Close Help" })
-        end
     end,
 })
 
@@ -245,22 +238,19 @@ vim.api.nvim_create_user_command("ExplorerSize", function(opts)
     end
 end, { nargs = "?", desc = "Show or set explorer / window width (e.g. :ExplorerSize 24)" })
 
-    -- Auto open explorer when starting nvim with a directory
-    vim.api.nvim_create_autocmd("VimEnter", {
-        group = vim.api.nvim_create_augroup("AutoOpenExplorer", { clear = true }),
-        callback = function()
-            local args = vim.fn.argv()
-            if #args == 1 then
-                local path = args[1]
-                if vim.fn.isdirectory(path) == 1 then
-                    -- Open explorer after a short delay to ensure UI is ready
-                    vim.schedule(function()
-                        local ok, snacks = pcall(require, "snacks")
-                        if ok and snacks.explorer then
-                            snacks.explorer()
-                        end
-                    end)
+-- ── Auto open explorer when starting nvim with a directory ───
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = vim.api.nvim_create_augroup("AutoOpenExplorer", { clear = true }),
+    callback = function()
+        local args = vim.fn.argv()
+        if #args == 1 and vim.fn.isdirectory(args[1]) == 1 then
+            -- Defer so the UI is ready before the explorer opens
+            vim.schedule(function()
+                local ok, snacks = pcall(require, "snacks")
+                if ok and snacks.explorer then
+                    snacks.explorer()
                 end
-            end
-        end,
-    })
+            end)
+        end
+    end,
+})
