@@ -1,6 +1,8 @@
 return {
     "gorbit99/codewindow.nvim",
-    event = "VeryLazy",
+    keys = {
+        { "<leader>mm", function() require("codewindow").toggle_minimap() end, desc = "Toggle Minimap" },
+    },
     config = function()
         local ok, codewindow = pcall(require, "codewindow")
         if not ok then return end
@@ -19,7 +21,5 @@ return {
             window_border = "none",
             relative = "win",
         })
-        vim.keymap.set("n", "<leader>mm", function() codewindow.toggle_minimap() end,
-            { desc = "Toggle Minimap" })
     end,
 }

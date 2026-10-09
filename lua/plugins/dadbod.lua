@@ -31,23 +31,7 @@ return {
     {
         "kristijanhusak/vim-dadbod-completion",
         dependencies = { "tpope/vim-dadbod" },
-        ft = { "sql", "mysql", "plsql" },
-        config = function()
-            -- nvim-cmp users: this wires the source automatically.
-            -- blink.cmp users: delete this whole config() block and instead add
-            -- "vim-dadbod-completion" to the `sources.default` list in your
-            -- blink.cmp opts (blink has its own dadbod integration, no autocmd needed).
-            local ok, cmp = pcall(require, "cmp")
-            if not ok then
-                return
-            end
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "sql", "mysql", "plsql" },
-                callback = function()
-                    cmp.setup.buffer({ sources = { { name = "vim-dadbod-completion" } } })
-                end,
-            })
-        end,
+        ft = { "sql", "mysql", "plsql" }, -- source is wired in blink.cmp (lua/plugins/cmp.lua)
     },
     {
         "kristijanhusak/vim-dadbod-ui",

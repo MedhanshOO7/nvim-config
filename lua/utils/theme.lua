@@ -222,16 +222,6 @@ local function set_transparent_highlights(enabled)
         "FloatTitle",
         "FloatFooter",
         "NormalFloat",
-        "TelescopeNormal",
-        "TelescopeNormalNC",
-        "TelescopeBorder",
-        "TelescopePromptNormal",
-        "TelescopePromptBorder",
-        "TelescopePromptPrefix",
-        "TelescopeResultsNormal",
-        "TelescopeResultsBorder",
-        "TelescopePreviewNormal",
-        "TelescopePreviewBorder",
         "SnacksNormal",
         "SnacksNormalNC",
         "SnacksPicker",
@@ -260,16 +250,6 @@ local function set_transparent_highlights(enabled)
         "NoicePopupmenuBorder",
         "NotifyBackground",
         "NotifyBorder",
-        "InclineNormal",
-        "InclineNormalNC",
-        "NeoTreeNormal",
-        "NeoTreeNormalNC",
-        "NeoTreeEndOfBuffer",
-        "NvimTreeNormal",
-        "NvimTreeNormalNC",
-        "NvimTreeEndOfBuffer",
-        "OilNormal",
-        "OilNormalNC",
         "ToggleTerm",
         "ToggleTermNormal",
         "ToggleTermBorder",
@@ -279,8 +259,6 @@ local function set_transparent_highlights(enabled)
         "WhichKey",
         "WhichKeyNormal",
         "WhichKeyBorder",
-        "FidgetNormal",
-        "FidgetTask",
         "AerialNormal",
         "DapUINormal",
         "DapUINormalNC",
@@ -328,7 +306,6 @@ local function apply_editor_chrome(transparent)
     local float_bg = transparent and "NONE" or get_glass_bg(normal_bg, normal_fg, transparent)
     local float_border = blend(accent, normal_bg, 0.60)
     local sidebar_bg = transparent and "NONE" or blend(normal_fg, normal_bg, 0.04)
-    local accent_bg = transparent and "NONE" or blend(accent, normal_bg, 0.12)
     local soft_edge = blend(comment, normal_bg, 0.60)
 
     local highlights = {
@@ -346,8 +323,6 @@ local function apply_editor_chrome(transparent)
         CurSearch = { fg = normal_fg, bg = blend(danger, normal_bg, 0.30), bold = true },
         StatusLine = { fg = normal_fg, bg = "NONE" },
         StatusLineNC = { fg = comment, bg = "NONE" },
-        InclineNormal = { bg = "NONE" },
-        InclineNormalNC = { bg = "NONE" },
 
         -- ── Completion menu & AI Ghost Text ────────────────────────────────────
         Pmenu = { fg = normal_fg, bg = float_bg },
@@ -356,7 +331,6 @@ local function apply_editor_chrome(transparent)
         PmenuThumb = { bg = blend(accent, normal_bg, 0.42) },
         CopilotSuggestion = { fg = blend(comment, normal_bg, 0.65), italic = true },
         CopilotAnnotation = { fg = blend(comment, normal_bg, 0.60), italic = true },
-        SupermavenSuggestion = { fg = blend(comment, normal_bg, 0.65), italic = true },
 
         -- ── Floating windows ──────────────────────────────────────────────────
         NormalFloat = { fg = normal_fg, bg = float_bg },
@@ -365,24 +339,7 @@ local function apply_editor_chrome(transparent)
         FloatFooter = { fg = comment, bg = "NONE" },
         WinSeparator = { fg = soft_edge, bg = "NONE" },
 
-        -- ── Bufferline / tabline ──────────────────────────────────────────────
-        BufferLineFill = { bg = sidebar_bg },
         TabLineFill = { bg = sidebar_bg },
-
-        -- ── Telescope ─────────────────────────────────────────────────────────
-        TelescopeNormal = { fg = normal_fg, bg = float_bg },
-        TelescopeNormalNC = { fg = normal_fg, bg = float_bg },
-        TelescopeBorder = { fg = float_border, bg = float_bg },
-        TelescopePromptNormal = { fg = normal_fg, bg = accent_bg },
-        TelescopePromptBorder = { fg = float_border, bg = accent_bg },
-        TelescopePromptPrefix = { fg = accent, bg = accent_bg, bold = true },
-        TelescopePromptTitle = { fg = normal_bg, bg = accent, bold = true },
-        TelescopePreviewNormal = { fg = normal_fg, bg = float_bg },
-        TelescopePreviewBorder = { fg = float_border, bg = float_bg },
-        TelescopePreviewTitle = { fg = normal_bg, bg = success, bold = true },
-        TelescopeResultsNormal = { fg = normal_fg, bg = float_bg },
-        TelescopeResultsBorder = { fg = float_border, bg = float_bg },
-        TelescopeResultsTitle = { fg = normal_bg, bg = accent_alt, bold = true },
 
         -- ── Trouble ───────────────────────────────────────────────────────────
         TroubleNormal = { fg = normal_fg, bg = float_bg },
@@ -394,10 +351,6 @@ local function apply_editor_chrome(transparent)
         -- ── Notify ────────────────────────────────────────────────────────────
         NotifyBackground = { bg = float_bg },
         NotifyBorder = { fg = float_border, bg = float_bg },
-
-        -- ── Indent blankline ──────────────────────────────────────────────────
-        IblIndent = { fg = blend(comment, normal_bg, 0.35) },
-        IblScope = { fg = blend(accent, normal_bg, 0.75) },
 
         -- ── Render-markdown ───────────────────────────────────────────────────
         Headline1Bg = { fg = normal_fg, bg = blend(danger, normal_bg, 0.18), bold = true },

@@ -39,12 +39,6 @@ return {
 
         if blink_ok then
             capabilities = blink.get_lsp_capabilities(capabilities)
-        else
-            local cmp_lsp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-
-            if cmp_lsp_ok then
-                capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-            end
         end
 
         capabilities.textDocument.foldingRange = {
@@ -149,53 +143,9 @@ return {
             },
         })
 
-        -- ============================================================
-        -- LSP PROGRESS
-        -- ============================================================
-
-        vim.lsp.handlers["$/progress"] = function(_, result, ctx)
-            local client = vim.lsp.get_client_by_id(ctx.client_id)
-            local value = result.value
-
-            if not value or not client then
-                return
-            end
-
-            local title = client.name
-            local message = value.message
-            local percentage = value.percentage
-            local kind = value.kind
-
-            -- fidget.nvim handles LSP progress display natively.
-        end
-
-        -- ============================================================
-        -- HOVER
-        -- ============================================================
-
-        vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
-            local opts = vim.tbl_extend("force", config or {}, {
-                border = float_border,
-                max_width = math.floor(vim.o.columns * 0.45),
-                max_height = math.floor(vim.o.lines * 0.30),
-            })
-
-            return vim.lsp.handlers.hover(err, result, ctx, opts)
-        end
-
-        -- ============================================================
-        -- SIGNATURE HELP
-        -- ============================================================
-
-        -- vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
-        --     local opts = vim.tbl_extend("force", config or {}, {
-        --         border = float_border,
-        --         max_width = math.floor(vim.o.columns * 0.45),
-        --         max_height = math.floor(vim.o.lines * 0.18),
-        --     })
-        --
-        --     return vim.lsp.handlers.signature_help(err, result, ctx, opts)
-        -- end
+        -- LSP progress, hover and signature help are rendered by noice.nvim
+        -- (lua/plugins/noice.lua). Don't override those handlers here: a
+        -- handler installed after noice loads silently replaces noice's.
 
         -- ============================================================
         -- SERVER CONFIGURATION
@@ -209,72 +159,10 @@ return {
             servers = {}
         end
 
-        -- Neovim 0.10 compatibility.
-        -- Neovim 0.11 uses the native vim.lsp.config API.
-        if vim.fn.has("nvim-0.11") == 0 then
-            pcall(require, "lspconfig")
-        end
-
-        -- ============================================================
-        -- LSP RESTART COMMAND
-        -- ============================================================
-
-        vim.api.nvim_create_user_command("LspRestart", function(opts)
-            local target = opts.args ~= "" and opts.args or nil
-
-            local clients = vim.lsp.get_clients()
-            local restarted = {}
-
-            for _, client in ipairs(clients) do
-                if not target or client.name == target then
-                    table.insert(restarted, client.name)
-
-                    local server_name = client.name
-
-                    client:stop()
-
-                    if vim.fn.has("nvim-0.11") == 1 then
-                        vim.lsp.enable(server_name, false)
-                    end
-
-                    vim.defer_fn(function()
-                        if vim.fn.has("nvim-0.11") == 1 then
-                            vim.lsp.enable(server_name, true)
-                        end
-
-                        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                            if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].filetype ~= "" then
-                                pcall(vim.api.nvim_exec_autocmds, "FileType", {
-                                    buffer = buf,
-                                    modeline = false,
-                                })
-                            end
-                        end
-                    end, 300)
-                end
-            end
-
-            if #restarted > 0 then
-                vim.notify("Restarting LSP: " .. table.concat(restarted, ", "), vim.log.levels.INFO, { title = "LSP" })
-            else
-                vim.notify("No active LSP clients found to restart", vim.log.levels.WARN, { title = "LSP" })
-            end
+        vim.keymap.set("n", "<leader>lR", function()
+            -- `:lsp` is built in from 0.12; nvim-lspconfig provides :LspRestart on 0.11
+            vim.cmd(vim.fn.exists(":lsp") == 2 and "lsp restart" or "LspRestart")
         end, {
-            nargs = "?",
-            desc = "Restart active language servers",
-
-            complete = function()
-                local names = {}
-
-                for _, c in ipairs(vim.lsp.get_clients()) do
-                    table.insert(names, c.name)
-                end
-
-                return names
-            end,
-        })
-
-        vim.keymap.set("n", "<leader>lR", "<cmd>LspRestart<cr>", {
             desc = "Restart language servers",
         })
 
@@ -313,28 +201,11 @@ return {
         -- ENABLE LSP SERVERS
         -- ============================================================
 
-        if vim.fn.has("nvim-0.11") == 1 then
-            for server, server_config in pairs(servers) do
-                local merged_config = vim.tbl_deep_extend("force", {
-                    capabilities = capabilities,
-                }, server_config)
-
-                vim.lsp.config(server, merged_config)
-
-                vim.lsp.enable(server)
-            end
-        else
-            local lspconfig = require("lspconfig")
-
-            for server, server_config in pairs(servers) do
-                local merged = vim.tbl_deep_extend("force", {
-                    capabilities = capabilities,
-                }, server_config)
-
-                if lspconfig[server] then
-                    lspconfig[server].setup(merged)
-                end
-            end
+        for server, server_config in pairs(servers) do
+            vim.lsp.config(server, vim.tbl_deep_extend("force", {
+                capabilities = capabilities,
+            }, server_config))
+            vim.lsp.enable(server)
         end
 
         -- ============================================================
