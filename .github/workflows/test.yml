@@ -1,0 +1,47 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  headless:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+
+      - name: Install tools (ripgrep, fd, tree-sitter CLI)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep fd-find build-essential
+          npm install -g tree-sitter-cli
+
+      - name: Link config into place
+        run: |
+          mkdir -p ~/.config
+          ln -s "$GITHUB_WORKSPACE" ~/.config/nvim
+
+      - name: Cache plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/nvim/lazy
+          key: lazy-${{ runner.os }}-${{ hashFiles('lazy-lock.json') }}
+
+      - name: Install plugins at the locked commits
+        run: nvim --headless "+Lazy! restore" +qa
+
+      - name: Install treesitter parsers
+        run: >
+          nvim --headless
+          "+lua require('nvim-treesitter').install({ 'python', 'cpp', 'typescript', 'bash', 'json', 'lua', 'markdown' }):wait(300000)"
+          +qa
+
+      - name: Run tests
+        run: nvim --headless -c 'luafile tests/run_tests.lua'
