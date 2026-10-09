@@ -117,7 +117,8 @@ end
 return {
     {
         "3rd/image.nvim",
-        ft = { "markdown", "norg" },
+        -- Loaded only as Molten's output renderer; snacks.image handles markdown images
+        lazy = true,
         enabled = image_enabled,
         opts = function()
             return {

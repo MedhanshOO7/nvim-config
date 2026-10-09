@@ -47,8 +47,8 @@ return {
                     and buf_name ~= ""
                     and not vim.tbl_contains(ignored_filetypes, ft)
             end,
-            -- Write all buffers when one saves (for session safety)
-            write_all_buffers = vim.fn.has("nvim-0.9") == 1,
+            -- Only write the buffer that triggered the save, never unrelated edits
+            write_all_buffers = false,
             -- Show notification on save (execution_message removed; auto-save.nvim now automatically clears the message area)
         })
 

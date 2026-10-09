@@ -113,6 +113,9 @@ return {
     {
         "nvim-treesitter/nvim-treesitter-context",
         event = "BufReadPost",
+        keys = {
+            { "<leader>ux", function() require("treesitter-context").toggle() end, desc = "Toggle Treesitter sticky header" },
+        },
         opts = {
             max_lines = 3,            -- show up to 3 context lines at top
             min_window_height = 0,

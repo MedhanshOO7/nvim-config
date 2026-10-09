@@ -49,16 +49,13 @@ return {
             { "<leader>w", group = "Windows and sessions", icon = { icon = "󰖲", color = "blue" } },
             { "<leader>x", group = "Diagnostics and lists", icon = { icon = "󱖫", color = "red" } },
             { "<leader>y", group = "Yanky / Clipboard", icon = { icon = "󰅍", color = "yellow" } },
-            { "<leader>z", desc = "Toggle Zen Mode", icon = { icon = "󰈈", color = "purple" } },
+            { "<leader>z", group = "Zen and folds", icon = { icon = "󰈈", color = "purple" } },
 
             -- AI
-            { "<leader>aa", desc = "AI Actions", mode = { "n", "v" }, icon = { icon = "󱚣", color = "green" } },
-            { "<leader>ac", desc = "Toggle AI Chat", mode = { "n", "v" }, icon = { icon = "󰭹", color = "green" } },
             { "<leader>Ca", desc = "Copilot: Authenticate", icon = { icon = "󰚩", color = "green" } },
             { "<leader>Cd", desc = "Copilot: Disable / Toggle engine", icon = { icon = "󰂭", color = "red" } },
             { "<leader>Cp", desc = "Copilot: Open panel", icon = { icon = "󰚩", color = "green" } },
             { "<leader>Cs", desc = "Copilot: Status", icon = { icon = "󰚩", color = "green" } },
-            { "<leader>Cx", desc = "Copilot: Toggle engine", icon = { icon = "󰚩", color = "green" } },
 
             -- Core Shortcuts
             { "<leader>e", desc = "Toggle file explorer", icon = { icon = "󰉋", color = "yellow" } },
@@ -105,8 +102,6 @@ return {
             { "<leader>ff", desc = "Find file", icon = { icon = "󰈔", color = "blue" } },
             { "<leader>fg", desc = "Live grep", icon = { icon = "", color = "green" } },
             { "<leader>fk", desc = "Keymap help", icon = { icon = "", color = "purple" } },
-            { "<leader>fm", desc = "Mini.files directory browser", icon = { icon = "󱏒", color = "azure" } },
-            { "<leader>fO", desc = "Open Oil file browser", icon = { icon = "󰉋", color = "yellow" } },
             { "<leader>fp", desc = "Git files", icon = { icon = "", color = "purple" } },
             { "<leader>fr", desc = "Recent files", icon = { icon = "", color = "orange" } },
             { "<leader>fs", desc = "Save file", icon = { icon = "󰆓", color = "green" } },
@@ -116,10 +111,7 @@ return {
             { "<leader>fy", desc = "Find Registers / Yank history", icon = { icon = "󰅍", color = "yellow" } },
 
             -- Folds
-            { "<leader>za", desc = "Toggle fold" },
-            { "<leader>zc", desc = "Close fold" },
             { "<leader>zM", desc = "Close all folds" },
-            { "<leader>zo", desc = "Open fold" },
             { "<leader>zR", desc = "Open all folds" },
             { "<leader>zv", desc = "Preview fold" },
 
@@ -176,10 +168,6 @@ return {
             { "<leader>mv", desc = "Evaluate visual selection", mode = "v" },
 
             -- Markdown Tables
-            { "<leader>mT", group = "Markdown tables", icon = { icon = "󰓫", color = "blue" } },
-            { "<leader>mTi", desc = "Toggle Markdown table inline view" },
-            { "<leader>mTr", desc = "Toggle Markdown table reader" },
-            { "<leader>mTp", desc = "Toggle Markdown table preview" },
 
             -- Multicursor
             { "<leader>Ma", desc = "Add next match", icon = { icon = "󰆿", color = "purple" } },
@@ -194,7 +182,6 @@ return {
             { "<leader>Mx", desc = "Delete cursor" },
 
             -- Notes and writing
-            { "<leader>nb", desc = "Toggle Brainstorm mode", icon = { icon = "󰠮", color = "yellow" } },
             { "<leader>nn", desc = "Aerial navigation", icon = { icon = "󰠮", color = "yellow" } },
             { "<leader>no", desc = "Aerial toggle", icon = { icon = "󰠮", color = "yellow" } },
             { "<leader>np", desc = "Markdown preview", icon = { icon = "󰍔", color = "blue" } },
@@ -202,8 +189,6 @@ return {
             { "<leader>nr", desc = "Recalculate autolist", icon = { icon = "󰑕", color = "orange" } },
             { "<leader>ns", desc = "Strikeout text", mode = { "n", "v" } },
             { "<leader>nt", desc = "Twilight", icon = { icon = "󰈈", color = "purple" } },
-            { "<leader>nw", desc = "Writing mode toggle", icon = { icon = "󰠮", color = "yellow" } },
-            { "<leader>nz", desc = "Zen Mode", icon = { icon = "󰈈", color = "purple" } },
 
             -- Obsidian
             { "<leader>ob", desc = "Show backlinks", icon = { icon = "󰌹", color = "purple" } },

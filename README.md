@@ -650,7 +650,7 @@ The leader key is set to `<Space>`.
 | `<leader>CM` | Switch Copilot Model | CopilotChat |
 | `<leader>Cp` | Copilot Open Panel | copilot.lua |
 | `<leader>Cs` | Copilot Status | copilot.lua |
-| `<leader>Cd` / `<leader>Cx` | Copilot Toggle Engine | copilot.lua |
+| `<leader>Cd` | Copilot Toggle Engine | copilot.lua |
 | `<leader>Ca` | Copilot Authenticate | copilot.lua |
 | `<M-a>` | **Toggle Supermaven AI Autocomplete** | supermaven-nvim |
 | `<leader>ac` | **Toggle CodeCompanion AI Chat** | codecompanion.nvim |

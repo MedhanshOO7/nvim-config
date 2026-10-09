@@ -85,10 +85,6 @@ vim.api.nvim_create_user_command("ConfigUpdate", function()
     require("utils.updater").update()
 end, { desc = "Pull latest configuration changes from Git repository" })
 
-vim.api.nvim_create_user_command("NvimUpdate", function()
-    require("utils.updater").update()
-end, { desc = "Pull latest configuration changes from Git repository" })
-
 vim.api.nvim_create_user_command("ReportBuild", function()
     require("utils.report_tool").build({ pdf = true })
 end, { desc = "Build practical report from current markdown file" })

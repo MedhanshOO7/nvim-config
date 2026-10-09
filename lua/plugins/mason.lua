@@ -25,19 +25,18 @@ return {
             },
         },
         opts = {
+            -- Debuggers, formatters and linters only; LSP servers are installed
+            -- by mason-lspconfig in lua/plugins/lsp.lua
             ensure_installed = {
                 "debugpy",
                 "codelldb",
                 "clang-format",
-                "emmet-language-server",
                 "eslint_d",
                 "js-debug-adapter",
                 "markdownlint",
-                "marksman",
                 "prettierd",
                 "prettier",
                 "ruff",
-                "qmlls",
                 "selene",
                 "shellcheck",
                 "shfmt",
