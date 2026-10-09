@@ -120,16 +120,7 @@ map("n", "<leader>nd", function()
 end, { desc = "Dismiss notifications" })
 
 -- Buffers and tabs
-map("n", "<leader>bn", cmd("bnext"), { desc = "Go to the next open file" })
-map("n", "<leader>bp", cmd("bprevious"), { desc = "Go to the previous open file" })
-map("n", "<leader>bd", function()
-    local ok, snacks = pcall(require, "snacks")
-    if ok and snacks.bufdelete then
-        snacks.bufdelete()
-    else
-        vim.cmd("bdelete")
-    end
-end, { desc = "Close the current file" })
+-- <leader>bn/bp/bb/bd/bh/bl/bP follow barbar tab order (lua/ui/tabline)
 map("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do

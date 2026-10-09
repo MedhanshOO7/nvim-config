@@ -66,8 +66,8 @@ return {
             { "<leader>q", desc = "Quit window", icon = { icon = "󰅖", color = "red" } },
 
             -- Buffers
-            { "<leader>bb", desc = "Browse open buffers", icon = { icon = "󰓩", color = "cyan" } },
-            { "<leader>bd", desc = "Delete current buffer", icon = { icon = "󰆴", color = "red" } },
+            { "<leader>bb", desc = "Pick a buffer by letter", icon = { icon = "󰓩", color = "cyan" } },
+            { "<leader>bd", desc = "Close the current buffer", icon = { icon = "󰆴", color = "red" } },
             { "<leader>bn", desc = "Next buffer", icon = { icon = "󰒭", color = "cyan" } },
             { "<leader>bo", desc = "Close all other buffers", icon = { icon = "󰆤", color = "orange" } },
             { "<leader>bp", desc = "Previous buffer", icon = { icon = "󰒮", color = "cyan" } },
