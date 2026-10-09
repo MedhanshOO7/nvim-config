@@ -291,9 +291,14 @@ local function apply_editor_chrome(transparent)
     local warning = hl_hex("DiagnosticWarn", "fg", "#eed49f")
     local danger = hl_hex("DiagnosticError", "fg", "#ed8796")
 
-    -- MATUGEN INTEGRATION: Safely inject Material You colors into the UI chrome!
+    -- Matugen accents only apply to the matugen theme; every other theme keeps
+    -- the accents of its own palette.
+    local matugen_active = vim.g.preferred_theme == "matugen"
     package.loaded["matugen-colors"] = nil
-    local ok_matugen, matugen = pcall(require, "matugen-colors")
+    local ok_matugen, matugen = false, nil
+    if matugen_active then
+        ok_matugen, matugen = pcall(require, "matugen-colors")
+    end
     if ok_matugen and type(matugen) == "table" then
         accent = matugen.primary or accent
         accent_alt = matugen.secondary or accent_alt
