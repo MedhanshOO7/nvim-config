@@ -158,10 +158,10 @@ end, { desc = "Preview fold" })
 
 
 -- Git
-map("n", "]h", cmd("Gitsigns next_hunk"), { desc = "Go to the next git change" })
-map("n", "[h", cmd("Gitsigns prev_hunk"), { desc = "Go to the previous git change" })
-map("n", "<leader>gn", cmd("Gitsigns next_hunk"), { desc = "Go to the next git change" })
-map("n", "<leader>gN", cmd("Gitsigns prev_hunk"), { desc = "Go to the previous git change" })
+map("n", "]h", cmd("Gitsigns nav_hunk next"), { desc = "Go to the next git change" })
+map("n", "[h", cmd("Gitsigns nav_hunk prev"), { desc = "Go to the previous git change" })
+map("n", "<leader>gn", cmd("Gitsigns nav_hunk next"), { desc = "Go to the next git change" })
+map("n", "<leader>gN", cmd("Gitsigns nav_hunk prev"), { desc = "Go to the previous git change" })
 map("n", "<leader>gs", cmd("Gitsigns stage_hunk"), { desc = "Stage this changed block" })
 map("n", "<leader>gu", cmd("Gitsigns undo_stage_hunk"), { desc = "Undo staging for this changed block" })
 map("n", "<leader>gr", cmd("Gitsigns reset_hunk"), { desc = "Discard this changed block" })
@@ -214,7 +214,7 @@ local function pick_keymaps()
     end
 end
 
-map("n", "<leader>p", function()
+map("n", "<leader>:", function()
     local ok, snacks = pcall(require, "snacks")
     if ok and snacks.picker then
         snacks.picker.commands()
@@ -264,8 +264,8 @@ map("n", "[t", function()
 end, { desc = "Previous TODO comment" })
 map("n", "<leader>fk", pick_keymaps, { desc = "Browse every keybinding" })
 map("n", "<leader>?", pick_keymaps, { desc = "Browse every keybinding" })
-map({ "n", "x" }, "<leader>sr", cmd("GrugFar"), { desc = "Search and replace across the project" })
-map("v", "<leader>sr", cmd("'<,'>GrugFarWithin"), { desc = "Search and replace within selection" })
+map("n", "<leader>sr", cmd("GrugFar"), { desc = "Search and replace across the project" })
+map("x", "<leader>sr", ":GrugFarWithin<CR>", { desc = "Search and replace within selection" })
 map("n", "<leader>sw", function()
     grug_far().open({
         prefills = {
@@ -319,7 +319,6 @@ map("n", "<leader>mo", cmd("MoltenOpenInBrowser"), { desc = "Open the current Mo
 -- There is no separate Arduino implementation.
 
 -- PlatformIO development
-map("n", "<leader>p", "", { desc = "+PlatformIO" })
 map("n", "<leader>pi", "<cmd>lua require('commands.platformio').init_platformio_project()<cr>", { desc = "Initialize PlatformIO Project" })
 map("n", "<leader>pb", "<cmd>lua require('commands.platformio').build_platformio()<cr>", { desc = "Build Project" })
 map("n", "<leader>pu", "<cmd>lua require('commands.platformio').upload_platformio()<cr>", { desc = "Upload Project" })
@@ -417,18 +416,6 @@ map("n", "<leader>ul", function()
         vim.notify("Line numbers: Relative", vim.log.levels.INFO)
     end
 end, { desc = "Toggle relative line numbers" })
-
-vim.keymap.set("n", "<leader>lp", function()
-    local enabled = vim.diagnostic.is_enabled()
-
-    if enabled then
-        vim.diagnostic.enable(false)
-        vim.notify("Diagnostics disabled")
-    else
-        vim.diagnostic.enable(true)
-        vim.notify("Diagnostics enabled")
-    end
-end, { desc = "Toggle Diagnostics" })
 
 map("n", "<leader>uc", function()
     local level = vim.wo.conceallevel == 0 and 2 or 0

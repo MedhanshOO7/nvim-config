@@ -39,11 +39,13 @@ return {
             { "<leader>M", group = "Multicursor", icon = { icon = "󰆿", color = "purple" } },
             { "<leader>n", group = "Notes and writing", icon = { icon = "󰠮", color = "yellow" } },
             { "<leader>o", group = "Obsidian", icon = { icon = "󰠮", color = "purple" } },
+            { "<leader>p", group = "PlatformIO", icon = { icon = "", color = "orange" } },
             { "<leader>P", group = "Python", icon = { icon = "", color = "yellow" } },
             { "<leader>r", group = "Run Code", icon = { icon = "", color = "green" } },
             { "<leader>s", group = "Search and jump", icon = { icon = "󰉁", color = "azure" } },
             { "<leader>T", group = "Testing (Neotest)", icon = { icon = "󰙨", color = "green" } },
             { "<leader>t", group = "Terminal and tasks", icon = { icon = "", color = "red" } },
+            { "<leader>v", group = "Peek (Glance)", icon = { icon = "󰈈", color = "blue" } },
             { "<leader>u", group = "UI and theme", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>w", group = "Windows and sessions", icon = { icon = "󰖲", color = "blue" } },
             { "<leader>x", group = "Diagnostics and lists", icon = { icon = "󱖫", color = "red" } },
@@ -61,7 +63,7 @@ return {
 
             -- Core Shortcuts
             { "<leader>e", desc = "Toggle file explorer", icon = { icon = "󰉋", color = "yellow" } },
-            { "<leader>p", desc = "Command palette", icon = { icon = "", color = "purple" } },
+            { "<leader>:", desc = "Command palette", icon = { icon = "", color = "purple" } },
             { "<leader>q", desc = "Quit window", icon = { icon = "󰅖", color = "red" } },
 
             -- Buffers
@@ -135,13 +137,13 @@ return {
             { "<leader>gu", desc = "Undo stage hunk", icon = { icon = "󰕌", color = "yellow" } },
 
             -- Git Conflicts
-            { "<leader>gco", desc = "Conflict: Choose Ours", icon = { icon = "󰄬", color = "green" } },
-            { "<leader>gct", desc = "Conflict: Choose Theirs", icon = { icon = "󰄬", color = "blue" } },
-            { "<leader>gcb", desc = "Conflict: Choose Both", icon = { icon = "󰓩", color = "purple" } },
-            { "<leader>gc0", desc = "Conflict: Choose None", icon = { icon = "󰅖", color = "red" } },
-            { "<leader>gc]", desc = "Conflict: Next conflict", icon = { icon = "󰒭", color = "orange" } },
-            { "<leader>gc[", desc = "Conflict: Prev conflict", icon = { icon = "󰒮", color = "orange" } },
-            { "<leader>gcq", desc = "Conflict: Quickfix list", icon = { icon = "", color = "yellow" } },
+            { "<leader>gCo", desc = "Conflict: Choose Ours", icon = { icon = "󰄬", color = "green" } },
+            { "<leader>gCt", desc = "Conflict: Choose Theirs", icon = { icon = "󰄬", color = "blue" } },
+            { "<leader>gCb", desc = "Conflict: Choose Both", icon = { icon = "󰓩", color = "purple" } },
+            { "<leader>gC0", desc = "Conflict: Choose None", icon = { icon = "󰅖", color = "red" } },
+            { "<leader>gC]", desc = "Conflict: Next conflict", icon = { icon = "󰒭", color = "orange" } },
+            { "<leader>gC[", desc = "Conflict: Prev conflict", icon = { icon = "󰒮", color = "orange" } },
+            { "<leader>gCq", desc = "Conflict: Quickfix list", icon = { icon = "", color = "yellow" } },
 
             -- Harpoon
             { "<leader>ha", desc = "Add to harpoon", icon = { icon = "󰛢", color = "cyan" } },

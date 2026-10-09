@@ -2,7 +2,7 @@
 
 Built to understand the editor, not just use it. Engineered for embedded hardware, high-performance C/C++, full-stack web, Jupyter data science, and distraction-free writing.
 
-![Neovim](https://img.shields.io/badge/Neovim-0.10+-blue.svg?style=flat-square&logo=neovim) ![Lua](https://img.shields.io/badge/Written_in-Lua-blue.svg?style=flat-square&logo=lua) ![Startup Time](https://img.shields.io/badge/Startup_Time-~38ms-green.svg?style=flat-square) ![Plugins](https://img.shields.io/badge/Plugins-128-orange.svg?style=flat-square)
+![Neovim](https://img.shields.io/badge/Neovim-0.11+-blue.svg?style=flat-square&logo=neovim) ![Lua](https://img.shields.io/badge/Written_in-Lua-blue.svg?style=flat-square&logo=lua) ![Startup Time](https://img.shields.io/badge/Startup_Time-~150ms-green.svg?style=flat-square) ![Plugins](https://img.shields.io/badge/Plugins-116-orange.svg?style=flat-square)
 
 <p align="center">
   <img src="assets/screenshot.png" alt="Neovim Overview" width="100%" />
@@ -131,7 +131,7 @@ If you just want something that works out of the box, there are better options �
 
 ### Minimum Version
 
-- **Neovim v0.10.0+** (v0.11+ / v0.12+ recommended).
+- **Neovim v0.11.0+** (v0.12+ recommended).
 - **Python 3.11+** for Molten Jupyter notebook sync and Python provider.
 - **Node.js & npm** for GitHub Copilot and plugin build scripts.
 
@@ -402,8 +402,6 @@ On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plug
 | [HiPhish/rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) | Vibrant rainbow-colored matching brackets |
 | [NvChad/nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua) | Virtual text color swatches (`██`) without background clutter |
 | [kevinhwang91/nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) | Ultra fold preview and provider |
-| [RRethy/vim-illuminate](https://github.com/RRethy/vim-illuminate) | Highlight other uses of the word under cursor |
-| [j-hui/fidget.nvim](https://github.com/j-hui/fidget.nvim) | Non-intrusive LSP progress spinner |
 | [m4xshen/smartcolumn.nvim](https://github.com/m4xshen/smartcolumn.nvim) | Smart color column that only appears past 80/100 chars |
 | [stevearc/quicker.nvim](https://github.com/stevearc/quicker.nvim) | Quickfix list enhancements with inline editing |
 | [kevinhwang91/nvim-bqf](https://github.com/kevinhwang91/nvim-bqf) | Better quickfix window with preview and fuzzy search |
@@ -514,7 +512,7 @@ The leader key is set to `<Space>`.
 | `<leader>fw` / `<leader>ls` | Workspace symbols search | snacks.picker |
 | `<leader>fu` | Visual undo history | snacks.picker |
 | `<leader>ft` | Find TODO / NOTE / FIX comments | todo-comments |
-| `<leader>p` | Command palette | snacks.picker |
+| `<leader>:` | Command palette | snacks.picker |
 | `<leader>?` / `<leader>fk` | Interactive keymap finder | snacks.picker |
 | `<leader>sr` | Project-wide find and replace | grug-far |
 | `<leader>sw` | Search word under cursor (replace) | grug-far |
@@ -541,10 +539,10 @@ The leader key is set to `<Space>`.
 | `gi` | Go to implementation | LSP |
 | `gr` | List references | LSP |
 | `K` | Hover documentation | LSP |
-| `gpd` | **Peek Definition** in float overlay | glance.nvim |
-| `gpr` | **Peek References** in float overlay | glance.nvim |
-| `gpi` | **Peek Implementations** in float overlay | glance.nvim |
-| `gpt` | **Peek Type Definitions** in float overlay | glance.nvim |
+| `<leader>vd` | **Peek Definition** in float overlay | glance.nvim |
+| `<leader>vr` | **Peek References** in float overlay | glance.nvim |
+| `<leader>vi` | **Peek Implementations** in float overlay | glance.nvim |
+| `<leader>vt` | **Peek Type Definitions** in float overlay | glance.nvim |
 | `<leader>ca` | Code actions with live diff preview | tiny-code-action |
 | `<leader>cf` | Format current file | conform.nvim |
 | `<leader>rn` | Rename symbol everywhere | Built-in LSP |
@@ -587,12 +585,12 @@ The leader key is set to `<Space>`.
 | `<leader>gl` | Open floating Lazygit | snacks.lazygit |
 | `<leader>gf` | Lazygit current file history | snacks.lazygit |
 | `<leader>gB` | Open git permalink in browser | snacks.gitbrowse |
-| `<leader>gco` | **Conflict: Choose Ours** | git-conflict |
-| `<leader>gct` | **Conflict: Choose Theirs** | git-conflict |
-| `<leader>gcb` | **Conflict: Choose Both** | git-conflict |
-| `<leader>gc0` | **Conflict: Choose None** | git-conflict |
-| `<leader>gc]` / `<leader>gc[` | Next / previous conflict marker | git-conflict |
-| `<leader>gcq` | Send all conflicts to Quickfix list | git-conflict |
+| `<leader>gCo` | **Conflict: Choose Ours** | git-conflict |
+| `<leader>gCt` | **Conflict: Choose Theirs** | git-conflict |
+| `<leader>gCb` | **Conflict: Choose Both** | git-conflict |
+| `<leader>gC0` | **Conflict: Choose None** | git-conflict |
+| `<leader>gC]` / `<leader>gC[` | Next / previous conflict marker | git-conflict |
+| `<leader>gCq` | Send all conflicts to Quickfix list | git-conflict |
 | `]t` / `[t` | Next / previous TODO comment | todo-comments |
 
 ### Terminal & Code Runner
