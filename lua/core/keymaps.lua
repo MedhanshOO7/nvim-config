@@ -427,6 +427,29 @@ end, { desc = "Toggle text wrapping" })
 map("n", "<leader>ua", cmd("AutoSaveToggle"), { desc = "Turn autosave on or off" })
 map("n", "<leader>ub", cmd("AutoSaveBufferToggle"), { desc = "Turn autosave on or off for this file" })
 
+-- Editing quality of life
+map("n", "<A-J>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move line down" })
+map("n", "<A-K>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move line up" })
+map("x", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move selection down" })
+map("x", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move selection up" })
+map("x", "<", "<gv", { desc = "Indent left and keep selection" })
+map("x", ">", ">gv", { desc = "Indent right and keep selection" })
+map("n", "J", "mzJ`z", { desc = "Join lines without moving the cursor" })
+map("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centred)" })
+map("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centred)" })
+map("n", "gX", function()
+    local target = vim.fn.expand("<cfile>")
+    local apps = { "Browser (default)", "Copy to clipboard" }
+    vim.ui.select(apps, { prompt = "Open " .. target }, function(choice)
+        if choice == apps[1] then
+            vim.ui.open(target)
+        elseif choice == apps[2] then
+            vim.fn.setreg("+", target)
+            vim.notify("Copied " .. target)
+        end
+    end)
+end, { desc = "Open or copy the path/URL under the cursor" })
+
 -- Disable arrow keys to enforce hjkl navigation muscle memory
 map({ "n", "v", "x", "i" }, "<Up>", "<nop>", { desc = "Disabled (use k)" })
 map({ "n", "v", "x", "i" }, "<Down>", "<nop>", { desc = "Disabled (use j)" })

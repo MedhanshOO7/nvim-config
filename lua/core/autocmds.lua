@@ -254,3 +254,55 @@ vim.api.nvim_create_autocmd("VimEnter", {
         end
     end,
 })
+
+-- ── Quality of life ──────────────────────────────────────────
+local qol = vim.api.nvim_create_augroup("QualityOfLife", { clear = true })
+
+-- Pick up files changed outside Neovim (git checkout, formatters, other
+-- editors) before autosave can overwrite them.
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "BufEnter" }, {
+    group = qol,
+    callback = function()
+        if vim.o.buftype ~= "nofile" and vim.fn.getcmdwintype() == "" then
+            vim.cmd("checktime")
+        end
+    end,
+})
+
+-- Reopen files where you left off
+vim.api.nvim_create_autocmd("BufReadPost", {
+    group = qol,
+    callback = function(event)
+        local ignore = { gitcommit = true, gitrebase = true, svn = true, hgcommit = true }
+        if ignore[vim.bo[event.buf].filetype] or vim.b[event.buf].last_pos_restored then
+            return
+        end
+        vim.b[event.buf].last_pos_restored = true
+        local mark = vim.api.nvim_buf_get_mark(event.buf, '"')
+        if mark[1] > 0 and mark[1] <= vim.api.nvim_buf_line_count(event.buf) then
+            pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
+})
+
+-- Keep splits balanced when the terminal is resized
+vim.api.nvim_create_autocmd("VimResized", {
+    group = qol,
+    callback = function()
+        local tab = vim.fn.tabpagenr()
+        vim.cmd("tabdo wincmd =")
+        vim.cmd("tabnext " .. tab)
+    end,
+})
+
+-- `:w new/dir/file.lua` creates the missing directories
+vim.api.nvim_create_autocmd("BufWritePre", {
+    group = qol,
+    callback = function(event)
+        if event.match:match("^%w%w+:[\\/][\\/]") then
+            return -- URLs (oil://, scp://, ...)
+        end
+        local file = vim.uv.fs_realpath(event.match) or event.match
+        vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+    end,
+})

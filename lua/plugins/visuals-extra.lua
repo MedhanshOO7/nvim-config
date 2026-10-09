@@ -18,6 +18,30 @@ return {
     {
         "rachartier/tiny-glimmer.nvim",
         event = "VeryLazy",
+        config = function(_, opts)
+            local glimmer = require("tiny-glimmer")
+            glimmer.setup(opts)
+            -- auto_map is off (it defers past the dashboard and clobbers maps), so
+            -- wire the motions here: arm the animation, then run the real key.
+            local function animated(animate, keys, after)
+                return function()
+                    animate()
+                    local ok, err = pcall(vim.cmd.normal, { vim.v.count1 .. keys, bang = true })
+                    if not ok then
+                        vim.api.nvim_echo({ { (err:gsub("^.-:%s*(E%d+)", "%1")), "ErrorMsg" } }, false, {})
+                    elseif after then
+                        vim.cmd.normal({ after, bang = true })
+                    end
+                end
+            end
+            local map = vim.keymap.set
+            map("n", "n", animated(glimmer.search_next, "n", "zzzv"), { desc = "Next search match (centred)" })
+            map("n", "N", animated(glimmer.search_prev, "N", "zzzv"), { desc = "Previous search match (centred)" })
+            map("n", "*", animated(glimmer.search_under_cursor, "*", "zzzv"), { desc = "Search word under cursor" })
+            map("n", "#", animated(glimmer.search_under_cursor, "#", "zzzv"), { desc = "Search word under cursor backwards" })
+            map("n", "u", animated(glimmer.undo, "u"), { desc = "Undo" })
+            map("n", "<C-r>", animated(glimmer.redo, "\18"), { desc = "Redo" })
+        end,
         opts = {
             disable_warnings = true,
             default_animation = "fade",
@@ -36,31 +60,25 @@ return {
                     intensity = 1.3,
                 },
             },
-            commands = {
+            -- tiny-glimmer reads these from `overwrite` (a `commands` table is ignored)
+            overwrite = {
+                auto_map = false,
                 yank = {
                     enabled = true,
-                    default_animation = "fade",
-                    highlight = "IncSearch",
+                    default_animation = { name = "fade", settings = { from_color = "IncSearch" } },
                 },
-                paste = {
-                    enabled = false,
-                },
+                paste = { enabled = false }, -- yanky owns p/P (and highlights puts)
                 undo = {
                     enabled = true,
-                    default_animation = "pulse",
-                    highlight = "DiagnosticInfo",
+                    default_animation = { name = "pulse", settings = { from_color = "DiagnosticInfo" } },
                 },
                 redo = {
                     enabled = true,
-                    default_animation = "pulse",
-                    highlight = "DiagnosticHint",
+                    default_animation = { name = "pulse", settings = { from_color = "DiagnosticHint" } },
                 },
                 search = {
                     enabled = true,
-                    default_animation = "pulse",
-                    highlight = "CurSearch",
-                    next_mapping = "n",
-                    prev_mapping = "N",
+                    default_animation = { name = "pulse", settings = { to_color = "CurSearch" } },
                 },
             },
         },
