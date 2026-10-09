@@ -5,7 +5,6 @@ return {
         build = ":TSUpdate",
         lazy = false, -- the main branch does not support lazy-loading
         dependencies = {
-            "windwp/nvim-ts-autotag",
             { "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
         },
         config = function()
@@ -54,8 +53,14 @@ return {
                 "vue",
                 "yaml",
             }
-            -- Async, and a no-op for parsers that are already installed
-            ts.install(parsers)
+            -- Async and a no-op when everything is installed; deferred off the startup path
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "VeryLazy",
+                once = true,
+                callback = function()
+                    ts.install(parsers)
+                end,
+            })
             vim.treesitter.language.register("json", "jsonc") -- main has no separate jsonc parser
 
             local function too_big(buf)
@@ -98,9 +103,12 @@ return {
                     move[m[2]](m[3], "textobjects")
                 end, { desc = m[4] })
             end
-
-            require("nvim-ts-autotag").setup()
         end,
+    },
+    {
+        "windwp/nvim-ts-autotag",
+        ft = { "html", "xml", "javascriptreact", "typescriptreact", "vue", "svelte", "astro", "markdown" },
+        opts = {},
     },
     {
         "nvim-treesitter/nvim-treesitter-context",

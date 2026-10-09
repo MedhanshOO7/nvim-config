@@ -2,7 +2,7 @@
 
 Built to understand the editor, not just use it. Engineered for embedded hardware, high-performance C/C++, full-stack web, Jupyter data science, and distraction-free writing.
 
-![Neovim](https://img.shields.io/badge/Neovim-0.11+-blue.svg?style=flat-square&logo=neovim) ![Lua](https://img.shields.io/badge/Written_in-Lua-blue.svg?style=flat-square&logo=lua) ![Startup Time](https://img.shields.io/badge/Startup_Time-~150ms-green.svg?style=flat-square) ![Plugins](https://img.shields.io/badge/Plugins-116-orange.svg?style=flat-square)
+![Neovim](https://img.shields.io/badge/Neovim-0.11+-blue.svg?style=flat-square&logo=neovim) ![Lua](https://img.shields.io/badge/Written_in-Lua-blue.svg?style=flat-square&logo=lua) ![Startup Time](https://img.shields.io/badge/Startup_Time-~150ms-green.svg?style=flat-square) ![Plugins](https://img.shields.io/badge/Plugins-113-orange.svg?style=flat-square)
 
 <p align="center">
   <img src="assets/screenshot.png" alt="Neovim Overview" width="100%" />
@@ -313,7 +313,7 @@ On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plug
 - **Breadcrumbs**: `dropbar.nvim` for clickable LSP symbol breadcrumbs in the winbar.
 - **Bottom Statusline**: `lualine.nvim` with solid opaque sections and rounded pill geometry (`` / ``).
 - **Floating Filename**: `incline.nvim` renders the active filename floating over each split.
-- **Fluid Motion**: `smear-cursor.nvim` for smooth cursor trail animations, `cinnamon.nvim` for smooth scrolling.
+- **Fluid Motion**: `smear-cursor.nvim` for smooth cursor trail animations, `snacks.scroll` for smooth scrolling.
 - **Yank & Paste Flash**: `tiny-glimmer.nvim` highlights yanked and pasted regions with a flash animation.
 - **Delimiters**: `rainbow-delimiters.nvim` for colorful nested brackets and scopes.
 - **Window Separators**: `colorful-winsep.nvim` for vibrant active window borders.
@@ -333,7 +333,6 @@ On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plug
 | [folke/which-key.nvim](https://github.com/folke/which-key.nvim) | Interactive keybinding discovery menu |
 | [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim) | Core Lua utility functions |
 | [nvim-tree/nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | Standard Nerd Font file icons |
-| [echasnovski/mini.icons](https://github.com/echasnovski/mini.icons) | Lightweight icon provider |
 
 ### LSP, Completion & Diagnostics
 
@@ -398,7 +397,6 @@ On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plug
 | [romgrk/barbar.nvim](https://github.com/romgrk/barbar.nvim) | Sleek buffer tabline with close glyphs and diagnostic counters |
 | [folke/noice.nvim](https://github.com/folke/noice.nvim) | Modern cmdline popup, floating notifications, and doc borders |
 | [sphamba/smear-cursor.nvim](https://github.com/sphamba/smear-cursor.nvim) | Fluid cursor trail animation |
-| [declancm/cinnamon.nvim](https://github.com/declancm/cinnamon.nvim) | Smooth animated scrolling |
 | [HiPhish/rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim) | Vibrant rainbow-colored matching brackets |
 | [NvChad/nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua) | Virtual text color swatches (`██`) without background clutter |
 | [kevinhwang91/nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) | Ultra fold preview and provider |
@@ -408,7 +406,6 @@ On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plug
 | [rachartier/tiny-code-action.nvim](https://github.com/rachartier/tiny-code-action.nvim) | Code actions menu with live diff preview |
 | [lewis6991/satellite.nvim](https://github.com/lewis6991/satellite.nvim) | Diagnostic-aware scrollbar |
 | [nvim-zh/colorful-winsep.nvim](https://github.com/nvim-zh/colorful-winsep.nvim) | Vibrant active window separator |
-| [gorbit99/codewindow.nvim](https://github.com/gorbit99/codewindow.nvim) | Code minimap sidebar |
 | [OXY2DEV/helpview.nvim](https://github.com/OXY2DEV/helpview.nvim) | Enhanced help file viewer with rich rendering |
 | [mrjones2014/smart-splits.nvim](https://github.com/mrjones2014/smart-splits.nvim) | Seamless window resizing and navigation across splits |
 

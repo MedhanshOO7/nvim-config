@@ -309,7 +309,13 @@ return {
         quickfile = { enabled = true },
         scope = { enabled = true },
         scratch = { enabled = true },
-        scroll = { enabled = false }, -- cinnamon.nvim handles smooth scrolling
+        scroll = {
+            enabled = true, -- animates <C-d>/<C-u>, mouse wheel, n/N, gg/G; auto-off for bigfiles
+            animate = {
+                duration = { step = 10, total = 150 },
+                easing = "outQuad",
+            },
+        },
         statuscolumn = {
             enabled = true,
             -- Improve statuscolumn UX with better information display

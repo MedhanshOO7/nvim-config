@@ -12,7 +12,7 @@ return {
         },
         highlight = {
             on_put = true,
-            on_yank = true,
+            on_yank = false, -- tiny-glimmer animates yanks
             timer = 200,
         },
         preserve_cursor_position = {

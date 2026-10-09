@@ -2,7 +2,6 @@ return {
     "folke/which-key.nvim",
     event = "VeryLazy",
     dependencies = {
-        "echasnovski/mini.icons",
         "nvim-tree/nvim-web-devicons",
     },
     opts = {
@@ -171,7 +170,6 @@ return {
             { "<leader>mh", desc = "Hide output" },
             { "<leader>mi", desc = "Initialize Molten" },
             { "<leader>ml", desc = "Evaluate line" },
-            { "<leader>mm", desc = "Toggle Minimap" },
             { "<leader>mo", desc = "Open in browser" },
             { "<leader>mr", desc = "Restart kernel" },
             { "<leader>ms", desc = "Show output" },

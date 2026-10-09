@@ -13,31 +13,6 @@ return {
         },
     },
 
-    -- 2. Smooth Scrolling & Physics Transitions
-    -- Makes viewport jumps, <C-d>/<C-u>, and search jumps smooth as butter.
-    {
-        "declancm/cinnamon.nvim",
-        version = "*",
-        event = "VeryLazy",
-        opts = {
-            keymaps = {
-                basic = true,   -- smooth C-d / C-u / C-f / C-b / C-e / C-y
-                extra = false,  -- keep extra off (they conflict with telescope bindings)
-            },
-            options = {
-                mode = "window",
-                delay = 6,
-                max_delta = {
-                    time = 150,
-                },
-                step_size = {
-                    vertical = 1,
-                    horizontal = 2,
-                },
-            },
-        },
-    },
-
     -- 3. Multi-Action Micro-Glimmer Animations (Colorful Flash Flares)
     -- Smooth fade/pulse feedback with custom vibrant colors on yank, paste, undo/redo, and search.
     {
