@@ -167,37 +167,6 @@ return {
         })
 
         -- ============================================================
-        -- MASON
-        -- ============================================================
-
-        local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-
-        if mason_lspconfig_ok then
-            mason_lspconfig.setup({
-                ensure_installed = {
-                    "basedpyright",
-                    "bashls",
-                    "clangd",
-                    "cssls",
-                    "emmet_language_server",
-                    "html",
-                    "jsonls",
-                    "lua_ls",
-                    "marksman",
-                    "qmlls",
-                    "tailwindcss",
-                    "vtsls",
-                    "yamlls",
-                },
-
-                automatic_installation = true,
-
-                -- We explicitly enable servers below.
-                automatic_enable = false,
-            })
-        end
-
-        -- ============================================================
         -- ENABLE LSP SERVERS
         -- ============================================================
 

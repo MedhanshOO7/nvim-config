@@ -25,9 +25,25 @@ return {
             },
         },
         opts = {
-            -- Debuggers, formatters and linters only; LSP servers are installed
-            -- by mason-lspconfig in lua/plugins/lsp.lua
+            -- Mason package names (not lspconfig names). Servers are enabled from
+            -- lua/lsp/servers.lua; keep both lists in sync.
             ensure_installed = {
+                -- Language servers
+                "basedpyright",
+                "bash-language-server",
+                "clangd",
+                "css-lsp",
+                "emmet-language-server",
+                "html-lsp",
+                "json-lsp",
+                "lua-language-server",
+                "marksman",
+                "qmlls",
+                "tailwindcss-language-server",
+                "vtsls",
+                "yaml-language-server",
+
+                -- Debuggers, formatters, linters
                 "debugpy",
                 "codelldb",
                 "clang-format",
