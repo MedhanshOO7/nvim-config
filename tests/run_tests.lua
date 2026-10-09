@@ -2,10 +2,19 @@
 -- Neovim Configuration Rigorous Test Suite
 -- ============================================================================
 
+-- Captured before the runner prints anything (print() also lands in :messages)
+local startup_messages = vim.api.nvim_exec2("messages", { output = true }).output
+
 local test_count = 0
 local pass_count = 0
 local fail_count = 0
+local skip_count = 0
 local failures = {}
+
+-- Write straight to stdout: once noice starts it swallows print()
+local function print(text)
+    io.stdout:write((text or "") .. "\n")
+end
 
 local function color(code, text)
     return string.format("\27[%dm%s\27[0m", code, text)
@@ -27,6 +36,13 @@ local function it(test_name, fn)
         table.insert(failures, { name = test_name, err = err })
         print(string.format("  %s %s\n    %s", color(31, "✖"), test_name, color(31, tostring(err))))
     end
+end
+
+--- Report a test as skipped (missing external service, tool, ...)
+local function skip(test_name, reason)
+    test_count = test_count + 1
+    skip_count = skip_count + 1
+    print(string.format("  %s %s %s", color(33, "○"), test_name, color(90, "(skipped: " .. reason .. ")")))
 end
 
 local function assert_eq(actual, expected, msg)
@@ -243,7 +259,18 @@ end)
 describe("Dadbod & MariaDB Utilities (lua/utils/dadbod.lua)", function()
     local dadbod = require("utils.dadbod")
 
-    it("get_databases should query active databases and filter system tables", function()
+    -- Tests that query a live server only run when MariaDB answers
+    vim.fn.system(dadbod.get_mysql_bin() .. " -u root -s -N -e 'SELECT 1;'")
+    local db_up = vim.v.shell_error == 0
+    local function db_it(name, fn)
+        if db_up then
+            it(name, fn)
+        else
+            skip(name, "MariaDB not reachable")
+        end
+    end
+
+    db_it("get_databases should query active databases and filter system tables", function()
         local dbs = dadbod.get_databases()
         assert_true(type(dbs) == "table", "get_databases should return a table")
         assert_true(#dbs > 0, "should discover active MariaDB databases from XAMPP")
@@ -262,7 +289,7 @@ describe("Dadbod & MariaDB Utilities (lua/utils/dadbod.lua)", function()
         assert_true(db_set["ccet_committees"] or db_set["campus_placement"], "user databases should be discovered")
     end)
 
-    it("describe table should fetch schema correctly from MariaDB", function()
+    db_it("describe table should fetch schema correctly from MariaDB", function()
         local schema = vim.fn.systemlist("mariadb -D ccet_committees -t -e 'DESCRIBE Committees;'")
         assert_true(#schema > 0, "DESCRIBE Committees should return schema lines")
         local header_found = false
@@ -275,7 +302,7 @@ describe("Dadbod & MariaDB Utilities (lua/utils/dadbod.lua)", function()
         assert_true(col_found, "Column 'Committee_ID' should be present in schema")
     end)
 
-    it("run_sql should execute queries and populate [SQL Output] buffer", function()
+    db_it("run_sql should execute queries and populate [SQL Output] buffer", function()
         local buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_name(buf, "/tmp/test_query.sql")
         vim.bo[buf].filetype = "sql"
@@ -360,40 +387,205 @@ end)
 describe("Keymapping Configurations", function()
     it("<leader>rr should be mapped to run SQL in SQL files and RunCode in code files", function()
         local rr_map = vim.fn.maparg("<leader>rr", "n", false, true)
-        assert_not_nil(rr_map, "<leader>rr mapping should exist")
+        assert_true(not vim.tbl_isempty(rr_map), "<leader>rr mapping should exist")
         assert_not_nil(rr_map.callback or rr_map.rhs, "<leader>rr should have an executable action")
     end)
 
     it("<leader>cf should be mapped to conform.format", function()
         local cf_map = vim.fn.maparg("<leader>cf", "n", false, true)
-        assert_not_nil(cf_map, "<leader>cf mapping should exist")
+        assert_true(not vim.tbl_isempty(cf_map), "<leader>cf mapping should exist")
         assert_not_nil(cf_map.callback or cf_map.rhs, "<leader>cf should have a format action")
     end)
 
     it("<leader>Ds should be mapped to select_database", function()
         local ds_map = vim.fn.maparg("<leader>Ds", "n", false, true)
-        assert_not_nil(ds_map, "<leader>Ds mapping should exist")
+        assert_true(not vim.tbl_isempty(ds_map), "<leader>Ds mapping should exist")
     end)
 
     it("<leader>DS should be mapped to view_table_schema", function()
         local ds_upper_map = vim.fn.maparg("<leader>DS", "n", false, true)
-        assert_not_nil(ds_upper_map, "<leader>DS mapping should exist")
+        assert_true(not vim.tbl_isempty(ds_upper_map), "<leader>DS mapping should exist")
     end)
 
     it("<leader>Db should be mapped to DBUIToggle", function()
         local db_map = vim.fn.maparg("<leader>Db", "n", false, true)
-        assert_not_nil(db_map, "<leader>Db mapping should exist")
+        assert_true(not vim.tbl_isempty(db_map), "<leader>Db mapping should exist")
     end)
+end)
+
+
+-- ============================================================================
+-- 8. CONFIG INTEGRITY (regression guards for whole classes of bugs)
+-- ============================================================================
+
+-- Headless Neovim never fires UIEnter, so lazy.nvim never emits VeryLazy;
+-- fire it so the UI plugins (which-key, lualine, barbar, ...) load.
+vim.api.nvim_exec_autocmds("User", { pattern = "VeryLazy", modeline = false })
+-- `-c luafile` runs before VimEnter; which-key only registers its labels then
+if vim.v.vim_did_enter == 0 then
+    vim.api.nvim_exec_autocmds("VimEnter", { modeline = false })
+end
+vim.wait(2000, function()
+    return #require("which-key")._queue == 0 and require("which-key.config").loaded == true
+end, 50)
+
+describe("Startup", function()
+    it("should start without error messages", function()
+        local errors = {}
+        for line in startup_messages:gmatch("[^\n]+") do
+            -- E1568: terminal didn't answer the background-colour query (no TTY)
+            if line:match("E%d+:") and not line:match("E1568") then
+                table.insert(errors, line)
+            end
+        end
+        assert_eq(#errors, 0, "startup errors: " .. table.concat(errors, " | "))
+    end)
+end)
+
+describe("Keymap documentation", function()
+    -- LspAttach maps only exist in buffers with a language server
+    local lsp_keys = {}
+    local lsp_src = io.open(vim.fn.stdpath("config") .. "/lua/plugins/lsp.lua"):read("*a")
+    for key in lsp_src:gmatch('map_lsp%([^,]+,%s*"([^"]+)"') do
+        lsp_keys[key] = true
+    end
+
+    local function is_mapped(key)
+        local lhs = key:gsub("<leader>", vim.g.mapleader)
+        for _, mode in ipairs({ "n", "v", "x", "o", "i", "t" }) do
+            if not vim.tbl_isempty(vim.fn.maparg(lhs, mode, false, true)) then
+                return true
+            end
+        end
+        return false
+    end
+
+    it("every which-key label should point at a real mapping", function()
+        -- Labels are registered with wk.add() in which.lua's config
+        local registered = require("which-key.config").mappings
+        assert_true(#registered > 0, "which-key registered no labels (did it load?)")
+        -- Mapped per-buffer for their filetype only
+        local buffer_local = { "^<leader>P", "^<leader>nr$" }
+        local missing = {}
+        for _, km in ipairs(registered) do
+            local key = km.lhs and vim.fn.keytrans(vim.keycode(km.lhs)):gsub("^" .. vim.pesc(vim.fn.keytrans(vim.g.mapleader)), "<leader>")
+            if key and key:match("^<leader>") and km.desc and not km.group and not km.rhs and not km.callback and not is_mapped(key) then
+                local allowed = false
+                for _, pat in ipairs(buffer_local) do
+                    allowed = allowed or key:match(pat) ~= nil
+                end
+                if not allowed and not lsp_keys[key] then
+                    table.insert(missing, key)
+                end
+            end
+        end
+        assert_eq(#missing, 0, "labels without a mapping: " .. table.concat(missing, ", "))
+    end)
+
+    it("every key in the README key tables should exist", function()
+        local readme = io.open(vim.fn.stdpath("config") .. "/README.md"):read("*a")
+        local not_keys = { ["git-delta"] = true, ["zen-browser"] = true, ["<leader>z"] = true }
+        local buffer_local = vim.tbl_extend("force", { ["<leader>nr"] = true, ["<Esc><Esc>"] = true }, lsp_keys)
+        local missing, seen = {}, {}
+        for line in readme:gmatch("[^\n]+") do
+            local first = line:match("^|%s*([^|]+)|")
+            for key in (first or ""):gmatch("`([^`]+)`") do
+                local looks_like_key = key:match("^<[%w%-]+>") or key:match("^[%[%]]")
+                if looks_like_key and not seen[key] and not not_keys[key] and not buffer_local[key] then
+                    seen[key] = true
+                    if not is_mapped(key) then
+                        table.insert(missing, key)
+                    end
+                end
+            end
+        end
+        assert_eq(#missing, 0, "README documents unmapped keys: " .. table.concat(missing, ", "))
+    end)
+end)
+
+describe("Treesitter", function()
+    local samples = { python = "def f():\n    pass", cpp = "int main() {}", typescript = "const a = 1",
+        sh = "echo hi", lua = "local a = 1", json = "{}", markdown = "# hi" }
+    for ft, text in pairs(samples) do
+        local lang = vim.treesitter.language.get_lang(ft)
+        if not pcall(vim.treesitter.language.add, lang) then
+            skip(ft .. " should get treesitter highlighting", "parser not installed")
+        else
+            it(ft .. " should get treesitter highlighting", function()
+                local buf = vim.api.nvim_create_buf(true, false)
+                vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(text, "\n"))
+                vim.api.nvim_set_current_buf(buf)
+                vim.bo[buf].filetype = ft
+                local active = vim.treesitter.highlighter.active[buf] ~= nil
+                vim.api.nvim_buf_delete(buf, { force = true })
+                assert_true(active, "treesitter highlighter not attached for " .. ft)
+            end)
+        end
+    end
+end)
+
+describe("Statusline styles (lua/ui/statusline)", function()
+    local layouts = require("ui.statusline.layouts")
+    local styles = require("ui.styles")
+
+    for _, style in ipairs(styles.list) do
+        it(style.id .. " should render without statusline errors", function()
+            layouts[style.id]()
+            local line = require("lualine").statusline(true) or ""
+            local ok, err = pcall(vim.api.nvim_eval_statusline, line, { maxwidth = 200 })
+            assert_true(ok, tostring(err))
+        end)
+    end
+
+    it("LSP progress with a % sign should render safely", function()
+        local real_status = vim.lsp.status
+        vim.lsp.status = function()
+            return "100%: Loading workspace"
+        end
+        local ok_fn, rendered = pcall(require("ui.statusline.parts").lsp_progress)
+        vim.lsp.status = real_status
+        assert_true(ok_fn, tostring(rendered))
+        local ok, err = pcall(vim.api.nvim_eval_statusline, rendered, {})
+        assert_true(ok, "unescaped % in lsp_progress: " .. tostring(err))
+        assert_true(rendered:find("100%%%%") ~= nil, "expected escaped percent, got " .. rendered)
+    end)
+
+    -- Restore whichever style the user has active
+    require("ui.statusline.layouts")[styles.current()]()
+end)
+
+describe("Mason tool list", function()
+    local reg_ok, registry = pcall(require, "mason-registry")
+    local names = reg_ok and registry.get_all_package_names() or {}
+    if #names == 0 then
+        skip("every ensure_installed entry should be a Mason package", "Mason registry not downloaded")
+    else
+        it("every ensure_installed entry should be a Mason package", function()
+            local spec = dofile(vim.fn.stdpath("config") .. "/lua/plugins/mason.lua")
+            local known = {}
+            for _, n in ipairs(names) do
+                known[n] = true
+            end
+            local unknown = {}
+            for _, n in ipairs(spec[2].opts.ensure_installed) do
+                if not known[n] then
+                    table.insert(unknown, n)
+                end
+            end
+            assert_eq(#unknown, 0, "unknown Mason packages: " .. table.concat(unknown, ", "))
+        end)
+    end
 end)
 
 -- ============================================================================
 -- SUMMARY REPORT
 -- ============================================================================
 print("\n" .. string.rep("─", 60))
-print(string.format("Test Suite Completed: %s total, %s passed, %s failed",
+print(string.format("Test Suite Completed: %s total, %s passed, %s failed, %s skipped",
     color(1, tostring(test_count)),
     color(32, tostring(pass_count)),
-    fail_count > 0 and color(31, tostring(fail_count)) or color(32, "0")
+    fail_count > 0 and color(31, tostring(fail_count)) or color(32, "0"),
+    color(33, tostring(skip_count))
 ))
 print(string.rep("─", 60) .. "\n")
 
