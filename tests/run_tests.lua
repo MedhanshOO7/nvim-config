@@ -37,13 +37,13 @@ end
 
 local function assert_true(val, msg)
     if not val then
-        error(msg or "assertion failed: expected true, got " .. vim.inspect(val))
+        error(msg or ("assertion failed: expected true, got " .. vim.inspect(val)))
     end
 end
 
 local function assert_false(val, msg)
     if val then
-        error(msg or "assertion failed: expected false, got " .. vim.inspect(val))
+        error(msg or ("assertion failed: expected false, got " .. vim.inspect(val)))
     end
 end
 

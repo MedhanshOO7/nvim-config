@@ -97,20 +97,22 @@ return {
         "nvim-zh/colorful-winsep.nvim",
         event = { "WinLeave" },
         opts = {
-            highlight = "#89b4fa",
-            interval = 30,
-            no_exec_files = {
-                "packer",
-                "TelescopePrompt",
+            border = "rounded",
+            -- Re-run by the plugin on every ColorScheme, so the glow tracks the theme accent
+            highlight = function()
+                local c = require("utils.palette").colors()
+                vim.api.nvim_set_hl(0, "ColorfulWinSep", { fg = c.blue, bg = "NONE" })
+            end,
+            animate = { enabled = false }, -- smear-cursor already animates focus changes
+            excluded_ft = {
                 "mason",
+                "lazy",
                 "snacks_dashboard",
                 "snacks_picker_input",
+                "snacks_picker_list",
+                "snacks_layout_box",
                 "snacks_explorer",
-                "lazy",
-                "alpha",
             },
-            symbols = { "─", "│", "┌", "┐", "└", "┘" },
-            smooth = true,
         },
     },
 
@@ -169,14 +171,16 @@ return {
         "HiPhish/rainbow-delimiters.nvim",
         event = "VeryLazy",
         config = function()
+            -- Bracket colours come from the active theme so they stay readable on any palette
             local function apply_rainbow_colors()
-                vim.api.nvim_set_hl(0, "RainbowDelimiterRed", { fg = "#f38ba8", bold = true })
-                vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg = "#f9e2af", bold = true })
-                vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg = "#89b4fa", bold = true })
-                vim.api.nvim_set_hl(0, "RainbowDelimiterOrange", { fg = "#fab387", bold = true })
-                vim.api.nvim_set_hl(0, "RainbowDelimiterGreen", { fg = "#a6e3a1", bold = true })
-                vim.api.nvim_set_hl(0, "RainbowDelimiterViolet", { fg = "#cba6f7", bold = true })
-                vim.api.nvim_set_hl(0, "RainbowDelimiterCyan", { fg = "#89dceb", bold = true })
+                local c = require("utils.palette").colors()
+                vim.api.nvim_set_hl(0, "RainbowDelimiterRed", { fg = c.red })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg = c.yellow })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg = c.blue })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterOrange", { fg = c.orange })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterGreen", { fg = c.green })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterViolet", { fg = c.violet })
+                vim.api.nvim_set_hl(0, "RainbowDelimiterCyan", { fg = c.cyan })
             end
 
             apply_rainbow_colors()
@@ -184,7 +188,10 @@ return {
             vim.api.nvim_create_autocmd("ColorScheme", {
                 group = vim.api.nvim_create_augroup("rainbow_delimiters_vivid_colors", { clear = true }),
                 pattern = "*",
-                callback = apply_rainbow_colors,
+                -- schedule: run after utils.theme finishes its own ColorScheme pass
+                callback = function()
+                    vim.schedule(apply_rainbow_colors)
+                end,
             })
 
             vim.g.rainbow_delimiters = {

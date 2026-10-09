@@ -14,6 +14,12 @@ return {
             auto_save = true,
             auto_create = true,
             suppressed_dirs = { "~/", "~/Dev/", "~/Downloads", "~/Documents", "~/Desktop/" },
+            -- Lets barbar store its buffer order in a session global (needs "globals" in sessionoptions)
+            pre_save_cmds = {
+                function()
+                    vim.api.nvim_exec_autocmds("User", { pattern = "SessionSavePre" })
+                end,
+            },
             session_lens = {
                 load_on_setup = false,
             },
