@@ -95,6 +95,8 @@ return {
             -- Database (Dadbod)
             { "<leader>Ds", desc = "Select database for buffer", icon = { icon = "󰆼", color = "yellow" } },
             { "<leader>DS", desc = "View table schema & columns", icon = { icon = "󰓫", color = "cyan" } },
+            { "<leader>Dh", desc = "Toggle SQL schema sidebar", icon = { icon = "󰆼", color = "green" } },
+            { "<leader>Dp", desc = "Pick SQL table & columns via picker", icon = { icon = "󰓫", color = "cyan" } },
             { "<leader>Db", desc = "Toggle Database UI", icon = { icon = "󰆼", color = "yellow" } },
             { "<leader>Df", desc = "Find DB buffer", icon = { icon = "", color = "blue" } },
             { "<leader>Dl", desc = "Last DB query info", icon = { icon = "", color = "orange" } },

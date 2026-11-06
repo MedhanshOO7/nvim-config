@@ -90,6 +90,18 @@ map({ "n", "v" }, "<leader>rr", function()
         pcall(vim.cmd, "RunCode")
     end
 end, { desc = "Run: Current file / selection" })
+
+-- SQL Schema Sidebar / Viewer (configurable via vim.g.sql_schema)
+--   <leader>Ds  - select database        (dadbod)
+--   <leader>DS  - view schema inspector  (dadbod floating window)
+--   <leader>Dh  - toggle schema sidebar  (this module, persistent)
+--   <leader>Dp  - pick table via snacks.picker
+map("n", "<leader>Dh", function()
+    require("utils.sql_schema").toggle()
+end, { desc = "Toggle SQL schema sidebar/viewer" })
+map("n", "<leader>Dp", function()
+    require("utils.sql_schema").pick_table()
+end, { desc = "Pick SQL table & columns via picker" })
 map("n", "<leader>to", function()
     local ok, ts = pcall(require, "utils.terminal_style")
     if ok then

@@ -489,19 +489,19 @@ return {
 
     sqls = {
         filetypes = { "sql", "mysql", "plsql" },
-        root_dir = function(fname)
-            return vim.fn.getcwd()
+        -- Use the native vim.lsp.config root_dir pattern: call on_dir(root)
+        -- so sqls activates on any SQL buffer regardless of project markers.
+        root_dir = function(bufnr, on_dir)
+            on_dir(vim.fn.getcwd())
         end,
+        -- Connections are intentionally left empty. Add your own per-project
+        -- connection under `settings.sqls.connections` if you want sqls to
+        -- introspect a live database schema. Without a connection, sqls still
+        -- attaches and provides SQL language support (completion, diagnostics,
+        -- hover) but won't introspect a live schema.
         settings = {
             sqls = {
-                -- Connections can be added here per-project; sqls will
-                -- introspect the schema for table/column completion.
-                connections = {
-                    {
-                        driver = "mysql",
-                        dataSourceName = "root@tcp(127.0.0.1:3306)/practicedb?parseTime=true",
-                    },
-                },
+                connections = {},
             },
         },
     },

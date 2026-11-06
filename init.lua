@@ -38,6 +38,17 @@ end
 
 vim.g.autoformat_enabled = false
 vim.g.blink_ghost_text = true
+
+-- SQL Schema Sidebar / Viewer configuration.
+-- position: "sidebar" | "float" | "bottom" | "right"
+-- sidebar_side: "left" | "right" (only for position = "sidebar")
+vim.g.sql_schema = {
+    position = "sidebar",
+    sidebar_side = "left",
+    width = 35,
+    height = 12,
+    auto_open = false,
+}
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
@@ -79,6 +90,7 @@ require("core.autocmds")
 require("core.lazy")
 require("utils.status_style").load()
 require("utils.theme").setup()
+require("utils.sql_schema").setup(vim.g.sql_schema)
 require("core.keymaps")
 
 -- Lazy-loaded utility commands (zero startup cost)
