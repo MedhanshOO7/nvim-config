@@ -154,9 +154,9 @@ function M.init_platformio_project()
                             notify_warn("compile_commands.json generation failed — clangd accuracy may be limited")
                         else
                             notify_info("compile_commands.json generated. clangd is ready.")
-                            -- Trigger LspRestart so clangd picks up the new DB
+                            -- Restart clangd so it picks up the new DB (:LspRestart is gone on 0.12+)
                             vim.schedule(function()
-                                pcall(vim.cmd, "LspRestart clangd")
+                                pcall(vim.cmd, vim.fn.exists(":lsp") == 2 and "lsp restart clangd" or "LspRestart clangd")
                             end)
                         end
                     end)
@@ -522,7 +522,7 @@ function M.refresh_clangd()
                 notify_error("compile_commands.json generation failed:\n" .. (obj.stderr or ""))
             else
                 notify_info("compile_commands.json ready — restarting clangd")
-                pcall(vim.cmd, "LspRestart clangd")
+                pcall(vim.cmd, vim.fn.exists(":lsp") == 2 and "lsp restart clangd" or "LspRestart clangd")
             end
         end)
     end)

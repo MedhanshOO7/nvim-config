@@ -238,22 +238,7 @@ vim.api.nvim_create_user_command("ExplorerSize", function(opts)
     end
 end, { nargs = "?", desc = "Show or set explorer / window width (e.g. :ExplorerSize 24)" })
 
--- ── Auto open explorer when starting nvim with a directory ───
-vim.api.nvim_create_autocmd("VimEnter", {
-    group = vim.api.nvim_create_augroup("AutoOpenExplorer", { clear = true }),
-    callback = function()
-        local args = vim.fn.argv()
-        if #args == 1 and vim.fn.isdirectory(args[1]) == 1 then
-            -- Defer so the UI is ready before the explorer opens
-            vim.schedule(function()
-                local ok, snacks = pcall(require, "snacks")
-                if ok and snacks.explorer then
-                    snacks.explorer()
-                end
-            end)
-        end
-    end,
-})
+
 
 -- ── Quality of life ──────────────────────────────────────────
 local qol = vim.api.nvim_create_augroup("QualityOfLife", { clear = true })

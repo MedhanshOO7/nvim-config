@@ -446,7 +446,10 @@ describe("Keymap documentation", function()
     -- LspAttach maps only exist in buffers with a language server
     local lsp_keys = {}
     local lsp_src = io.open(vim.fn.stdpath("config") .. "/lua/plugins/lsp.lua"):read("*a")
-    for key in lsp_src:gmatch('map_lsp%([^,]+,%s*"([^"]+)"') do
+    for key in lsp_src:gmatch('map_lsp%([^,{]+,%s*"([^"]+)"') do
+        lsp_keys[key] = true
+    end
+    for key in lsp_src:gmatch('map_lsp%(%b{}%s*,%s*"([^"]+)"') do
         lsp_keys[key] = true
     end
 
@@ -465,11 +468,12 @@ describe("Keymap documentation", function()
         local registered = require("which-key.config").mappings
         assert_true(#registered > 0, "which-key registered no labels (did it load?)")
         -- Mapped per-buffer for their filetype only
-        local buffer_local = { "^<leader>P", "^<leader>nr$" }
+        local buffer_local = { "^<leader>P", "^<leader>nr$", "^<leader>ch$", "^<leader>cT$" }
         local missing = {}
         for _, km in ipairs(registered) do
             local key = km.lhs and vim.fn.keytrans(vim.keycode(km.lhs)):gsub("^" .. vim.pesc(vim.fn.keytrans(vim.g.mapleader)), "<leader>")
-            if key and key:match("^<leader>") and km.desc and not km.group and not km.rhs and not km.callback and not is_mapped(key) then
+            -- `preset` labels describe Vim's builtin motions/operators
+            if key and km.desc and not km.preset and not km.group and not km.rhs and not km.callback and not is_mapped(key) then
                 local allowed = false
                 for _, pat in ipairs(buffer_local) do
                     allowed = allowed or key:match(pat) ~= nil
@@ -484,7 +488,7 @@ describe("Keymap documentation", function()
 
     it("every key in the README key tables should exist", function()
         local readme = io.open(vim.fn.stdpath("config") .. "/README.md"):read("*a")
-        local not_keys = { ["git-delta"] = true, ["zen-browser"] = true, ["<leader>z"] = true }
+        local not_keys = { ["git-delta"] = true, ["zen-browser"] = true, ["<leader>z"] = true, ["<C-w>="] = true }
         local buffer_local = vim.tbl_extend("force", { ["<leader>nr"] = true, ["<Esc><Esc>"] = true }, lsp_keys)
         local missing, seen = {}, {}
         for line in readme:gmatch("[^\n]+") do
@@ -575,6 +579,107 @@ describe("Mason tool list", function()
             assert_eq(#unknown, 0, "unknown Mason packages: " .. table.concat(unknown, ", "))
         end)
     end
+end)
+
+describe("Plugin integrity", function()
+    local Config = require("lazy.core.config")
+    local root = vim.fn.stdpath("config")
+
+    local function read(path)
+        local f = io.open(root .. "/" .. path)
+        local text = f and f:read("*a") or ""
+        if f then
+            f:close()
+        end
+        return text
+    end
+
+    it("no global key should be claimed by two plugin specs", function()
+        local owners, clashes = {}, {}
+        for name, plugin in pairs(Config.plugins) do
+            for _, key in pairs(plugin._.handlers and plugin._.handlers.keys or {}) do
+                if not key.ft then
+                    local modes = type(key.mode) == "table" and key.mode or { key.mode or "n" }
+                    for _, mode in ipairs(modes) do
+                        local id = mode .. " " .. vim.fn.keytrans(vim.keycode(key.lhs))
+                        if owners[id] and owners[id] ~= name then
+                            table.insert(clashes, id .. " (" .. owners[id] .. ", " .. name .. ")")
+                        end
+                        owners[id] = name
+                    end
+                end
+            end
+        end
+        assert_eq(#clashes, 0, "key clashes: " .. table.concat(clashes, "; "))
+    end)
+
+    it("rplugin should stay enabled while molten-nvim is installed", function()
+        local disabled = Config.options.performance.rtp.disabled_plugins or {}
+        assert_true(not Config.plugins["molten-nvim"] or not vim.tbl_contains(disabled, "rplugin"),
+            "molten-nvim is a remote plugin; disabling rplugin removes its commands")
+    end)
+
+    it("molten-nvim should not lazy-load on cmd (stubs delete its remote commands)", function()
+        local molten = Config.plugins["molten-nvim"]
+        assert_true(not molten or molten.cmd == nil, "lazy cmd stubs replace and then delete :Molten* commands")
+    end)
+
+    it("nothing should call :LspStart (nvim-lspconfig skips it on 0.12+)", function()
+        local hits = {}
+        for _, file in ipairs(vim.fn.globpath(root, "lua/**/*.lua", false, true)) do
+            for line in io.lines(file) do
+                if line:match('"[^"]*LspStart') then
+                    table.insert(hits, vim.fn.fnamemodify(file, ":t"))
+                end
+            end
+        end
+        assert_eq(#hits, 0, ":LspStart used in " .. table.concat(hits, ", "))
+    end)
+
+    it("LSP configs should not use lspconfig's legacy on_new_config hook", function()
+        local servers = require("lsp.servers")
+        for name, config in pairs(servers) do
+            assert_true(config.on_new_config == nil, name .. " uses on_new_config, which vim.lsp.config ignores")
+        end
+        assert_true(type(servers.jsonls.before_init) == "function", "jsonls should inject SchemaStore in before_init")
+        assert_true(type(servers.yamlls.before_init) == "function", "yamlls should inject SchemaStore in before_init")
+    end)
+
+    it("overseer key commands should exist once overseer is loaded", function()
+        require("lazy").load({ plugins = { "overseer.nvim" } })
+        local missing = {}
+        for _, key in pairs(Config.plugins["overseer.nvim"]._.handlers.keys or {}) do
+            local command = type(key.rhs) == "string" and key.rhs:match("<cmd>(%w+)")
+            if command and vim.fn.exists(":" .. command) ~= 2 then
+                table.insert(missing, command)
+            end
+        end
+        assert_eq(#missing, 0, "missing overseer commands: " .. table.concat(missing, ", "))
+    end)
+
+    it("zephyr west templates should be registered with overseer", function()
+        local names, done = {}, false
+        require("overseer.template").list({ dir = vim.fn.getcwd() }, function(templates)
+            for _, tmpl in ipairs(templates) do
+                names[tmpl.name] = true
+            end
+            done = true
+        end)
+        vim.wait(5000, function()
+            return done
+        end)
+        assert_true(names["west build"] and names["west flash"], "west templates not registered")
+    end)
+
+    it("live-server should be configured through vim.g.live_server", function()
+        assert_true(type(vim.g.live_server) == "table", "vim.g.live_server is not set")
+        assert_true(not read("lua/plugins/live-server.lua"):find('require%("live%-server"%)%.setup'),
+            "live-server removed setup() in v0.2")
+    end)
+
+    it("snacks indent guides should use a box-drawing character", function()
+        assert_eq(require("snacks").config.indent.char, "│")
+    end)
 end)
 
 -- ============================================================================

@@ -104,7 +104,7 @@ If you just want something that works out of the box, there are better options �
 │   │   ├── lsp.lua             # LSP client setup
 │   │   ├── cmp.lua             # Completion engine
 │   │   ├── snacks.lua          # Snacks picker, explorer, dashboard, zen
-│   │   ├── copilot.lua         # AI assistants (Copilot, CopilotChat, Supermaven)
+│   │   ├── copilot.lua         # AI assistants (Copilot, CopilotChat)
 │   │   ├── treesitter.lua      # Syntax parsing & highlighting
 │   │   ├── zephyr.lua          # Zephyr RTOS overseer templates
 │   │   ├── dap.lua             # Debug Adapter Protocol
@@ -210,7 +210,6 @@ Install these only if you need their specific workflows:
 | `lazygit` | snacks.lazygit | Floating Git TUI modal (`<leader>gl`) | `pacman -S lazygit` / `brew install lazygit` |
 | `cmake` + `ninja` | cmake-tools.nvim | C/C++ CMake build generation & debugging | `pacman -S cmake ninja` |
 | `git-delta` | tiny-code-action.nvim | Enhanced side-by-side diff in code actions | `pacman -S git-delta` |
-| `live-server` | live-server.nvim | Hot-reload web dev server (`<leader>lv`) | `npm install -g live-server` |
 | `west` | zephyr.lua | Embedded Zephyr RTOS building & flashing | `pip install west` (inside python venv) |
 | `arm-none-eabi-gdb` | nvim-dap | Bare-metal ARM Cortex MCU debugging | ARM GNU toolchain |
 | `zen-browser` | markdown-preview | Live Markdown & HTML preview browser | [zen-browser.app](https://zen-browser.app) |
@@ -554,15 +553,15 @@ The leader key is set to `<Space>`.
 | Key | Action | Engine |
 | :--- | :--- | :--- |
 | `]h` / `[h` | Jump to next / previous hunk | gitsigns |
-| `<leader>gn` / `<leader>gp` | Jump to next / previous hunk | gitsigns |
+| `<leader>gn` / `<leader>gN` | Jump to next / previous hunk | gitsigns |
+| `<leader>gp` | Preview hunk | gitsigns |
 | `<leader>gs` | Stage current hunk | gitsigns |
 | `<leader>gu` | Undo staging for hunk | gitsigns |
 | `<leader>gr` | Discard / reset hunk | gitsigns |
 | `<leader>gb` | Line git blame | gitsigns |
-| `<leader>gd` | Preview hunk diff | gitsigns |
-| `<leader>gD` | Diff buffer against git index | gitsigns |
+| `<leader>gd` | Open side-by-side diffview | diffview.nvim |
 | `<leader>gh` | Current file commit history | diffview.nvim |
-| `<leader>gq` | Close diffview | diffview.nvim |
+| `<leader>gq` / `<leader>gD` | Close diffview | diffview.nvim |
 | `<leader>gg` | Open full Neogit panel | neogit |
 | `<leader>gc` | Start Neogit commit | neogit |
 | `<leader>gl` | Open floating Lazygit | snacks.lazygit |
@@ -691,8 +690,9 @@ The leader key is set to `<Space>`.
 | `<leader>Tf` | Run current test file | neotest |
 | `<leader>Td` | Debug nearest test | neotest |
 | `<leader>Ts` / `<leader>To` | Toggle test summary / open output | neotest |
-| `<leader>rs` | Send selection to REPL | vim-slime |
+| `<leader>rs` | Send paragraph (normal) / selection (visual) to REPL | vim-slime |
 | `<leader>rl` | Send line to REPL | vim-slime |
+| `<leader>rC` | Configure REPL target | vim-slime |
 | `<leader>mi` | Initialize Molten Jupyter kernel | molten-nvim |
 | `<leader>me` | Evaluate Molten cell operator | molten-nvim |
 | `<leader>ml` | Evaluate Molten line | molten-nvim |

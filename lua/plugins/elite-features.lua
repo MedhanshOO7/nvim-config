@@ -58,6 +58,7 @@ return {
     -- 4. Smart-Splits (Organic Window Resizing)
     {
         'mrjones2014/smart-splits.nvim',
+        lazy = false,
         keys = {
             -- Moving between splits
             { '<C-h>', function() require('smart-splits').move_cursor_left() end, desc = "Move to left split" },
@@ -70,6 +71,8 @@ return {
             { '<A-k>', function() require('smart-splits').resize_up() end, desc = "Resize split up" },
             { '<A-l>', function() require('smart-splits').resize_right() end, desc = "Resize split right" },
         },
-        opts = {},
+        opts = function()
+            return { multiplexer_integration = vim.env.TMUX and 'tmux' or false }
+        end,
     },
 }

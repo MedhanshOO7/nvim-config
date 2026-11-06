@@ -512,11 +512,13 @@ return {
 
         keys = {
             {
-                "<leader>mp",
+                "<leader>np",
                 function()
+                    -- The plugin's :MarkdownPreviewToggle is buffer-local and only
+                    -- defined on BufEnter; the autoload function works anywhere.
                     vim.fn["mkdp#util#toggle_preview"]()
                 end,
-                desc = "Markdown Browser Preview",
+                desc = "Open or close the markdown browser preview",
             },
         },
     },

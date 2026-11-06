@@ -451,7 +451,8 @@ local function apply_editor_chrome(transparent)
         SnacksBackdrop = { bg = "NONE" },
         SnacksDashboardNormal = { bg = transparent and "NONE" or normal_bg },
         SnacksIndent = { fg = blend(comment, normal_bg, 0.32) },
-        SnacksIndentScope = { fg = blend(accent, normal_bg, 0.85), bold = true },
+        SnacksIndentScope = { fg = blend(accent, normal_bg, 0.60) },
+        SnacksIndentChunk = { link = "SnacksIndentScope" },
         SnacksDashboardHeader = { fg = accent, bold = true },
         SnacksDashboardDesc = { fg = normal_fg },
         SnacksDashboardKey = { fg = accent_alt, bold = true },
@@ -467,17 +468,6 @@ local function apply_editor_chrome(transparent)
         NeogitDiffDelete = { fg = danger, bg = blend(danger, normal_bg, 0.10) },
         NeogitDiffContext = { fg = normal_fg, bg = float_bg },
         NeogitDiffContextHighlight = { fg = normal_fg, bg = blend(accent, normal_bg, 0.07) },
-
-        -- ── Fidget / progress chrome ────────────────────────────────────────
-        FidgetTitle = { fg = accent, bold = true },
-        FidgetTask = { fg = normal_fg },
-        FidgetNormal = { fg = normal_fg, bg = float_bg },
-
-        -- ── Alpha (dashboard) ─────────────────────────────────────────────────
-        AlphaHeader = { fg = accent },
-        AlphaButtons = { fg = accent_alt },
-        AlphaShortcut = { fg = warning },
-        AlphaFooter = { fg = comment },
 
         -- ── Aerial ────────────────────────────────────────────────────────────
         AerialLine = { bg = blend(accent, normal_bg, 0.12) },
@@ -551,80 +541,13 @@ local function apply_editor_chrome(transparent)
         DropBarMenuFloatBorder = { fg = float_border, bg = float_bg },
         DropBarMenuHoverEntry = { bg = blend(accent, normal_bg, 0.18), bold = true },
 
-        -- ── Snacks Notifier (Frosted Glass Toasts) ───────────────────────────
-        SnacksNotifierInfo = { fg = normal_fg, bg = blend(accent, normal_bg, 0.16) },
-        SnacksNotifierWarn = { fg = normal_fg, bg = blend(warning, normal_bg, 0.16) },
-        SnacksNotifierError = { fg = normal_fg, bg = blend(danger, normal_bg, 0.18) },
-        SnacksNotifierDebug = { fg = normal_fg, bg = blend(accent_alt, normal_bg, 0.14) },
-        SnacksNotifierTrace = { fg = normal_fg, bg = blend(comment, normal_bg, 0.14) },
-
-        SnacksNotifierBorderInfo = { fg = accent, bg = blend(accent, normal_bg, 0.16) },
-        SnacksNotifierBorderWarn = { fg = warning, bg = blend(warning, normal_bg, 0.16) },
-        SnacksNotifierBorderError = { fg = danger, bg = blend(danger, normal_bg, 0.18) },
-        SnacksNotifierBorderDebug = { fg = accent_alt, bg = blend(accent_alt, normal_bg, 0.14) },
-        SnacksNotifierBorderTrace = { fg = comment, bg = blend(comment, normal_bg, 0.14) },
-
-        SnacksNotifierTitleInfo = { fg = accent, bg = blend(accent, normal_bg, 0.16), bold = true },
-        SnacksNotifierTitleWarn = { fg = warning, bg = blend(warning, normal_bg, 0.16), bold = true },
-        SnacksNotifierTitleError = { fg = danger, bg = blend(danger, normal_bg, 0.18), bold = true },
-        SnacksNotifierTitleDebug = { fg = accent_alt, bg = blend(accent_alt, normal_bg, 0.14), bold = true },
-        SnacksNotifierTitleTrace = { fg = comment, bg = blend(comment, normal_bg, 0.14), bold = true },
-
-        SnacksNotifierIconInfo = { fg = accent, bg = blend(accent, normal_bg, 0.16) },
-        SnacksNotifierIconWarn = { fg = warning, bg = blend(warning, normal_bg, 0.16) },
-        SnacksNotifierIconError = { fg = danger, bg = blend(danger, normal_bg, 0.18) },
-        SnacksNotifierIconDebug = { fg = accent_alt, bg = blend(accent_alt, normal_bg, 0.14) },
-        SnacksNotifierIconTrace = { fg = comment, bg = blend(comment, normal_bg, 0.14) },
-
-        SnacksNotifierFooterInfo = { fg = comment, bg = blend(accent, normal_bg, 0.16) },
-        SnacksNotifierFooterWarn = { fg = comment, bg = blend(warning, normal_bg, 0.16) },
-        SnacksNotifierFooterError = { fg = comment, bg = blend(danger, normal_bg, 0.18) },
-
-        SnacksNotifierHistory = { fg = normal_fg, bg = float_bg },
-
-        -- ── Completion item kinds ─────────────────────────────────────────────
-        CmpItemKindFunction = { fg = accent },
-        CmpItemKindMethod = { fg = accent },
-        CmpItemKindConstructor = { fg = accent },
-        CmpItemKindClass = { fg = warning },
-        CmpItemKindInterface = { fg = warning },
-        CmpItemKindStruct = { fg = warning },
-        CmpItemKindProperty = { fg = normal_fg },
-        CmpItemKindField = { fg = normal_fg },
-        CmpItemKindVariable = { fg = accent_alt },
-        CmpItemKindConstant = { fg = success },
-        CmpItemKindKeyword = { fg = accent_alt },
-        CmpItemKindSnippet = { fg = warning },
-        CmpItemKindText = { fg = normal_fg },
-        CmpItemKindFile = { fg = accent },
-        CmpItemKindFolder = { fg = accent_alt },
-        CmpItemKindModule = { fg = accent_alt },
-        CmpItemKindUnit = { fg = warning },
-        CmpItemKindValue = { fg = success },
-        CmpItemKindEnum = { fg = warning },
-        CmpItemKindEnumMember = { fg = success },
-        CmpItemKindEvent = { fg = accent },
-        CmpItemKindOperator = { fg = accent_alt },
-        CmpItemKindTypeParameter = { fg = warning },
-
         -- ── Mode-morphing cursor highlights ─────────────────────────────
         Cursor = { fg = normal_bg, bg = accent },
         InsertCursor = { fg = normal_bg, bg = success },
         ReplaceCursor = { fg = normal_bg, bg = danger },
         VisualCursor = { fg = normal_bg, bg = accent_alt },
 
-        -- ── Semantic Treesitter & LSP Syntax Polishing ───────────────────
-        ["@variable.parameter"] = { fg = blend(accent, normal_fg, 0.75), italic = true },
-        ["@variable.member"] = { fg = blend(accent_alt, normal_fg, 0.85) },
-        ["@keyword.return"] = { fg = danger, bold = true },
-        ["@keyword.coroutine"] = { fg = accent_alt, bold = true },
-        ["@keyword.exception"] = { fg = danger, bold = true },
-        ["@comment.documentation"] = { fg = blend(comment, normal_fg, 0.65), italic = true },
-        ["@lsp.type.comment"] = { fg = comment, italic = true },
-        ["@lsp.type.interface"] = { fg = warning, bold = true },
-        ["@lsp.type.struct"] = { fg = warning, bold = true },
-        ["@lsp.type.typeParameter"] = { fg = accent_alt, italic = true },
-        ["@lsp.type.decorator"] = { fg = accent, bold = true },
+        -- ── Markdown markup (syntax colours are left to the colorscheme) ───
         ["@markup.raw.block.markdown"] = { bg = float_bg },
         ["@markup.link.label.markdown_inline"] = { fg = accent, bold = true, underline = true },
         ["@markup.link.url.markdown_inline"] = { fg = comment, underline = true },
@@ -632,6 +555,25 @@ local function apply_editor_chrome(transparent)
 
     for group, value in pairs(highlights) do
         vim.api.nvim_set_hl(0, group, value)
+    end
+
+    -- Completion kind colours: only for themes that don't style blink.cmp
+    -- themselves (blink links every BlinkCmpKind<Kind> to one plain group).
+    local kind_colors = {
+        Function = accent, Method = accent, Constructor = accent, Event = accent, File = accent,
+        Class = warning, Interface = warning, Struct = warning, Enum = warning, Unit = warning,
+        Snippet = warning, TypeParameter = warning,
+        Variable = accent_alt, Keyword = accent_alt, Folder = accent_alt, Module = accent_alt,
+        Operator = accent_alt,
+        Constant = success, Value = success, EnumMember = success,
+        Property = normal_fg, Field = normal_fg, Text = normal_fg,
+    }
+    for kind, color in pairs(kind_colors) do
+        local group = "BlinkCmpKind" .. kind
+        local current = vim.api.nvim_get_hl(0, { name = group })
+        if vim.tbl_isempty(current) or current.link == "BlinkCmpKind" then
+            vim.api.nvim_set_hl(0, group, { fg = color })
+        end
     end
 end
 

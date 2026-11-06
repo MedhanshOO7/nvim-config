@@ -35,7 +35,7 @@ local function setup_barbar()
         animation = true,
         auto_hide = false,
 
-        tabpages = false,
+        tabpages = true, -- shows "n/m" only when several tabs exist (Neogit opens in a tab)
         clickable = true,
 
         focus_on_close = "left",

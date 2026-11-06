@@ -89,19 +89,8 @@ return {
                                 }
                             )
 
-                            for _, client in
-                                ipairs(vim.lsp.get_clients({
-                                    name = "clangd",
-                                }))
-                            do
-                                if client.config.root_dir == root then
-                                    vim.lsp.stop_client(client.id)
-                                end
-                            end
-
-                            vim.schedule(function()
-                                vim.cmd("silent! LspStart clangd")
-                            end)
+                            -- :LspStart is not defined by nvim-lspconfig on Nvim 0.12+
+                            vim.cmd(vim.fn.exists(":lsp") == 2 and "lsp restart clangd" or "LspRestart clangd")
                         end)
                     end)
                 end
@@ -204,15 +193,15 @@ return {
             },
         },
 
-        on_new_config = function(new_config)
+        -- on_new_config is an old lspconfig hook that vim.lsp.config never calls;
+        -- before_init runs before the settings are sent to the server.
+        before_init = function(_, config)
             local ok, schemastore = pcall(require, "schemastore")
 
             if ok then
-                new_config.settings = new_config.settings or {}
-
-                new_config.settings.json = new_config.settings.json or {}
-
-                new_config.settings.json.schemas = schemastore.json.schemas()
+                config.settings = config.settings or {}
+                config.settings.json = config.settings.json or {}
+                config.settings.json.schemas = schemastore.json.schemas()
             end
         end,
     },
@@ -314,6 +303,29 @@ return {
     },
 
     -- ============================================================
+    -- SQL
+    -- ============================================================
+
+    sqls = {
+        filetypes = { "sql", "mysql", "plsql" },
+        root_dir = function(fname)
+            return vim.fn.getcwd()
+        end,
+        settings = {
+            sqls = {
+                -- Connections can be added here per-project; sqls will
+                -- introspect the schema for table/column completion.
+                connections = {
+                    {
+                        driver = "mysql",
+                        dataSourceName = "root@tcp(127.0.0.1:3306)/practicedb?parseTime=true",
+                    },
+                },
+            },
+        },
+    },
+
+    -- ============================================================
     -- TYPESCRIPT / JAVASCRIPT
     -- ============================================================
 
@@ -391,15 +403,15 @@ return {
             },
         },
 
-        on_new_config = function(new_config)
+        before_init = function(_, config)
             local ok, schemastore = pcall(require, "schemastore")
 
             if ok then
-                new_config.settings = new_config.settings or {}
-
-                new_config.settings.yaml = new_config.settings.yaml or {}
-
-                new_config.settings.yaml.schemas = schemastore.yaml.schemas()
+                config.settings = config.settings or {}
+                config.settings.yaml = config.settings.yaml or {}
+                -- Use SchemaStore.nvim's catalogue instead of yamlls' built-in download
+                config.settings.yaml.schemaStore = { enable = false, url = "" }
+                config.settings.yaml.schemas = schemastore.yaml.schemas()
             end
         end,
     },

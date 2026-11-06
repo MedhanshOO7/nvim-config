@@ -21,7 +21,6 @@ return {
         wk.setup(opts)
         wk.add({
             -- Group headers with icons & colors
-            { "<leader>a", group = "AI", icon = { icon = "󰚩", color = "green" } },
             { "<leader>B", group = "Build and CMake", icon = { icon = "󰜎", color = "blue" } },
             { "<leader>b", group = "Buffers", icon = { icon = "󰈔", color = "cyan" } },
             { "<leader>C", group = "Copilot AI", icon = { icon = "󰚩", color = "green" } },
@@ -37,10 +36,12 @@ return {
             { "<leader>m", group = "Molten", icon = { icon = "󰘦", color = "yellow" } },
             { "<leader>M", group = "Multicursor", icon = { icon = "󰆿", color = "purple" } },
             { "<leader>n", group = "Notes and writing", icon = { icon = "󰠮", color = "yellow" } },
+            { "<leader>N", group = "Embedded / nRF (Zephyr)", icon = { icon = "󰜎", color = "orange" } },
             { "<leader>o", group = "Obsidian", icon = { icon = "󰠮", color = "purple" } },
             { "<leader>p", group = "PlatformIO", icon = { icon = "", color = "orange" } },
             { "<leader>P", group = "Python", icon = { icon = "", color = "yellow" } },
             { "<leader>r", group = "Run Code", icon = { icon = "", color = "green" } },
+            { "<leader>R", group = "Report (markdown)", icon = { icon = "󰈙", color = "blue" } },
             { "<leader>s", group = "Search and jump", icon = { icon = "󰉁", color = "azure" } },
             { "<leader>T", group = "Testing (Neotest)", icon = { icon = "󰙨", color = "green" } },
             { "<leader>t", group = "Terminal and tasks", icon = { icon = "", color = "red" } },
@@ -79,6 +80,9 @@ return {
             { "<leader>rf", desc = "Run current file", icon = { icon = "", color = "green" } },
             { "<leader>rp", desc = "Run project", icon = { icon = "", color = "green" } },
             { "<leader>rc", desc = "Close runner output", icon = { icon = "", color = "red" } },
+            { "<leader>rs", desc = "Send paragraph / selection to REPL", mode = { "n", "x" }, icon = { icon = "", color = "yellow" } },
+            { "<leader>rl", desc = "Send line to REPL", icon = { icon = "", color = "yellow" } },
+            { "<leader>rC", desc = "Configure REPL target", icon = { icon = "", color = "yellow" } },
 
             -- Debug
             { "<leader>db", desc = "Toggle breakpoint", icon = { icon = "", color = "red" } },
@@ -98,7 +102,7 @@ return {
             -- Find
             { "<leader>f/", desc = "Search in current buffer", icon = { icon = "", color = "blue" } },
             { "<leader>fb", desc = "Search buffers", icon = { icon = "󰓩", color = "cyan" } },
-            { "<leader>fe", desc = "Classic Explorer (netrw)", icon = { icon = "󰉋", color = "yellow" } },
+            { "<leader>fe", desc = "Open file explorer", icon = { icon = "󰉋", color = "yellow" } },
             { "<leader>ff", desc = "Find file", icon = { icon = "󰈔", color = "blue" } },
             { "<leader>fg", desc = "Live grep", icon = { icon = "", color = "green" } },
             { "<leader>fk", desc = "Keymap help", icon = { icon = "", color = "purple" } },
@@ -145,7 +149,7 @@ return {
             { "<leader>h4", desc = "Harpoon file 4" },
 
             -- LSP
-            { "<leader>ld", desc = "Explain problem (cursor)", icon = { icon = "󰅚", color = "red" } },
+            { "<leader>ld", desc = "Jump to definition", icon = { icon = "󰅩", color = "blue" } },
             { "<leader>lD", desc = "Jump to declaration", icon = { icon = "󰅩", color = "blue" } },
             { "<leader>le", desc = "Explain problem (float)", icon = { icon = "󰅚", color = "red" } },
             { "<leader>li", desc = "Jump to implementation", icon = { icon = "󰅩", color = "blue" } },
@@ -199,11 +203,9 @@ return {
             { "<leader>os", desc = "Search notes", icon = { icon = "", color = "purple" } },
             { "<leader>ot", desc = "Today's daily note", icon = { icon = "󰸗", color = "purple" } },
             { "<leader>oy", desc = "Yesterday's daily note", icon = { icon = "󰸗", color = "purple" } },
-            { "<leader>ch", desc = "Toggle checkbox (Obsidian)", icon = { icon = "󰄲", color = "green" } },
 
             -- Python
             { "<leader>Pv", desc = "Select VirtualEnv", icon = { icon = "", color = "yellow" } },
-            { "<leader>Pc", desc = "Select Cached VirtualEnv", icon = { icon = "", color = "yellow" } },
             { "<leader>Pm", desc = "Make / Create VirtualEnv", icon = { icon = "", color = "green" } },
             { "<leader>Pi", desc = "Install package", icon = { icon = "󰏖", color = "cyan" } },
             { "<leader>PR", desc = "Install requirements.txt", icon = { icon = "󰈔", color = "blue" } },
@@ -230,7 +232,6 @@ return {
             { "<leader>tf", desc = "Project shell", icon = { icon = "", color = "red" } },
             { "<leader>tg", desc = "Terminal picker", icon = { icon = "", color = "red" } },
             { "<leader>th", desc = "Horizontal shell", icon = { icon = "", color = "red" } },
-            { "<leader>tl", desc = "Load task bundle", icon = { icon = "", color = "red" } },
             { "<leader>to", desc = "Toggle terminal", icon = { icon = "", color = "red" } },
             { "<leader>tr", desc = "Run task", icon = { icon = "", color = "green" } },
             { "<leader>tt", desc = "Toggle task list", icon = { icon = "", color = "yellow" } },
@@ -247,7 +248,7 @@ return {
             { "<leader>ui", desc = "Toggle image hover previews", icon = { icon = "󰋩", color = "purple" } },
             { "<leader>ul", desc = "Toggle relative line numbers", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>um", desc = "Toggle buffer modifiable", icon = { icon = "󰔎", color = "cyan" } },
-            { "<leader>un", desc = "Notification history / Next theme", icon = { icon = "󰂚", color = "yellow" } },
+            { "<leader>un", desc = "Next theme", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>up", desc = "Prev theme", icon = { icon = "󰔎", color = "cyan" } },
             { "<leader>us", desc = "Toggle spell check", icon = { icon = "󰓆", color = "green" } },
             { "<leader>ut", desc = "Theme picker", icon = { icon = "󰔎", color = "cyan" } },
@@ -282,8 +283,6 @@ return {
             { "<leader>yy", desc = "Yank text (to Yanky)", mode = { "n", "x" }, icon = { icon = "󰅍", color = "yellow" } },
 
             -- Non-leader keys
-            { "-", desc = "Open parent directory in Oil", icon = { icon = "󰉋", color = "yellow" } },
-            { "<M-a>", desc = "Toggle AI Autocomplete (Supermaven)", icon = { icon = "󰚩", color = "green" } },
             { "<M-n>", desc = "Cycle forward through yank history" },
             { "<M-p>", desc = "Cycle backward through yank history" },
             { "[y", desc = "Cycle backward through yank history" },
@@ -298,15 +297,15 @@ return {
             { "[h", desc = "Prev Hunk" },
             { "]h", desc = "Next Hunk" },
             { "<C-`>", desc = "Toggle terminal", mode = { "n", "i", "t" } },
-            { "<C-1>", desc = "Go to buffer 1" },
-            { "<C-2>", desc = "Go to buffer 2" },
-            { "<C-3>", desc = "Go to buffer 3" },
-            { "<C-4>", desc = "Go to buffer 4" },
-            { "<C-5>", desc = "Go to buffer 5" },
-            { "<C-6>", desc = "Go to buffer 6" },
-            { "<C-7>", desc = "Go to buffer 7" },
-            { "<C-8>", desc = "Go to buffer 8" },
-            { "<C-9>", desc = "Go to buffer 9" },
+            { "<A-1>", desc = "Go to buffer 1" },
+            { "<A-2>", desc = "Go to buffer 2" },
+            { "<A-3>", desc = "Go to buffer 3" },
+            { "<A-4>", desc = "Go to buffer 4" },
+            { "<A-5>", desc = "Go to buffer 5" },
+            { "<A-6>", desc = "Go to buffer 6" },
+            { "<A-7>", desc = "Go to buffer 7" },
+            { "<A-8>", desc = "Go to buffer 8" },
+            { "<A-9>", desc = "Go to buffer 9" },
             { "<C-M-Down>", desc = "Add cursor below", mode = { "n", "x" } },
             { "<C-M-Up>", desc = "Add cursor above", mode = { "n", "x" } },
         })

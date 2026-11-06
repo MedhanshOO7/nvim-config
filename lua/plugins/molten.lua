@@ -143,17 +143,9 @@ return {
         "benlubas/molten-nvim",
         build = ":UpdateRemotePlugins",
         ft = { "python", "jupyter" },
-        cmd = {
-            "MoltenInit",
-            "MoltenEvaluateOperator",
-            "MoltenEvaluateLine",
-            "MoltenEvaluateVisual",
-            "MoltenDelete",
-            "MoltenHideOutput",
-            "MoltenShowOutput",
-            "MoltenRestart",
-            "MoltenOpenInBrowser",
-        },
+        -- No `cmd` list: Molten's commands come from the remote-plugin manifest
+        -- (:UpdateRemotePlugins) and exist from startup. lazy.nvim's cmd stubs
+        -- would replace them and then delete them when the plugin loads.
         dependencies = image_enabled and { "3rd/image.nvim" } or {},
         init = function()
             ensure_jupyter_dirs()

@@ -5,7 +5,6 @@ return {
 
     cmd = {
         "VenvSelect",
-        "VenvSelectCached",
         "VenvSelectLog",
     },
 
@@ -44,13 +43,12 @@ return {
                 vim.g.python_venv_python = python
 
                 -- Restart basedpyright so it reads the newly selected interpreter.
-                for _, client in ipairs(vim.lsp.get_clients({ name = "basedpyright" })) do
-                    client:stop()
+                -- (:LspStart is not defined by nvim-lspconfig on Nvim 0.12+.)
+                if #vim.lsp.get_clients({ name = "basedpyright" }) > 0 then
+                    vim.schedule(function()
+                        vim.cmd(vim.fn.exists(":lsp") == 2 and "lsp restart basedpyright" or "LspRestart basedpyright")
+                    end)
                 end
-
-                vim.schedule(function()
-                    vim.cmd("silent! LspStart basedpyright")
-                end)
 
                 vim.notify(
                     "Python environment: " .. vim.fn.fnamemodify(venv, ":t"),
@@ -66,13 +64,6 @@ return {
             "<leader>Pv",
             "<cmd>VenvSelect<cr>",
             desc = "Python: Select VirtualEnv",
-            ft = "python",
-        },
-
-        {
-            "<leader>Pc",
-            "<cmd>VenvSelectCached<cr>",
-            desc = "Python: Select Cached VirtualEnv",
             ft = "python",
         },
 

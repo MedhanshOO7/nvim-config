@@ -189,7 +189,7 @@ return {
         },
         indent = {
             enabled = true,
-            char = "",
+            char = "│",
             animate = {
                 enabled = true,
                 style = "out",
@@ -199,14 +199,14 @@ return {
                     total = 250,
                 },
             },
+            -- Colours: SnacksIndent / SnacksIndentScope / SnacksIndentChunk, set
+            -- for every theme in lua/utils/theme.lua
             scope = {
                 enabled = true,
                 underline = false,
-                hl = "IblScope",
             },
             chunk = {
                 enabled = true,
-                hl = "IblIndent",
             },
         },
         input = {
@@ -228,7 +228,7 @@ return {
             },
         },
         lazygit = { enabled = true },
-        notifier = { enabled = false }, -- Noice owns notifications (see <leader>un); no snacks notifier config needed
+        notifier = { enabled = false }, -- noice renders messages through nvim-notify (lua/plugins/noice.lua)
         picker = {
             enabled = true,
             ui_select = true,
@@ -318,28 +318,10 @@ return {
         },
         statuscolumn = {
             enabled = true,
-            -- Improve statuscolumn UX with better information display
-            left = { "sign", "fold" }, -- Signs and fold indicators
-            right = { "git", "diagnostics" }, -- Git status and diagnostics
-            -- Better fold text
-            fold = "closed",
-            -- Git signs configuration
-            git = {
-                -- Patterns for git status
-                patterns = { "GitSign" },
-            },
-            -- Diagnostics configuration
-            diagnostics = {
-                -- Show diagnostics in statuscolumn
-                signs = {
-                    { icon = " ", hl = "DiagnosticSignError" },
-                    { icon = " ", hl = "DiagnosticSignWarn" },
-                    { icon = " ", hl = "DiagnosticSignInfo" },
-                    { icon = " ", hl = "DiagnosticSignHint" },
-                },
-                min_severity = vim.diagnostic.severity.HINT,
-            },
-            -- Update refresh rate for better performance
+            left = { "sign", "fold" }, -- diagnostics and other signs, then fold markers
+            right = { "git" }, -- gitsigns bar
+            folds = { open = false, git_hl = false },
+            git = { patterns = { "GitSign" } },
             refresh = 50, -- ms
         },
         words = { enabled = true },
@@ -376,15 +358,6 @@ return {
                     sidescrolloff = 5,
                 },
             },
-            -- Improve appearance when entering/leaving zen mode
-            on_open = function()
-                -- Optional: add a subtle indication that zen mode is active
-                vim.cmd("hi ZenBg guibg=#1a1b26")
-            end,
-            on_close = function()
-                -- Clean up when leaving zen mode
-                vim.cmd("hi ZenBg clear")
-            end,
         },
     },
     init = function()

@@ -54,7 +54,7 @@ require("lazy").setup({
                 "matchparen",
                 "netrwPlugin",
                 "editorconfig",
-                "rplugin",
+                -- "rplugin" must stay enabled: molten-nvim is a Python remote plugin
                 "spellfile",
                 "tarPlugin",
                 "tohtml",

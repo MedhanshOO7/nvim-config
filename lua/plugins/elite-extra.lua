@@ -7,15 +7,7 @@ return {
             { "nvim-lua/plenary.nvim" },
         },
         event = "LspAttach",
-        keys = {
-            {
-                "<leader>ca",
-                function()
-                    require("tiny-code-action").code_action()
-                end,
-                desc = "Code: Actions (visual preview)",
-            },
-        },
+        -- <leader>ca is mapped per buffer in plugins/lsp.lua and calls this plugin
         opts = {
             backend = vim.fn.executable("delta") == 1 and "delta" or "vim",
         },
@@ -39,16 +31,16 @@ return {
             {
                 "<leader>Tr",
                 function()
-                    require("neotest").run.run()
+                    require("utils.neotest_notify").run_with_notify()
                 end,
-                desc = "Test: Run nearest",
+                desc = "Test: Run nearest (notification)",
             },
             {
                 "<leader>Tf",
                 function()
-                    require("neotest").run.run(vim.fn.expand("%"))
+                    require("utils.neotest_notify").run_with_notify(vim.fn.expand("%"))
                 end,
-                desc = "Test: Run file",
+                desc = "Test: Run file (notification)",
             },
             {
                 "<leader>Ts",

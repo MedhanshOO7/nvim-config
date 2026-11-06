@@ -87,6 +87,51 @@ return {
             default = { "lsp", "path", "snippets", "buffer", "copilot", "lazydev" },
 
             providers = {
+                lsp = {
+                    name = "lsp",
+                    module = "blink.cmp.sources.lsp",
+                    transform_items = function(_, items)
+                        local CompletionItemKind = vim.lsp.protocol.CompletionItemKind
+                        local custom_kinds = { "Table", "Column", "Database", "Alias" }
+
+                        for _, name in ipairs(custom_kinds) do
+                            local found = false
+                            for _, v in ipairs(CompletionItemKind) do
+                                if v == name then
+                                    found = true
+                                    break
+                                end
+                            end
+                            if not found then
+                                CompletionItemKind[#CompletionItemKind + 1] = name
+                            end
+                        end
+
+                        local function get_kind_idx(name)
+                            for idx, v in ipairs(CompletionItemKind) do
+                                if v == name then
+                                    return idx
+                                end
+                            end
+                            return nil
+                        end
+
+                        local table_idx = get_kind_idx("Table")
+                        local col_idx = get_kind_idx("Column")
+
+                        for _, item in ipairs(items) do
+                            local kind = item.kind
+                            -- sqls sends Field for columns and Struct for tables typically
+                            if kind == CompletionItemKind.Field then
+                                item.kind = col_idx
+                            elseif kind == CompletionItemKind.Struct then
+                                item.kind = table_idx
+                            end
+                        end
+
+                        return items
+                    end,
+                },
                 copilot = {
                     name = "copilot",
                     module = "blink-cmp-copilot",
@@ -182,11 +227,11 @@ return {
                 },
             },
 
-            per_filetype = {
-                sql = { "dadbod", "buffer", "snippets" },
-                mysql = { "dadbod", "buffer", "snippets" },
-                plsql = { "dadbod", "buffer", "snippets" },
-            },
+per_filetype = {
+    sql = { "dadbod", "lsp", "buffer", "snippets" },
+    mysql = { "dadbod", "lsp", "buffer", "snippets" },
+    plsql = { "dadbod", "lsp", "buffer", "snippets" },
+},
         },
 
         completion = {

@@ -123,14 +123,15 @@ return {
                 ------------------------------------------------------------------
                 -- vim.notify()
                 --
-                -- This is the important part.
-                --
-                -- Plugins calling vim.notify() are intercepted by Noice and
-                -- routed through the same notification pipeline.
+                -- Not overridden (disabled in 06cbe38). vim.notify() then echoes,
+                -- and the echo arrives as a `msg_show` message that the
+                -- `messages` section above renders in the same notify view and
+                -- keeps in :Noice history. The `event = "notify"` routes below
+                -- only apply if this is turned back on.
                 ------------------------------------------------------------------
 
                 notify = {
-                    enabled = false,
+                    enabled = true,
                     view = "notify",
                 },
 
@@ -288,10 +289,6 @@ return {
                                 {
                                     find = "client.request is deprecated",
                                 },
-
-                                {
-                                    find = "written",
-                                },
                             },
                         },
 
@@ -360,7 +357,7 @@ return {
                     {
                         filter = {
                             event = "msg_show",
-                            min_height = 15,
+                            min_height = 30,
                         },
 
                         view = "split",

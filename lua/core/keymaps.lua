@@ -70,7 +70,7 @@ map({ "n", "v" }, "<leader>rr", function()
     if ft == "sql" or ft == "mysql" or ft == "plsql" then
         require("utils.dadbod").run_sql(mode)
     elseif mode == "n" then
-        pcall(vim.cmd, "RunFile")
+        require("utils.code_runner_notify").run_current_file()
     else
         pcall(vim.cmd, "RunCode")
     end
@@ -160,9 +160,8 @@ map("n", "<leader>gb", function()
     require("gitsigns").blame_line({ full = true })
 end, { desc = "Show who changed this line and when" })
 map("n", "<leader>gp", cmd("Gitsigns preview_hunk"), { desc = "Preview this changed block" })
-map("n", "<leader>gd", cmd("DiffviewOpen"), { desc = "Open side-by-side git diffview" })
 map("n", "<leader>gD", cmd("DiffviewClose"), { desc = "Close git diffview" })
-map("n", "<leader>gg", cmd("Neogit"), { desc = "Open the full git panel" })
+-- <leader>gd/gh/gq live in plugins/diffview.lua, <leader>gg in plugins/neogit.lua
 map("n", "<leader>gc", cmd("Neogit commit"), { desc = "Start a git commit" })
 
 -- Search and discovery
@@ -247,14 +246,9 @@ map("n", "<leader>ft", function()
         pcall(vim.cmd, "TodoQuickFix")
     end
 end, { desc = "Find every TODO, NOTE, or FIX comment" })
-map("n", "]t", function()
-    require("todo-comments").jump_next()
-end, { desc = "Next TODO comment" })
-map("n", "[t", function()
-    require("todo-comments").jump_prev()
-end, { desc = "Previous TODO comment" })
 map("n", "<leader>fk", pick_keymaps, { desc = "Browse every keybinding" })
 map("n", "<leader>?", pick_keymaps, { desc = "Browse every keybinding" })
+-- ]t / [t (next/previous TODO) live in plugins/todo-comments.lua
 map("n", "<leader>sr", cmd("GrugFar"), { desc = "Search and replace across the project" })
 map("x", "<leader>sr", ":GrugFarWithin<CR>", { desc = "Search and replace within selection" })
 map("n", "<leader>sw", function()
@@ -273,7 +267,7 @@ map("n", "<leader>sB", function()
 end, { desc = "Search and replace only in the current file" })
 
 -- Markdown and notebooks
-map("n", "<leader>np", cmd("MarkdownPreviewToggle"), { desc = "Open or close the markdown browser preview" })
+-- <leader>np (markdown browser preview) lives in plugins/markdown.lua
 map("n", "<leader>nB", function()
     require("utils.markdown_modes").toggle_brainstorm()
 end, { desc = "Markdown: Brainstorm Mode" })

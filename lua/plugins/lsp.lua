@@ -205,6 +205,17 @@ return {
 
                 vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
+                -- Notify which server attached to this buffer.
+                if client then
+                    vim.schedule(function()
+                        vim.notify(
+                            "LSP: " .. client.name .. " attached",
+                            vim.log.levels.INFO,
+                            { title = "LSP" }
+                        )
+                    end)
+                end
+
                 -- Diagnostics.
                 map_lsp("n", "<leader>le", function()
                     vim.diagnostic.open_float(bordered({
@@ -280,8 +291,19 @@ return {
         vim.api.nvim_create_autocmd("LspDetach", {
             group = vim.api.nvim_create_augroup("user_lsp_detach", { clear = true }),
 
-            callback = function()
+            callback = function(event)
                 pcall(vim.lsp.buf.clear_references)
+
+                local client = vim.lsp.get_client_by_id(event.data.client_id)
+                if client then
+                    vim.schedule(function()
+                        vim.notify(
+                            "LSP: " .. client.name .. " detached",
+                            vim.log.levels.WARN,
+                            { title = "LSP" }
+                        )
+                    end)
+                end
             end,
         })
     end,

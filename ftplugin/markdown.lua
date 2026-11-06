@@ -1,9 +1,8 @@
 -- Neovim's ftplugin system handles idempotency; no manual guard needed.
 
 vim.opt_local.textwidth = 0
-vim.opt_local.wrap = true
-vim.opt_local.linebreak = true
-vim.opt_local.breakindent = true
+-- wrap/linebreak are owned by render-markdown's FileType hook (lua/plugins/markdown.lua):
+-- markdown stays unwrapped so rendered tables keep their layout.
 vim.opt_local.spell = true
 vim.opt_local.spelllang = { "en" }
 vim.opt_local.conceallevel = 2

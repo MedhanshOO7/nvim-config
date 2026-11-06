@@ -3,7 +3,7 @@ return {
     ft = { "python", "c", "cpp", "javascript", "typescript", "markdown" },
     cmd = { "RunCode", "RunFile", "RunProject", "RunClose" },
     keys = {
-        { "<leader>rf", "<cmd>RunFile<cr>", desc = "Run: Current file" },
+        { "<leader>rf", function() require("utils.code_runner_notify").run_current_file() end, desc = "Run: Current file (notification)" },
         { "<leader>rp", "<cmd>RunProject<cr>", desc = "Run: Project" },
         { "<leader>rc", "<cmd>RunClose<cr>", desc = "Run: Close runner window" },
     },
