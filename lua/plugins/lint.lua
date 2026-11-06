@@ -31,18 +31,14 @@ return {
         lint.linters.ruff = vim.tbl_deep_extend("force", lint.linters.ruff or {}, {
             cmd = prefer_mason("ruff"),
         })
-        lint.linters.eslint_d = vim.tbl_deep_extend("force", lint.linters.eslint_d or {}, {
-            cmd = prefer_mason("eslint_d"),
-        })
         lint.linters.markdownlint = vim.tbl_deep_extend("force", lint.linters.markdownlint or {}, {
             cmd = prefer_mason("markdownlint"),
         })
 
+        -- JavaScript/TypeScript diagnostics and code actions come from
+        -- eslint-lsp (see lua/lsp/servers.lua), so eslint_d is intentionally
+        -- not run here to avoid duplicate diagnostics.
         lint.linters_by_ft = {
-            javascript = available("eslint_d") and { "eslint_d" } or {},
-            javascriptreact = available("eslint_d") and { "eslint_d" } or {},
-            typescript = available("eslint_d") and { "eslint_d" } or {},
-            typescriptreact = available("eslint_d") and { "eslint_d" } or {},
             python = available("ruff") and { "ruff" } or {},
             lua = available("selene") and { "selene" } or {},
             sh = available("shellcheck") and { "shellcheck" } or {},

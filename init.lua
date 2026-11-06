@@ -37,6 +37,7 @@ if #vim.api.nvim_list_uis() == 0 then
 end
 
 vim.g.autoformat_enabled = false
+vim.g.blink_ghost_text = true
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0

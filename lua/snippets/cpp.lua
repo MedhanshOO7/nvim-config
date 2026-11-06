@@ -24,4 +24,20 @@ ls.add_snippets("cpp", {
         }),
     }),
 
+    -- Debug print that stays valid in every C++ dialect.
+    s("dbg", {
+        t("std::cerr << "),
+        i(1, '"value: "'),
+        t(" << "),
+        i(2, "value"),
+        t(" << std::endl;"),
+    }),
+
+    s("fastio", {
+        t({
+            "std::ios::sync_with_stdio(false);",
+            "std::cin.tie(nullptr);",
+        }),
+    }),
+
 })

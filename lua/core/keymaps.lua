@@ -34,7 +34,15 @@ map("n", "<leader>fe", function()
         vim.notify("Snacks explorer not available", vim.log.levels.WARN)
     end
 end, { desc = "Open file explorer" })
-map("n", "<leader>fs", cmd("write"), { desc = "Save the current file" })
+map("n", "<leader>fs", function()
+    require("utils.save").save()
+end, { desc = "Save the current file" })
+
+-- Ctrl+S works in normal, insert and visual mode and stays in the mode it was
+-- pressed from. See lua/utils/save.lua for the no-double-format logic.
+map({ "n", "i", "x" }, "<C-s>", function()
+    require("utils.save").save()
+end, { desc = "Save and format the current file" })
 map("n", "<leader>cf", function()
     if not vim.bo.modifiable then
         vim.notify("Buffer is read-only (not modifiable)", vim.log.levels.WARN, { title = "Formatter" })
@@ -43,6 +51,13 @@ map("n", "<leader>cf", function()
     require("conform").format({ lsp_format = "fallback", async = true })
 end, { desc = "Format the current file" })
 map("n", "<leader>uf", cmd("FormatToggle"), { desc = "Toggle auto-format on save" })
+map("n", "<leader>ug", function()
+    vim.g.blink_ghost_text = not (vim.g.blink_ghost_text ~= false)
+    vim.notify(
+        vim.g.blink_ghost_text and "Completion ghost text is on" or "Completion ghost text is off",
+        vim.log.levels.INFO
+    )
+end, { desc = "Toggle completion ghost text" })
 map("n", "<leader>um", function()
     vim.bo.modifiable = not vim.bo.modifiable
     vim.notify(

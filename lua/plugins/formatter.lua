@@ -45,25 +45,8 @@ return {
             },
 
             formatters = {
-                prettier = {
-                    args = {
-                        "--stdin-filepath",
-                        "$FILENAME",
-                        "--tab-width",
-                        "4",
-                    },
-                },
-
-                stylua = {
-                    args = {
-                        "--indent-type",
-                        "Spaces",
-                        "--indent-width",
-                        "4",
-                        "-",
-                    },
-                },
-
+                -- Respect a project's .clang-format when one exists; otherwise
+                -- fall back to a reasonable LLVM-based style.
                 clang_format = {
                     prepend_args = function(self, ctx)
                         local bufnr = vim.api.nvim_get_current_buf()
@@ -85,14 +68,6 @@ return {
                             "--style={BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, UseTab: Never, AccessModifierOffset: -4}",
                         }
                     end,
-                },
-
-                shfmt = {
-                    prepend_args = {
-                        "-i",
-                        "4",
-                        "-ci",
-                    },
                 },
             },
 

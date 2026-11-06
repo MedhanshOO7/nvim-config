@@ -101,8 +101,8 @@ If you just want something that works out of the box, there are better options �
 │   │   ├── autocmds.lua        # Autocommands (format-on-save, yank highlight, etc.)
 │   │   └── lazy.lua            # lazy.nvim bootstrap & plugin loader
 │   ├── plugins/                # 70 plugin config files (one per plugin/group)
-│   │   ├── lsp.lua             # LSP client setup
-│   │   ├── cmp.lua             # Completion engine
+│   │   ├── lsp.lua             # LSP client setup (native vim.lsp.config)
+│   │   ├── cmp.lua             # blink.cmp v1 completion UI & keymaps
 │   │   ├── snacks.lua          # Snacks picker, explorer, dashboard, zen
 │   │   ├── copilot.lua         # AI assistants (Copilot, CopilotChat)
 │   │   ├── treesitter.lua      # Syntax parsing & highlighting
@@ -117,8 +117,9 @@ If you just want something that works out of the box, there are better options �
 │   │   ├── updater.lua         # 1-key config sync across machines
 │   │   ├── terminal_style.lua  # Terminal layout manager
 │   │   ├── markdown_modes.lua  # Writing mode presets
+│   │   ├── save.lua            # Ctrl+S save/format helper (no double format)
 │   │   └── writing.lua         # Writing utilities
-│   └── snippets/               # Custom snippet definitions
+│   └── snippets/               # Custom LuaSnip snippets (C++, Python, JS, TS, TSX, HTML, Markdown)
 ├── ftdetect/                   # Custom filetype detection
 ├── ftplugin/                   # Per-filetype settings
 ├── disabled_plugins/           # Archived / disabled plugin configs
@@ -341,12 +342,17 @@ On first launch, `lazy.nvim` will automatically bootstrap itself, clone all plug
 | [WhoIsSethDaniel/mason-tool-installer.nvim](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Automatically ensures all tools are installed |
 | [folke/lazydev.nvim](https://github.com/folke/lazydev.nvim) | Full type signatures and autocompletion for Neovim Lua APIs |
 | [b0o/schemastore.nvim](https://github.com/b0o/schemastore.nvim) | JSON/YAML schema validation catalog |
-| [saghen/blink.cmp](https://github.com/saghen/blink.cmp) | Completion engine (LSP, snippets, path, buffer, Copilot) |
-| [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Extensible snippet engine |
+| [saghen/blink.cmp](https://github.com/saghen/blink.cmp) | Stable v1 completion engine (LSP, snippets, paths, buffers, Copilot) |
+| [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Extensible snippet engine used by blink.cmp |
 | [rafamadriz/friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | Comprehensive community snippet collection |
 | [rachartier/tiny-inline-diagnostic.nvim](https://github.com/rachartier/tiny-inline-diagnostic.nvim) | Modern compiler-style curved diagnostic callouts |
 | [dnlhc/glance.nvim](https://github.com/dnlhc/glance.nvim) | VS Code-style peek definition, references, and implementations |
 | [Bekaboo/dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim) | Clickable LSP symbol breadcrumb bar |
+
+Active server selection:
+- **TypeScript/JavaScript**: `ts_ls` when a TypeScript `< 7` runtime is available (Mason's package bundles one), otherwise `vtsls`. Set `vim.g.typescript_lsp = "vtsls"` or `"ts_ls"` before plugins load to force one.
+- **Python**: `basedpyright` when installed, with `pylsp` as the automatic fallback. Set `vim.g.python_lsp = "pylsp"` to force it.
+- **ESLint**: `eslint-lsp` attaches only inside projects that contain an ESLint config file.
 
 ### Editing, Formatting & Linting
 
@@ -505,6 +511,7 @@ The leader key is set to `<Space>`.
 | `<leader>sj` | Jump anywhere on screen | flash.nvim |
 | `<leader>ss` | Jump by syntax block (treesitter) | flash.nvim |
 | `<leader>fs` | Save current file | builtin |
+| `<C-s>` | Save + format (normal, insert, visual) | conform.nvim |
 | `<leader>q` | Quit current window | builtin |
 | `<leader>.` | Toggle scratch buffer | snacks.scratch |
 | `<leader>S` | Select scratch buffer | snacks.scratch |
@@ -530,6 +537,10 @@ The leader key is set to `<Space>`.
 | `<leader>ca` | Code actions with live diff preview | tiny-code-action |
 | `<leader>cf` | Format current file | conform.nvim |
 | `<leader>rn` | Rename symbol everywhere | Built-in LSP |
+| `<leader>ll` | Toggle LSP for the current buffer | Built-in LSP |
+| `<leader>lI` | Toggle inlay hints for the current buffer | Built-in LSP |
+| `<leader>lk` | Signature help | Built-in LSP |
+| `<leader>le` | Show the diagnostic under the cursor | tiny-inline-diagnostic |
 | `<leader>ce` | Extract function (visual) | refactoring.nvim |
 | `<leader>cv` | Extract variable (visual) | refactoring.nvim |
 | `<leader>ci` | Inline variable | refactoring.nvim |
@@ -538,6 +549,25 @@ The leader key is set to `<Space>`.
 | `<leader>xd` | Diagnostics list (Current Buffer) | trouble.nvim |
 | `<leader>no` | Toggle code outline sidebar | aerial.nvim |
 | `<leader>nn` | Toggle floating outline navigator | aerial.nvim |
+
+### Completion, Snippets & Saving
+
+The completion menu opens automatically, uses fuzzy matching, and shows Nerd Font kind icons, the completion kind, source label (LSP, Snippet, Path, Buffer), and label descriptions when the server supplies them. Documentation appears after about 400 ms. No item is preselected, so Enter never inserts a completion you did not choose.
+
+| Key | Action |
+| :--- | :--- |
+| `Ctrl+Space` | Open the completion menu (or toggle its documentation) |
+| `Ctrl+N` / `Ctrl+P` | Select the next / previous completion item |
+| `Ctrl+E` | Dismiss the menu and undo any preview |
+| `Tab` | Snippet placeholder → completion selection → normal indent |
+| `Shift+Tab` | Previous snippet placeholder or completion item |
+| `Enter` | Accept an explicitly selected item; otherwise a normal newline |
+| `Ctrl+K` | Signature help |
+| `Ctrl+B` / `Ctrl+F` | Scroll the documentation window |
+| `<C-s>` | Save and format from normal, insert, or visual mode |
+| `<leader>ug` | Toggle subtle ghost-text preview |
+
+Snippet prefixes are expanded by LuaSnip with Tab/Shift+Tab placeholder navigation. Custom snippets live in `lua/snippets/` (`argparse`, `dataclass`, `ctxmanager`, `dbg`, `fastio`, `asyncfn`, `fetchjson`, `tsxfc`, `jsxfc`, `html5doc`, plus the existing competitive-programming template).
 
 ### Code Folding (`nvim-ufo`)
 
@@ -608,6 +638,7 @@ The leader key is set to `<Space>`.
 | **`<leader>ub`** | **Toggle Auto-Save (Buffer)** | Buffer auto-save |
 | **`<leader>uy`** | **Toggle Background Transparency** | Opaque / Glass |
 | **`<leader>uf`** | **Toggle Auto-Format on Save** | Format on/off |
+| **`<leader>ug`** | **Toggle Completion Ghost Text** | Ghost text on/off |
 | **`<leader>um`** | **Toggle Buffer Modifiable** | Locked / Unlocked |
 | **`<leader>ut`** | **Choose Theme** | Theme picker |
 | **`<leader>un`** | **Next Theme** | Theme cycle |

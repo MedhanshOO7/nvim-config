@@ -38,6 +38,9 @@ return {
         local blink_ok, blink = pcall(require, "blink.cmp")
 
         if blink_ok then
+            -- get_lsp_capabilities merges Blink's completion/signature
+            -- capabilities into the table we pass in, rather than replacing
+            -- the base client capabilities.
             capabilities = blink.get_lsp_capabilities(capabilities)
         end
 
@@ -89,6 +92,45 @@ return {
             vim.notify(not enabled and "Inlay hints are on" or "Inlay hints are off")
         end
 
+        -- Toggle every LSP client attached to one buffer, then re-run the
+        -- FileType event to let vim.lsp.enable attach them again on the same
+        -- buffer. This avoids reloading the file and losing undo history.
+        local function toggle_lsp_buffer(bufnr)
+            bufnr = (bufnr == nil or bufnr == 0) and vim.api.nvim_get_current_buf() or bufnr
+
+            if not vim.api.nvim_buf_is_valid(bufnr) then
+                return
+            end
+
+            local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+            if #clients > 0 then
+                vim.b[bufnr].lsp_suspended = true
+
+                for _, client in ipairs(clients) do
+                    pcall(vim.lsp.buf_detach_client, bufnr, client.id)
+                end
+
+                vim.notify("LSP detached for this buffer", vim.log.levels.INFO)
+                return
+            end
+
+            vim.b[bufnr].lsp_suspended = false
+            vim.api.nvim_buf_call(bufnr, function()
+                vim.cmd("silent! doautocmd <nomodeline> FileType")
+            end)
+
+            vim.defer_fn(function()
+                if vim.api.nvim_buf_is_valid(bufnr) and #vim.lsp.get_clients({ bufnr = bufnr }) == 0 then
+                    vim.notify("No language server reattached to this buffer", vim.log.levels.WARN)
+                end
+            end, 500)
+        end
+
+        vim.keymap.set("n", "<leader>ll", function()
+            toggle_lsp_buffer(0)
+        end, { desc = "Toggle LSP for this buffer" })
+
         -- ============================================================
         -- LAZYDEV
         -- ============================================================
@@ -126,7 +168,9 @@ return {
             },
 
             underline = {
-                severity = vim.diagnostic.severity.ERROR,
+                severity = {
+                    min = vim.diagnostic.severity.WARN,
+                },
             },
 
             update_in_insert = false,
@@ -171,10 +215,29 @@ return {
         -- ============================================================
 
         for server, server_config in pairs(servers) do
-            vim.lsp.config(server, vim.tbl_deep_extend("force", {
-                capabilities = capabilities,
-            }, server_config))
-            vim.lsp.enable(server)
+            local config = vim.deepcopy(server_config)
+
+            -- `_when` is our selector, not a field Neovim understands.
+            local when = config._when
+            config._when = nil
+
+            local enabled = true
+            if type(when) == "function" then
+                local ok, result = pcall(when)
+                enabled = ok and result == true
+            elseif when ~= nil then
+                enabled = when == true
+            end
+
+            if enabled then
+                vim.lsp.config(server, vim.tbl_deep_extend("force", {
+                    capabilities = capabilities,
+                }, config))
+                vim.lsp.enable(server)
+            else
+                -- Make sure a previous session/plugin did not leave it on.
+                vim.lsp.enable(server, false)
+            end
         end
 
         -- ============================================================
@@ -194,6 +257,15 @@ return {
                     return
                 end
 
+                -- The user explicitly suspended LSP in this buffer.
+                if vim.b[event.buf].lsp_suspended then
+                    vim.schedule(function()
+                        pcall(vim.lsp.buf_detach_client, event.buf, event.data.client_id)
+                    end)
+
+                    return
+                end
+
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
 
                 local function map_lsp(mode, lhs, rhs, desc)
@@ -205,15 +277,14 @@ return {
 
                 vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-                -- Notify which server attached to this buffer.
-                if client then
-                    vim.schedule(function()
-                        vim.notify(
-                            "LSP: " .. client.name .. " attached",
-                            vim.log.levels.INFO,
-                            { title = "LSP" }
-                        )
-                    end)
+                -- Semantic highlighting sits on top of Treesitter (Treesitter
+                -- keeps strings, comments and markup; LSP adds semantic
+                -- modifiers such as parameter/readonly).
+                if client and client:supports_method("textDocument/semanticTokens/full") then
+                    vim.lsp.semantic_tokens.enable(true, {
+                        bufnr = event.buf,
+                        client_id = client.id,
+                    })
                 end
 
                 -- Diagnostics.
@@ -269,6 +340,10 @@ return {
                 -- Signature help.
                 map_lsp("n", "<leader>lk", vim.lsp.buf.signature_help, "Show function signature help")
 
+                if client and client:supports_method("textDocument/signatureHelp") then
+                    map_lsp("n", "<C-k>", vim.lsp.buf.signature_help, "Show function signature help")
+                end
+
                 -- Rename.
                 map_lsp("n", "<leader>rn", smart_rename, "Rename this symbol everywhere")
 
@@ -294,15 +369,15 @@ return {
             callback = function(event)
                 pcall(vim.lsp.buf.clear_references)
 
-                local client = vim.lsp.get_client_by_id(event.data.client_id)
-                if client then
-                    vim.schedule(function()
-                        vim.notify(
-                            "LSP: " .. client.name .. " detached",
-                            vim.log.levels.WARN,
-                            { title = "LSP" }
-                        )
-                    end)
+                -- Attach/detach is routine; showing a notification for every
+                -- server is noise. Failures are still reported by Neovim.
+                if vim.g.lsp_debug then
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
+                    if client then
+                        vim.schedule(function()
+                            vim.notify("LSP: " .. client.name .. " detached", vim.log.levels.WARN, { title = "LSP" })
+                        end)
+                    end
                 end
             end,
         })

@@ -1,6 +1,8 @@
 return {
     "saghen/blink.cmp",
-    version = "*",
+    -- Pin the stable v1 line. v2 is still in development and changes the
+    -- configuration API (completion.list, sources, keymap commands, ...).
+    version = "1.*",
     dependencies = {
         "rafamadriz/friendly-snippets",
         "giuxtaposition/blink-cmp-copilot",
@@ -11,31 +13,60 @@ return {
         keymap = {
             preset = "none",
             ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-            ["<C-e>"] = { "hide", "fallback" },
+            ["<C-e>"] = { "cancel", "fallback" },
+            -- With selection.preselect = false this only accepts an item the
+            -- user explicitly selected; otherwise it falls back to a normal
+            -- <CR> (newline / indentation).
             ["<CR>"] = { "accept", "fallback" },
+
+            -- Contextual Tab, highest priority first:
+            --   1. an inline Copilot suggestion (when the plugin is active)
+            --   2. an active LuaSnip placeholder
+            --   3. an explicitly selected completion item
+            --   4. the completion menu (select the first item)
+            --   5. normal indentation
             ["<Tab>"] = {
                 function(cmp)
-                    local copilot_ok, copilot_suggestion = pcall(require, "copilot.suggestion")
-                    if copilot_ok and copilot_suggestion.is_visible() then
-                        copilot_suggestion.accept()
+                    local copilot_ok, copilot = pcall(require, "copilot.suggestion")
+                    if copilot_ok and copilot.is_visible() then
+                        copilot.accept()
                         return true
                     end
-                    if cmp.snippet_active() then
-                        return cmp.accept()
-                    elseif cmp.is_visible() then
-                        return cmp.select_and_accept()
+
+                    if cmp.snippet_active({ direction = 1 }) then
+                        return cmp.snippet_forward()
+                    end
+
+                    if cmp.is_menu_visible() then
+                        if cmp.accept() then
+                            return true
+                        end
+                        return cmp.select_next()
                     end
                 end,
                 "snippet_forward",
                 "fallback",
             },
-            ["<S-Tab>"] = { "snippet_backward", "fallback" },
+            ["<S-Tab>"] = {
+                function(cmp)
+                    if cmp.snippet_active({ direction = -1 }) then
+                        return cmp.snippet_backward()
+                    end
+                    if cmp.is_menu_visible() then
+                        return cmp.select_prev()
+                    end
+                end,
+                "snippet_backward",
+                "fallback",
+            },
+
+            ["<C-n>"] = { "select_next", "fallback_to_mappings" },
+            ["<C-p>"] = { "select_prev", "fallback_to_mappings" },
             ["<Up>"] = { "select_prev", "fallback" },
             ["<Down>"] = { "select_next", "fallback" },
-            ["<C-p>"] = { "select_prev", "fallback" },
-            ["<C-n>"] = { "select_next", "fallback" },
             ["<C-b>"] = { "scroll_documentation_up", "fallback" },
             ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+            ["<C-k>"] = { "show_signature", "hide_signature", "fallback_to_mappings" },
         },
 
         appearance = {
@@ -84,7 +115,7 @@ return {
         },
 
         sources = {
-            default = { "lsp", "path", "snippets", "buffer", "copilot", "lazydev" },
+            default = { "lsp", "snippets", "path", "buffer", "copilot", "lazydev" },
 
             providers = {
                 lsp = {
@@ -234,13 +265,34 @@ per_filetype = {
 },
         },
 
+        -- Fuzzy matching and frecency are on by default; keep them explicit so
+        -- the behaviour is visible and easy to tune.
+        fuzzy = {
+            implementation = "prefer_rust_with_warning",
+            use_proximity = true,
+            frecency = { enabled = true },
+        },
+
         completion = {
+            -- Insert () and quotes only when the server item asks for it.
+            -- nvim-autopairs is installed, so blink defers to it instead of
+            -- fighting over the same characters.
             accept = {
                 auto_brackets = { enabled = true },
             },
 
+            -- Never preselect and never auto-insert preview text. The menu is
+            -- a list to opt into, not a mode that mutates the buffer.
+            list = {
+                selection = {
+                    preselect = false,
+                    auto_insert = false,
+                },
+            },
+
             menu = {
                 border = "rounded",
+                max_height = 12,
                 draw = {
                     treesitter = { "lsp" },
                     columns = {
@@ -253,14 +305,25 @@ per_filetype = {
 
             documentation = {
                 auto_show = true,
-                auto_show_delay_ms = 150,
+                auto_show_delay_ms = 400,
+                treesitter_highlighting = true,
                 window = {
                     border = "rounded",
+                    max_width = 80,
+                    max_height = 20,
+                    scrollbar = true,
                 },
             },
 
+            -- Subtle inline preview. Toggle with <leader>ug.
             ghost_text = {
-                enabled = false,
+                enabled = function()
+                    return vim.g.blink_ghost_text ~= false
+                end,
+                show_with_selection = true,
+                show_without_selection = true,
+                show_with_menu = true,
+                show_without_menu = true,
             },
         },
 
@@ -270,5 +333,13 @@ per_filetype = {
         --         border = "rounded",
         --     },
         -- },
+        signature = {
+            enabled = true,
+            window = {
+                border = "rounded",
+                max_height = 10,
+                scrollbar = true,
+            },
+        },
     },
 }
