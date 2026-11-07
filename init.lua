@@ -6,6 +6,7 @@ local extra_paths = {
     "/usr/local/sbin",
     vim.fn.expand("~/.cargo/bin"),
     vim.fn.expand("~/.local/bin"),
+    vim.fn.stdpath("data") .. "/mason/bin",
 }
 
 for _, p in ipairs(extra_paths) do
